@@ -1,11 +1,16 @@
 <!DOCTYPE html><html lang="tr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#2E5D4B"><meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Gönül Pusulası"><title>Gönül Pusulası</title>
+<meta name="theme-color" content="#2E5D4B">
+<!-- iOS Native App Etiketleri -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gönül Pusulası">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Gönül Pusulası</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-/* --- Oğuzhan Standart Renk Paleti --- */
+/* --- Renk Paleti --- */
 :root{
   --kum:#F5EFE3;--kagit:#FFFBF3;--ye:#2E5D4B;--ye-ac:#3E7A62;
   --lac:#1B2A4A;--alt:#C9A227;--mt:#22201C;--sol:#7C766C;
@@ -16,9 +21,18 @@ body.koyu{
   --lac:#AEC0E0;--alt:#D9B94E;--mt:#EAE4D8;--sol:#9A968C;
   --cz:#2A3436;--golge:0 2px 14px rgba(0,0,0,.35);
 }
+
+/* --- NATIVE APP HİSSİ (Sayfa Sündürme ve Seçimi Kapatma) --- */
+html, body { overscroll-behavior-y: none; }
+header, nav, .btn, .cp, .kart h2, .et, .stk, #tb button, .bs { -webkit-user-select: none; user-select: none; }
+input, textarea, select { font-size: 16px !important; }
+.btn:active, .c1:active, .nk:active, .dergi-kart:active { transform: scale(0.97); transition: transform 0.1s ease; }
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--kum);color:var(--mt);font:16px/1.55 Inter,system-ui,sans-serif;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 h2,.sr{font-family:Amiri,Georgia,serif;font-weight:700;margin:0}
+
+/* --- Header & Layout --- */
 header{position:sticky;top:0;z-index:50;background:var(--ye);color:#F5EFE3;padding:calc(12px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:10px}
 header .ad{font-family:Amiri,serif;font-size:22px;font-weight:700}
 header .hc{margin-left:auto;font-size:12px;opacity:.9;text-align:right;line-height:1.35}
@@ -37,7 +51,7 @@ section{display:none}section.aktif{display:block}
 .sy{text-align:center;padding:6px 0 14px}.sy .k{font-size:13px;color:var(--sol)}
 .sy .d{font-family:Amiri,serif;font-size:38px;font-weight:700;color:var(--ye);letter-spacing:1px}
 
-/* --- Butonlar (Ergonomik) --- */
+/* --- Butonlar --- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ye);color:#F8F4EC;border:0;border-radius:14px;padding:14px 18px;font:700 15px Inter,sans-serif;width:100%;cursor:pointer;min-height:50px}
 .btn.ik{background:transparent;color:var(--ye);border:2px solid var(--ye)}
 .btn.km{padding:10px 14px;font-size:14px;border-radius:11px;min-height:44px}
@@ -73,7 +87,7 @@ section{display:none}section.aktif{display:block}
 .sh img{width:100%;border-radius:16px;margin:12px 0}
 .tt{width:46px;height:5px;background:var(--cz);border-radius:10px;margin:0 auto 14px}
 
-/* --- KIBLE PUSULASI --- */
+/* --- Pusula --- */
 #pus{position:fixed;inset:0;z-index:110;background:var(--kum);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px}
 #pus.acik{display:flex}
 .gl{width:260px;height:260px;border-radius:50%;border:3px solid var(--cz);background:var(--kagit);position:relative;display:grid;place-items:center;transition:.3s}
@@ -82,13 +96,12 @@ section{display:none}section.aktif{display:block}
 .gl.tam .ok{border-bottom-color:var(--ye)}
 .gl .dr{font-family:Amiri,serif;font-size:32px;font-weight:700;margin-top:64px}
 
-/* --- YENİ: DERGİ OKUMA MODU EKRANI --- */
+/* --- Dergi Modu --- */
 .dergi-kart{background:var(--kagit);border:1.5px solid var(--cz);border-radius:18px;display:flex;overflow:hidden;margin-bottom:12px;box-shadow:var(--golge);cursor:pointer}
 .dergi-kart img{width:100px;height:120px;object-fit:cover;border-right:1.5px solid var(--cz)}
 .dergi-kart-ic{padding:14px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .dergi-kart-ic h3{margin:0 0 4px;font-family:Amiri,serif;font-size:18px;color:var(--lac)}
 .dergi-kart-ic p{margin:0;font-size:13px;color:var(--sol)}
-
 #dergiModu{position:fixed;inset:0;z-index:200;background:var(--kagit);display:none;flex-direction:column;animation:fade .3s ease}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .dm-ust{background:var(--ye);color:#F5EFE3;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,.15)}
@@ -98,14 +111,19 @@ section{display:none}section.aktif{display:block}
 .dm-metin{padding:30px 20px;font-family:Amiri,Georgia,serif;font-size:19px;line-height:1.85;color:var(--mt);text-align:justify}
 .dm-metin h2, .dm-metin h3{font-family:Inter,sans-serif;font-size:22px;color:var(--lac);margin:1.5em 0 0.5em;line-height:1.3}
 .dm-metin p{margin-bottom:1.2em}
-/* Dergi Harf Büyütme (Drop Cap) */
 .dm-metin > p:first-of-type::first-letter{float:left;font-size:4.2rem;line-height:0.8;margin:0 12px 0 0;color:var(--ye);font-weight:700}
 
+/* --- Profil & Araçlar --- */
 .stk{font-family:Amiri,serif;font-size:22px;font-weight:700;color:var(--alt);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0}
 .sa{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--cz)}
 .bo{text-align:center;color:var(--sol);font-size:14.5px;padding:24px 12px}
 .yk2{text-align:center;color:var(--sol);font-size:14px;padding:18px}
 </style></head><body>
+
+<!-- AÇILIŞ (SPLASH) EKRANI (Native Hissi İçin) -->
+<div id="splashEkran" style="position:fixed; inset:0; background:var(--ye); z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity 0.6s ease;">
+  <h1 style="color:#F5EFE3; font-family:Amiri,serif; font-size:36px; text-shadow:0 4px 12px rgba(0,0,0,0.2);">Gönül Pusulası</h1>
+</div>
 
 <header><span class="ad">Gönül Pusulası</span><span class="hc" id="hicri">—</span>
 <button onclick="tema()" id="tbtn">☾</button></header>
@@ -148,19 +166,16 @@ section{display:none}section.aktif{display:block}
   </div>
 </section>
 
-<!-- ================= YENİ: DERGİ / KÜTÜPHANE ================= -->
+<!-- ================= DERGİ / KÜTÜPHANE ================= -->
 <section id="s-dergi">
   <div class="kart" style="background:var(--ye); color:#fff; border:none;">
     <h2 class="sr" style="font-size:24px; margin-bottom:6px;">Manevi Kütüphane</h2>
     <p style="margin:0; font-size:14px; opacity:0.9;">Gönül sultanlarının detaylı hayat hikayelerini dergi formatında, derinlemesine okuyun.</p>
   </div>
-  
   <div class="bs" style="margin-top:24px;"><h2>📍 Yakınınızdaki Sultanlar</h2></div>
   <div id="dergiYakinda"><div class="yk2">Çevrenizdeki türbeler aranıyor...</div></div>
-
   <div class="bs" style="margin-top:24px;"><h2>📖 Öne Çıkan Gönül Sultanları</h2></div>
   <div id="dergiSabit">
-    <!-- Sabit Kayıtlar -->
     <div class="dergi-kart" onclick="dergiAc('Ebu Eyyûb el-Ensarî')">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Eyup_Sultan_Mosque_1.jpg/640px-Eyup_Sultan_Mosque_1.jpg" alt="">
       <div class="dergi-kart-ic"><h3>Eyüp Sultan</h3><p>İstanbul'un Manevi Fatihi ve Mihmandar-ı Nebevi.</p></div>
@@ -193,13 +208,13 @@ section{display:none}section.aktif{display:block}
   <button onclick="tab('profil',this)"><span class="e">👤</span>Profil</button>
 </nav>
 
-<!-- DETAY PENCERESİ (Küçük Özet) -->
+<!-- DETAY PENCERESİ (Harita Özeti) -->
 <div class="pd" id="pd" onclick="if(event.target===this)shKapat()"><div class="sh" id="sh"></div></div>
 
-<!-- YENİ: TAM EKRAN DERGİ OKUYUCU MODU -->
+<!-- TAM EKRAN DERGİ OKUYUCU MODU -->
 <div id="dergiModu">
   <div class="dm-ust">
-    <button onclick="dergiKapat()">← Geri Dön</button>
+    <button onclick="dergiKapat()">← Geri</button>
     <div style="font-family:Amiri,serif; font-size:20px; font-weight:700;">Gönül Dergisi</div>
     <button id="btnDergiSes" onclick="dergiSesliOku()">🔊 Dinle</button>
   </div>
@@ -208,9 +223,7 @@ section{display:none}section.aktif{display:block}
     <div style="padding: 24px 20px 0;">
       <h1 class="sr" id="dmBaslik" style="font-size:36px; color:var(--ye); line-height:1.2; margin-bottom:8px;">Başlık</h1>
     </div>
-    <div class="dm-metin" id="dmMetin">
-      <div class="yk2">Tarihi kaynaklardan detaylı bilgiler derleniyor... Lütfen bekleyin.</div>
-    </div>
+    <div class="dm-metin" id="dmMetin"></div>
   </div>
 </div>
 
@@ -222,13 +235,31 @@ section{display:none}section.aktif{display:block}
   <button class="btn ik" style="max-width:220px" onclick="pusKapat()">Pusulayı Kapat</button>
 </div>
 
+<!-- iOS ANA EKRANA EKLE BALONU (Native Hissi) -->
+<div id="iosKurulum" style="position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); color:#1B2A4A; padding:16px; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.15); width:90%; max-width:400px; text-align:center; z-index:9000; display:none; border:1px solid #E4DAC8; font-size:14px; font-weight:600;">
+  <div style="margin-bottom:8px;">Tam ekran uygulama deneyimi için:</div>
+  <div>Aşağıdaki <b style="font-size:18px;">⍗</b> (Paylaş) butonuna basın<br>ve <b>"Ana Ekrana Ekle"</b>yi seçin.</div>
+  <button onclick="document.getElementById('iosKurulum').style.display='none'" style="margin-top:12px; background:var(--ye); color:#fff; border:none; padding:8px 16px; border-radius:10px; font-weight:600; width:100%;">Anladım</button>
+  <div style="position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:10px solid rgba(255,255,255,0.95);"></div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* --- GÖNÜL PUSULASI V4 — Dergi Modu & Önbellekli Optimizasyon --- */
+/* --- NATIVE APP AÇILIŞ VE KURULUM KONTROLÜ --- */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const sp = document.getElementById('splashEkran');
+    if(sp) { sp.style.opacity = '0'; setTimeout(() => sp.remove(), 600); }
+  }, 800);
+});
+const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+if (isIos() && !isInStandaloneMode()) { setTimeout(() => { document.getElementById('iosKurulum').style.display = 'block'; }, 3000); }
+
+/* --- GÖNÜL PUSULASI ÇEKİRDEK --- */
 const KABE={la:21.4225,ln:39.8262};
-const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:5000}; // Yarıçap varsayılan 5km yapıldı (Hız için)
-const L2={g:(k,d)=>{try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}},
-          s:(k,v)=>{try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
+const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:5000}; 
+const L2={g:(k,d)=>{try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}}, s:(k,v)=>{try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
 const $=i=>document.getElementById(i);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -242,7 +273,7 @@ function ilhamCiz(){$('ilham').textContent=ILHAM_DIZI[Math.floor(Date.now()/864e
 function ziyaretEt(id,btn){
   let z=L2.g('visitedPoints',[]); if(z.includes(id))return;
   z.push(id); L2.s('visitedPoints',z); btn.textContent='Ziyaret Edildi ✓'; btn.style.background='var(--ye-ac)';
-  nCiz(); isaretet(); profildoldur(); not('Ziyaretiniz deftere işlendi.');
+  nCiz(); isaretet(); profildoldur(); not('Ziyaretiniz profilinize işlendi.');
 }
 function profildoldur(){$('ptp').textContent=L2.g('visitedPoints',[]).length;}
 function tab(a,b){document.querySelectorAll('section').forEach(s=>s.classList.remove('aktif'));
@@ -250,7 +281,7 @@ function tab(a,b){document.querySelectorAll('section').forEach(s=>s.classList.re
   b.classList.add('on');scrollTo(0,0);if(a==='ziyaret'&&hr)setTimeout(()=>hr.invalidateSize(),120)}
 function tema(){document.body.classList.toggle('koyu');L2.s('tema',document.body.classList.contains('koyu'));$('tbtn').textContent=document.body.classList.contains('koyu')?'☀':'☾'}
 
-/* --- konum & vakit --- */
+/* --- Konum & Vakit --- */
 function konum(z){const e=L2.g('konum',null);if(e&&!z){S.la=e.la;S.ln=e.ln;hazir()}
   if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{S.la=p.coords.latitude;S.ln=p.coords.longitude;L2.s('konum',{la:S.la,ln:S.ln});hazir()},
   ()=>{if(!e)$('knm').textContent='konum izni gerekli'},{enableHighAccuracy:true,timeout:12000,maximumAge:300000})}
@@ -270,7 +301,7 @@ function sayac(){if(!S.tm)return;const d=new Date(),n=d.getHours()*3600+d.getMin
   const f=h-n;$('sad').textContent=a+' vaktine kalan';$('ssr').textContent=`${String(Math.floor(f/3600)).padStart(2,'0')}:${String(Math.floor(f%3600/60)).padStart(2,'0')}:${String(f%60).padStart(2,'0')}`}
 setInterval(sayac,1000);
 
-/* --- pusula --- */
+/* --- Pusula --- */
 function kAci(){const R=Math.PI/180,f1=S.la*R,f2=KABE.la*R,dl=(KABE.ln-S.ln)*R;return(Math.atan2(Math.sin(dl),Math.cos(f1)*Math.tan(f2)-Math.sin(f1)*Math.cos(dl))/R+360)%360}
 let pD=null;
 async function pusAc(){if(S.la===null)return;$('pus').classList.add('acik');const h=kAci();$('kdg').textContent=Math.round(h)+'°';
@@ -281,7 +312,7 @@ async function pusAc(){if(S.la===null)return;$('pus').classList.add('acik');cons
   addEventListener('deviceorientationabsolute',pD,true);addEventListener('deviceorientation',pD,true)}
 function pusKapat(){$('pus').classList.remove('acik');if(pD){removeEventListener('deviceorientationabsolute',pD,true);removeEventListener('deviceorientation',pD,true);pD=null}}
 
-/* --- ZİYARET NOKTALARI & HIZLI ÖNBELLEK --- */
+/* --- Ziyaret Noktaları (Önbellekli Hızlı) --- */
 const AY=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 function msf(a1,o1,a2,o2){const R=6371000,r=Math.PI/180;return 2*R*Math.asin(Math.sqrt(Math.sin((a2-a1)*r/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2))}
 const km=m=>m<950?Math.round(m)+' m':(m/1000).toFixed(1)+' km';
@@ -289,10 +320,9 @@ function sorgu(){const c=`${S.yr},${S.la},${S.ln}`,p=[];
   if(S.fl.tu)p.push(`nwr["historic"="tomb"](around:${c});`,`nwr["building"="mausoleum"](around:${c});`);
   if(S.fl.ta)p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"]["historic"](around:${c});`);
   if(S.fl.ca)p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"](around:${Math.min(S.yr,6000)},${S.la},${S.ln});`);
-  return p.length?`[out:json][timeout:15];(${p.join('')});out center 150;`:null} // 15 saniye timeout, maks 150 sonuç.
+  return p.length?`[out:json][timeout:15];(${p.join('')});out center 150;`:null} 
 
 async function noktalar(){
-  // 24 Saatlik Akıllı Önbellek Sistemi (Hızlandırma)
   const ckAd = 'np_' + Math.round(S.la*100) + '_' + Math.round(S.ln*100) + '_' + S.yr + '_' + S.fl.tu + S.fl.ta + S.fl.ca;
   const cache = L2.g(ckAd, null); const simdi = Date.now();
   if(cache && (simdi - cache.z) < 86400000) { S.np = cache.v; nCiz(); isaretet(); dergiListesiCiz(); return; }
@@ -307,17 +337,16 @@ async function noktalar(){
       let tu='Cami',ik='🕌';
       if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}
       else if(t.heritage||t.historic||t.start_date){tu='Tarihi Cami';ik='🏛️'}
-      return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)}})
-      .filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,50); // Görsel kasılmayı önlemek için max 50 yer
-    L2.s(ckAd, {z: simdi, v: S.np}); // Hafızaya yaz
+      return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)}}).filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,50);
+    L2.s(ckAd, {z: simdi, v: S.np});
     nCiz();isaretet();dergiListesiCiz();yolKontrol();return}catch(e){}}
   $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı. İnternetinizi kontrol edin.</div>'}
 
 function nCiz(){const l=S.np;$('nsy').textContent=l.length?l.length+' mekân':'';
   $('nls').innerHTML=l.length?l.map((n,i)=>`<div class="nk"><div class="ik2">${n.ik}</div>
     <div style="flex:1;min-width:0" onclick="detay(${i})"><div class="ad">${esc(n.ad)}</div>
-    <div class="al">${n.tu} · ${km(n.m)} (Kısa özet için dokunun)</div></div>
-    <button class="btn km ik" style="flex:0 0 auto;width:auto;border:none" onclick="dergiAc('${esc(n.ad)}')">📖 Dergide Oku</button>
+    <div class="al">${n.tu} · ${km(n.m)}</div></div>
+    <button class="btn km ik" style="flex:0 0 auto;width:auto;border:none" onclick="dergiAc('${esc(n.ad)}')">📖 Dergi</button>
     </div>`).join(''):'<div class="bo">Mekân bulunamadı. Üstten Çapı büyütebilirsiniz.</div>'}
 
 function cipler(){$('flt').innerHTML=[['tu','🪦 Türbe'],['ta','🏛️ Tarihi'],['ca','🕌 Cami']].map(([k,a])=>`<button class="c1 ${S.fl[k]?'on':''}" onclick="fDeg('${k}',this)">${a}</button>`).join('');
@@ -325,7 +354,7 @@ function cipler(){$('flt').innerHTML=[['tu','🪦 Türbe'],['ta','🏛️ Tarihi
 function fDeg(k,b){S.fl[k]=S.fl[k]?0:1;b.classList.toggle('on');L2.s('fl',S.fl);noktalar()}
 function yDeg(v,b){S.yr=v;L2.s('yr',v);document.querySelectorAll('#yrc .c1').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(hr)hr.setZoom(v>20000?10:v>6000?12:14);noktalar()}
 
-/* --- harita --- */
+/* --- Harita --- */
 let hr=null,kt=null;
 function hrtKur(){if(hr){hr.setView([S.la,S.ln],13);isaretet();return}
   hr=L.map('hrt',{zoomControl:false}).setView([S.la,S.ln],13);
@@ -336,15 +365,13 @@ function isaretet(){if(!kt)return;kt.clearLayers();const v=L2.g('visitedPoints',
   S.np.forEach((n,i)=>{const r = v.includes(n.id)?'#3E7A62':(n.tu==='Türbe'?'#C9A227':'#7C766C');
     L.circleMarker([n.la,n.ln],{radius:7,color:'#fff',weight:2,fillColor:r,fillOpacity:1}).addTo(kt).on('click',()=>detay(i))})}
 
-/* --- DETAY PENCERESİ (Kısa Özet İçin) --- */
+/* --- Detay Penceresi (Özet) --- */
 let aN=null;
 async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
   const isZ = L2.g('visitedPoints',[]).includes(n.id);
   $('sh').innerHTML=`<div class="tt"></div><div class="et">${n.tu} · ${km(n.m)}</div>
     <h2 class="sr" style="font-size:24px;margin:6px 0 12px">${esc(n.ad)}</h2>
-    <div class="sr2" style="margin-bottom:14px;">
-      <button class="btn km" style="flex:1" onclick="dergiAc('${esc(n.ad)}')">📖 Dergide Derinlemesine Oku</button>
-    </div>
+    <div class="sr2" style="margin-bottom:14px;"><button class="btn km" style="flex:1" onclick="dergiAc('${esc(n.ad)}')">📖 Dergide Derinlemesine Oku</button></div>
     <div id="wk" class="yk2">Özet aranıyor…</div>
     <div class="sr2">
       <button class="btn ik" style="flex:1" onclick="yolTarif()">🧭 Yol Tarifi</button>
@@ -356,123 +383,77 @@ async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
 function shKapat(){$('pd').classList.remove('acik');durAnlatim()}
 function yolTarif(){open(`https://www.google.com/maps/dir/?api=1&destination=${aN.la},${aN.ln}`,'_blank')}
 
-/* --- YENİ: DERGİ LİSTESİ DİNAMİK OLUŞTURMA --- */
+/* --- Dergi Listesi --- */
 function dergiListesiCiz(){
-  const yakindakiler = S.np.filter(n=> n.tu==='Türbe').slice(0,5); // Sadece en yakın 5 türbe dergiye çıksın
+  const yakindakiler = S.np.filter(n=> n.tu==='Türbe').slice(0,5);
   if(yakindakiler.length > 0){
-    $('dergiYakinda').innerHTML = yakindakiler.map(n=>
-      `<div class="dergi-kart" onclick="dergiAc('${esc(n.ad)}')">
-        <div class="dergi-kart-ic"><h3>${esc(n.ad)}</h3><p>${km(n.m)} yakınınızda. Hayatını derinlemesine okuyun.</p></div>
-      </div>`
-    ).join('');
-  } else {
-    $('dergiYakinda').innerHTML = '<div class="bo">Çevrenizde dergi formatına uygun türbe bulunamadı. Aşağıdaki sabit sultanları inceleyebilirsiniz.</div>';
-  }
+    $('dergiYakinda').innerHTML = yakindakiler.map(n=>`<div class="dergi-kart" onclick="dergiAc('${esc(n.ad)}')"><div class="dergi-kart-ic"><h3>${esc(n.ad)}</h3><p>${km(n.m)} yakınınızda. Hayatını derinlemesine okuyun.</p></div></div>`).join('');
+  } else {$('dergiYakinda').innerHTML = '<div class="bo">Çevrenizde dergi formatına uygun türbe bulunamadı.</div>';}
 }
 
-/* --- YENİ: TAM EKRAN DERGİ MODU (FULL WIKIPEDIA EXTRACT) --- */
+/* --- TAM EKRAN DERGİ MODU --- */
 let dergiMetniSaf = "";
 async function dergiAc(aranacakAd){
-  shKapat(); // Alttaki küçük pencereyi kapat
-  $('dergiModu').style.display='flex';
-  $('dmKapak').style.display='none';
+  shKapat(); $('dergiModu').style.display='flex'; $('dmKapak').style.display='none';
   $('dmBaslik').textContent = aranacakAd;
   $('dmMetin').innerHTML = '<div class="yk2">Manevi kütüphaneden hayat hikayesi derleniyor... 📖 Lütfen bekleyin.</div>';
   $('btnDergiSes').textContent = "🔊 Dinle";
   
-  // 1. Önce kapağı ve doğru başlığı bulalım (Summary API)
-  const ozet = await wikiOzet(aranacakAd);
-  let gercekBaslik = aranacakAd;
-  if(ozet){
-    gercekBaslik = ozet.bs;
-    $('dmBaslik').textContent = gercekBaslik;
-    if(ozet.gr){ $('dmKapak').src = ozet.gr; $('dmKapak').style.display='block'; }
-  }
-
-  // 2. Şimdi tam metni çekelim (Extracts API)
+  const ozet = await wikiOzet(aranacakAd); let gercekBaslik = aranacakAd;
+  if(ozet){gercekBaslik = ozet.bs; $('dmBaslik').textContent = gercekBaslik; if(ozet.gr){ $('dmKapak').src = ozet.gr; $('dmKapak').style.display='block'; }}
   try{
     const r = await fetch(`https://tr.wikipedia.org/w/api.php?action=query&prop=extracts&titles=${encodeURIComponent(gercekBaslik)}&format=json&origin=*`);
-    const j = await r.json();
-    const pages = j.query.pages;
-    const extract = Object.values(pages)[0].extract;
-
+    const j = await r.json(); const extract = Object.values(j.query.pages)[0].extract;
     if(extract){
-      // HTML temizliği (Gereksiz tabloları, ID'leri temizleyelim dergi gibi görünsün)
       let temizHtml = extract.replace(/<span class="mw-editsection">.*?<\/span>/g, '');
       $('dmMetin').innerHTML = temizHtml;
-      
-      // Sesli okuma için metni saf text'e çevirip sakla
-      const geciciDiv = document.createElement("div");
-      geciciDiv.innerHTML = temizHtml;
-      dergiMetniSaf = geciciDiv.textContent || geciciDiv.innerText || "";
-    } else {
-      $('dmMetin').innerHTML = '<div class="bo">Bu mübarek şahsiyet için detaylı kaynak yazısı bulunamadı.</div>';
-      dergiMetniSaf = "";
-    }
-  }catch(e){
-    $('dmMetin').innerHTML = '<div class="bo">Bağlantı hatası oluştu. Lütfen tekrar deneyin.</div>';
-  }
+      const geciciDiv = document.createElement("div"); geciciDiv.innerHTML = temizHtml; dergiMetniSaf = geciciDiv.textContent || geciciDiv.innerText || "";
+    } else { $('dmMetin').innerHTML = '<div class="bo">Bu mübarek şahsiyet için detaylı kaynak yazısı bulunamadı.</div>'; dergiMetniSaf = ""; }
+  }catch(e){ $('dmMetin').innerHTML = '<div class="bo">Bağlantı hatası oluştu. Lütfen tekrar deneyin.</div>'; }
 }
 function dergiKapat(){$('dergiModu').style.display='none'; durAnlatim();}
 
-/* --- SESLİ OKUMA MOTORU & DURDURMA --- */
+/* --- SES MOTORU (Durdurulabilir) --- */
 let okuyor = false;
 function dergiSesliOku(){
   if(!dergiMetniSaf) return;
   if(okuyor){ durAnlatim(); } 
-  else {
-    $('btnDergiSes').textContent = "🛑 Durdur";
-    okuSesli(dergiMetniSaf, () => { $('btnDergiSes').textContent = "🔊 Dinle"; okuyor = false; });
-    okuyor = true;
-  }
+  else { $('btnDergiSes').textContent = "🛑 Durdur"; okuSesli(dergiMetniSaf, () => { $('btnDergiSes').textContent = "🔊 Dinle"; okuyor = false; }); okuyor = true; }
 }
 function okuSesli(t, bitince_fonksiyon){
   if(!('speechSynthesis'in window)){not('Ses desteklenmiyor');return;}
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t.substring(0, 4000)); // Cihaz kasmasın diye ilk bölümü okur
-  u.lang='tr-TR'; u.rate=0.92;
-  if(bitince_fonksiyon) u.onend = bitince_fonksiyon;
-  speechSynthesis.speak(u);
+  const u=new SpeechSynthesisUtterance(t.substring(0, 4000)); u.lang='tr-TR'; u.rate=0.92;
+  if(bitince_fonksiyon) u.onend = bitince_fonksiyon; speechSynthesis.speak(u);
 }
-function durAnlatim(){
-  if('speechSynthesis'in window) speechSynthesis.cancel();
-  okuyor = false; $('btnDergiSes').textContent = "🔊 Dinle";
-}
+function durAnlatim(){ if('speechSynthesis'in window) speechSynthesis.cancel(); okuyor = false; $('btnDergiSes').textContent = "🔊 Dinle"; }
 
-/* --- Wikipedia Yardımcı Fonksiyon (Sadece Kapak/Özet İçin) --- */
+/* --- Wikipedia Özet (Kapaklar İçin) --- */
 async function wikiOzet(aranan){
-  try{
-    const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(aranan));
+  try{ const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(aranan));
     const j=await r.json();
     if(j.pages&&j.pages[0]){
       const r2=await fetch('https://tr.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(j.pages[0].key));
-      const j2=await r2.json();
-      return{mt:j2.extract, bs:j2.title, gr:j2.thumbnail?j2.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null}
+      const j2=await r2.json(); return{mt:j2.extract, bs:j2.title, gr:j2.thumbnail?j2.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null}
     }
   }catch(e){} return null;
 }
 
-/* --- yol hikâyesi --- */
+/* --- Yol & Araçlar --- */
 function yolKontrol(){const y=S.np.find(n=>n.m<800&&n.tu==='Türbe');
-  const e=$('yol');if(!y){e.style.display='none';return}
-  e.style.display='block';e.dataset.i=S.np.indexOf(y);
-  e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — keşfetmek için dokunun.`}
+  const e=$('yol');if(!y){e.style.display='none';return} e.style.display='block';e.dataset.i=S.np.indexOf(y); e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — keşfetmek için dokunun.`}
 function yakinAc(){detay(+$('yol').dataset.i)}
-
-/* --- ayet --- */
 async function ayet(){const g=Math.floor(Date.now()/864e5);
-  try{const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet');
-    const j=await r.json();if(!j.data||!j.data.text)throw 0;
+  try{const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet'); const j=await r.json();if(!j.data||!j.data.text)throw 0;
     $('ayt').textContent=j.data.text; $('aykn').textContent=j.data.surah.name+' Sûresi, '+j.data.numberInSurah+'. âyet'}catch(e){}}
 function pay(m){if(navigator.share)navigator.share({title:'Gönül Pusulası',text:m}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Kopyalandı')}}
 function not(m){const d=document.createElement('div');d.textContent=m;
   d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;text-align:center;';
   document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 
-/* --- başlat --- */
+/* --- Başlat --- */
 if(L2.g('tema',false)){document.body.classList.add('koyu');$('tbtn').textContent='☀'}
 S.fl=L2.g('fl',S.fl);S.yr=L2.g('yr',S.yr);
-cipler(); ayet(); ilhamCiz(); istikrarTakip(); profildoldur();
-konum(0);
+cipler(); ayet(); ilhamCiz(); istikrarTakip(); profildoldur(); konum(0);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.la!==null)vakit()});
 </script></body></html>
