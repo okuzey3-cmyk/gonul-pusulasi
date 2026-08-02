@@ -8,153 +8,130 @@
 :root{--kum:#F5EFE3;--kagit:#FFFBF3;--ye:#2E5D4B;--lac:#1B2A4A;--alt:#C9A227;--mt:#22201C;--sol:#7C766C;--cz:#E4DAC8}
 body.koyu{--kum:#12181A;--kagit:#1A2224;--ye:#7FC0A6;--lac:#AEC0E0;--alt:#D9B94E;--mt:#EAE4D8;--sol:#9A968C;--cz:#2A3436}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--kum);color:var(--mt);font:15px/1.5 Inter,system-ui,sans-serif;padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+body{margin:0;background:var(--kum);color:var(--mt);font:16px/1.55 Inter,system-ui,sans-serif;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 h2,.sr{font-family:Amiri,Georgia,serif;font-weight:700;margin:0}
-header{position:sticky;top:0;z-index:50;background:var(--ye);color:#F5EFE3;padding:calc(10px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;gap:10px}
-header .ad{font-family:Amiri,serif;font-size:20px;font-weight:700}
-header .hc{margin-left:auto;font-size:11px;opacity:.85;text-align:right;line-height:1.3}
-header button{background:rgba(255,255,255,.15);border:0;color:#F5EFE3;width:34px;height:34px;border-radius:11px;font-size:15px}
-main{padding:14px 14px 20px;max-width:620px;margin:0 auto}
+header{position:sticky;top:0;z-index:50;background:var(--ye);color:#F5EFE3;padding:calc(12px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:10px}
+header .ad{font-family:Amiri,serif;font-size:22px;font-weight:700}
+header .hc{margin-left:auto;font-size:12px;opacity:.9;text-align:right;line-height:1.35}
+header button{background:rgba(255,255,255,.2);border:0;color:#F5EFE3;width:40px;height:40px;border-radius:12px;font-size:18px}
+main{padding:16px;max-width:620px;margin:0 auto}
 section{display:none}section.aktif{display:block}
-.kart{background:var(--kagit);border:1px solid var(--cz);border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 2px 14px rgba(43,35,20,.06)}
-.bs{display:flex;align-items:center;gap:8px;margin-bottom:10px}.bs h2{font-size:17px}
-.et{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--sol);font-weight:700}
+.kart{background:var(--kagit);border:1.5px solid var(--cz);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 3px 16px rgba(43,35,20,.06)}
+.bs{display:flex;align-items:center;gap:8px;margin-bottom:12px}.bs h2{font-size:19px}
+.et{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--sol);font-weight:700}
 .vk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.v1{background:var(--kum);border:1px solid var(--cz);border-radius:13px;padding:9px 6px;text-align:center}
+.v1{background:var(--kum);border:1.5px solid var(--cz);border-radius:14px;padding:11px 6px;text-align:center}
 .v1.now{background:var(--ye);border-color:var(--ye);color:#F5EFE3}
-.v1 .n{font-size:11px;opacity:.8}.v1 .s{font-family:Amiri,serif;font-size:19px;font-weight:700}
-.sy{text-align:center;padding:4px 0 12px}.sy .k{font-size:12px;color:var(--sol)}
-.sy .d{font-family:Amiri,serif;font-size:34px;font-weight:700;color:var(--ye);letter-spacing:1px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--ye);color:#F8F4EC;border:0;border-radius:13px;padding:12px 15px;font:600 14.5px Inter,sans-serif;width:100%;cursor:pointer}
-.btn.ik{background:transparent;color:var(--ye);border:1.5px solid var(--ye)}
-.btn.km{padding:8px 12px;font-size:13px;border-radius:10px}
-.sr2{display:flex;gap:8px;margin-top:8px}
-.ay{font-family:Amiri,serif;font-size:17.5px;line-height:1.75}
-.kn{font-size:12px;color:var(--sol);margin-top:8px}
-.uy{background:linear-gradient(100deg,var(--alt),#E0BE55);color:#2A2208;border-radius:15px;padding:12px 14px;margin-bottom:12px;font-size:13.5px;font-weight:500;display:none}
-.uy b{display:block;font-family:Amiri,serif;font-size:16px;margin-bottom:2px}
-#hrt{height:265px;border-radius:16px;border:1px solid var(--cz);margin-bottom:12px;z-index:1}
-.cp{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.v1 .n{font-size:12px;opacity:.85}.v1 .s{font-family:Amiri,serif;font-size:21px;font-weight:700}
+.sy{text-align:center;padding:6px 0 14px}.sy .k{font-size:13px;color:var(--sol)}
+.sy .d{font-family:Amiri,serif;font-size:38px;font-weight:700;color:var(--ye);letter-spacing:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ye);color:#F8F4EC;border:0;border-radius:14px;padding:14px 18px;font:700 15px Inter,sans-serif;width:100%;cursor:pointer;min-height:50px}
+.btn.ik{background:transparent;color:var(--ye);border:2px solid var(--ye)}
+.btn.km{padding:10px 14px;font-size:14px;border-radius:11px;min-height:44px}
+.sr2{display:flex;gap:10px;margin-top:10px}
+.ay{font-family:Amiri,serif;font-size:19px;line-height:1.8}
+.kn{font-size:13px;color:var(--sol);margin-top:10px}
+.uy{background:linear-gradient(100deg,var(--alt),#E0BE55);color:#2A2208;border-radius:16px;padding:14px 16px;margin-bottom:14px;font-size:14px;font-weight:600;display:none}
+.uy b{display:block;font-family:Amiri,serif;font-size:17px;margin-bottom:3px}
+#hrt{height:280px;border-radius:18px;border:1.5px solid var(--cz);margin-bottom:14px;z-index:1}
+.cp{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
 .cp::-webkit-scrollbar{display:none}
-.c1{flex:0 0 auto;background:var(--kagit);border:1.5px solid var(--cz);color:var(--sol);border-radius:999px;padding:7px 13px;font:600 12.5px Inter,sans-serif}
+.c1{flex:0 0 auto;background:var(--kagit);border:2px solid var(--cz);color:var(--sol);border-radius:999px;padding:9px 16px;font:700 13.5px Inter,sans-serif;min-height:44px;display:flex;align-items:center}
 .c1.on{background:var(--ye);border-color:var(--ye);color:#F5EFE3}
-.nk{display:flex;gap:11px;align-items:center;padding:11px 0;border-bottom:1px solid var(--cz)}
+.nk{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--cz)}
 .nk:last-child{border-bottom:0}
-.nk .ik2{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:18px;background:var(--kum);border:1px solid var(--cz)}
-.nk .ad{font-weight:600;font-size:14.5px}.nk .al{font-size:12px;color:var(--sol)}
-.nk .sc{flex:0 0 auto;width:30px;height:30px;border-radius:9px;border:1.5px solid var(--cz);background:transparent;color:var(--ye);font-size:15px;font-weight:700}
-.nk .sc.on{background:var(--ye);border-color:var(--ye);color:#fff}
-#tb{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--kagit);border-top:1px solid var(--cz);display:flex;padding:7px 4px calc(7px + env(safe-area-inset-bottom))}
-#tb button{flex:1;background:none;border:0;color:var(--sol);font:600 10.5px Inter,sans-serif;display:grid;gap:2px;justify-items:center;padding:4px 0}
-#tb button .e{font-size:20px;line-height:1}#tb button.on{color:var(--ye)}
-.pd{position:fixed;inset:0;z-index:100;background:rgba(20,16,8,.55);display:none;align-items:flex-end}
+.nk .ik2{flex:0 0 46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:20px;background:var(--kum);border:1.5px solid var(--cz)}
+.nk .ad{font-weight:700;font-size:16px}.nk .al{font-size:13px;color:var(--sol);margin-top:2px}
+#tb{position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--kagit);border-top:1.5px solid var(--cz);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+#tb button{flex:1;background:none;border:0;color:var(--sol);font:700 12px Inter,sans-serif;display:grid;gap:3px;justify-items:center;padding:8px 0;min-height:50px}
+#tb button .e{font-size:22px;line-height:1}#tb button.on{color:var(--ye)}
+.pd{position:fixed;inset:0;z-index:100;background:rgba(20,16,8,.6);display:none;align-items:flex-end}
 .pd.acik{display:flex}
-.sh{background:var(--kagit);width:100%;max-height:88vh;overflow-y:auto;border-radius:22px 22px 0 0;padding:18px 18px calc(24px + env(safe-area-inset-bottom));animation:yk .28s ease}
+.sh{background:var(--kagit);width:100%;max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px 20px calc(28px + env(safe-area-inset-bottom));animation:yk .28s ease}
 @keyframes yk{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sh img{width:100%;border-radius:14px;margin:10px 0}
-.tt{width:42px;height:4px;background:var(--cz);border-radius:9px;margin:0 auto 12px}
-#pus{position:fixed;inset:0;z-index:110;background:var(--kum);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px}
+.sh img{width:100%;border-radius:16px;margin:12px 0}
+.tt{width:46px;height:5px;background:var(--cz);border-radius:10px;margin:0 auto 14px}
+#pus{position:fixed;inset:0;z-index:110;background:var(--kum);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px}
 #pus.acik{display:flex}
-.gl{width:245px;height:245px;border-radius:50%;border:2px solid var(--cz);background:var(--kagit);position:relative;display:grid;place-items:center;transition:.3s}
-.gl.tam{border-color:var(--ye);box-shadow:0 0 0 8px rgba(46,93,75,.14)}
-.ok{position:absolute;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:94px solid var(--alt);top:20px;transform-origin:50% 100%;transition:transform .12s linear}
+.gl{width:260px;height:260px;border-radius:50%;border:3px solid var(--cz);background:var(--kagit);position:relative;display:grid;place-items:center;transition:.3s}
+.gl.tam{border-color:var(--ye);box-shadow:0 0 0 10px rgba(46,93,75,.15)}
+.ok{position:absolute;width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:100px solid var(--alt);top:22px;transform-origin:50% 100%;transition:transform .12s linear}
 .gl.tam .ok{border-bottom-color:var(--ye)}
-.gl .dr{font-family:Amiri,serif;font-size:29px;font-weight:700;margin-top:58px}
-.sa{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--cz)}
-.sa:last-child{border-bottom:0}.sa .g{display:flex;gap:7px;align-items:center}
-.sa button{width:34px;height:34px;border-radius:10px;border:1.5px solid var(--cz);background:var(--kum);color:var(--mt);font-size:17px;font-weight:700}
-.sa .v{min-width:34px;text-align:center;font-family:Amiri,serif;font-size:19px;font-weight:700}
-#zd{width:185px;height:185px;border-radius:50%;background:var(--ye);color:#F5EFE3;border:0;margin:8px auto;display:grid;place-items:center;font:700 50px Amiri,serif;box-shadow:0 8px 26px rgba(46,93,75,.3);transition:transform .08s}
-#zd:active{transform:scale(.94)}
-.es{display:flex;flex-wrap:wrap;gap:6px;max-height:250px;overflow-y:auto}
-.es span{background:var(--kum);border:1px solid var(--cz);border-radius:999px;padding:6px 11px;font:700 13px Amiri,serif;color:var(--ye)}
-.bo{text-align:center;color:var(--sol);font-size:13.5px;padding:20px 10px}
-input,textarea,select{width:100%;font:14px Inter,sans-serif;padding:11px;border-radius:11px;border:1.5px solid var(--cz);background:var(--kum);color:var(--mt);margin-top:8px}
-.df{border-left:3px solid var(--alt);padding:3px 0 3px 11px;margin-bottom:13px}
-.df .t{font-size:11.5px;color:var(--sol)}.df .n2{font-size:13.5px;margin-top:3px}
-.yk2{text-align:center;color:var(--sol);font-size:13px;padding:16px}
+.gl .dr{font-family:Amiri,serif;font-size:32px;font-weight:700;margin-top:64px}
+.sa{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--cz)}
+.sa:last-child{border-bottom:0}.sa .g{display:flex;gap:8px;align-items:center}
+.bo{text-align:center;color:var(--sol);font-size:14.5px;padding:24px 12px}
+.yk2{text-align:center;color:var(--sol);font-size:14px;padding:18px}
 </style></head><body>
 
 <header><span class="ad">Gönül Pusulası</span><span class="hc" id="hicri">—</span>
-<button onclick="tema()" id="tbtn">☾</button></header>
+<button onclick="tema()" id="tbtn" aria-label="Tema Değiştir">☾</button></header>
 
 <main>
+<!-- BUGÜN SEKMESİ -->
 <section id="s-bugun" class="aktif">
   <div class="uy" id="yol" onclick="yakinAc()"></div>
   <div class="kart">
-    <div class="bs"><span class="et">Namaz Vakitleri</span><span style="margin-left:auto;font-size:12px;color:var(--sol)" id="knm">konum bekleniyor</span></div>
-    <div class="sy"><div class="k" id="sad">—</div><div class="d" id="ssr">--:--</div></div>
+    <div class="bs"><span class="et">Namaz Vakitleri</span><span style="margin-left:auto;font-size:13px;color:var(--sol)" id="knm">konum alınıyor...</span></div>
+    <div class="sy"><div class="k" id="sad">vakte kalan</div><div class="d" id="ssr">--:--</div></div>
     <div class="vk" id="vkl"></div>
-    <div class="sr2"><button class="btn" onclick="pusAc()">🧭 Kıble</button>
-    <button class="btn ik" onclick="konum(1)">📍 Konumu yenile</button></div>
+    <div class="sr2">
+      <button class="btn" onclick="pusAc()">🧭 Kıbleyi Bul</button>
+      <button class="btn ik" onclick="konum(1)">📍 Konumu Yenile</button>
+    </div>
   </div>
-  <div class="kart"><div class="bs"><span class="et">Günün Ayeti</span></div>
+  <div class="kart">
+    <div class="bs"><span class="et">Günün Ayeti</span></div>
     <div class="ay" id="ayt">yükleniyor…</div><div class="kn" id="aykn"></div>
-    <div class="sr2"><button class="btn ik km" style="flex:1" onclick="oku(ayt.textContent)">🔊 Dinle</button>
-    <button class="btn ik km" style="flex:1" onclick="pay(ayt.textContent+' — '+aykn.textContent)">Paylaş</button></div></div>
-  <div class="kart"><div class="bs"><span class="et">Günün Duası</span></div>
-    <div class="ay" id="dua" style="font-size:16px"></div></div>
-  <div class="kart"><div class="bs"><span class="et">Yaklaşan Mübarek Günler</span></div><div id="knd"></div></div>
+    <div class="sr2">
+      <button class="btn ik km" style="flex:1" onclick="oku(ayt.textContent)">🔊 Sesli Dinle</button>
+      <button class="btn ik km" style="flex:1" onclick="pay(ayt.textContent+' — '+aykn.textContent)">Paylaş</button>
+    </div>
+  </div>
+  <div class="kart">
+    <div class="bs"><span class="et">Günün Duası</span></div>
+    <div class="ay" id="dua" style="font-size:17px"></div>
+  </div>
+  <div class="kart">
+    <div class="bs"><span class="et">Yaklaşan Mübarek Günler</span></div>
+    <div id="knd"></div>
+  </div>
 </section>
 
+<!-- KEŞİF (ZİYARET) SEKMESİ -->
 <section id="s-ziyaret">
-  <div class="cp" id="flt"></div><div class="cp" id="yrc"></div><div id="hrt"></div>
-  <div class="kart"><div class="bs"><h2>Yakındaki Ziyaret Noktaları</h2>
-    <span style="margin-left:auto;font-size:12px;color:var(--sol)" id="nsy"></span></div>
-    <div id="nls"><div class="yk2">Konum alınıyor…</div></div></div>
-  <div class="kart" id="rk" style="display:none"><div class="bs"><h2>Gezi Rotam</h2></div>
-    <div id="rls"></div><button class="btn" style="margin-top:10px" onclick="rotaAc()">🗺️ Rotayı haritada aç</button>
-    <button class="btn ik km" style="margin-top:8px;width:100%" onclick="rotaSil()">Temizle</button></div>
-</section>
-
-<section id="s-zikir">
-  <div class="kart" style="text-align:center">
-    <div class="bs"><span class="et">Zikirmatik</span><span style="margin-left:auto;font-size:12px;color:var(--sol)" id="ztp"></span></div>
-    <select id="zsz"><option>Sübhanallah</option><option>Elhamdülillah</option><option>Allahü Ekber</option>
-    <option>Lâ ilâhe illallah</option><option>Estağfirullah</option><option>Salât-ü Selâm</option><option>Yâ Rabbi şükür</option></select>
-    <button id="zd" onclick="zArt()">0</button>
-    <div style="font-size:12.5px;color:var(--sol)">Hedef: <span id="zhd">33</span> · dokunarak say</div>
-    <div class="sr2"><button class="btn ik km" style="flex:1" onclick="zHedef()">Hedef</button>
-    <button class="btn ik km" style="flex:1" onclick="zSif()">Sıfırla</button></div></div>
-  <div class="kart"><div class="bs"><h2>Kaza Namazı Takibi</h2></div><div id="kls"></div><div class="kn" id="ktp"></div></div>
-  <div class="kart"><div class="bs"><h2>Esmâ'ül Hüsna</h2>
-    <button class="btn ik km" style="margin-left:auto;width:auto" onclick="esmaOku()">🔊</button></div>
-    <div class="es" id="els"></div></div>
-</section>
-
-<section id="s-defter">
-  <div class="kart"><div class="bs"><h2>Ziyaret Defterim</h2>
-    <span style="margin-left:auto;font-size:12px;color:var(--sol)" id="dsy"></span></div><div id="dls"></div></div>
-  <div class="kart"><div class="bs"><h2>Gidilecekler</h2></div><div id="fls"></div></div>
-  <div class="kart"><div class="bs"><span class="et">Yedek</span></div>
-    <div style="font-size:13px;color:var(--sol)">Defterin bu tarayıcıda saklanıyor. Aşağıdaki metni bir yere kopyalayarak yedekle.</div>
-    <textarea id="ydk" rows="3" placeholder="Yedek metnini buraya yapıştır"></textarea>
-    <div class="sr2"><button class="btn ik km" style="flex:1" onclick="ydkAl()">Yedeği çıkar</button>
-    <button class="btn ik km" style="flex:1" onclick="ydkYuk()">Geri yükle</button></div></div>
+  <div class="cp" id="flt"></div><div class="cp" id="yrc"></div>
+  <div id="hrt"></div>
+  <div class="kart">
+    <div class="bs"><h2>Çevredeki Türbeler ve Tarihi Yerler</h2>
+      <span style="margin-left:auto;font-size:13px;color:var(--sol)" id="nsy"></span></div>
+    <div id="nls"><div class="yk2">Etraftaki manevi mekânlar taranıyor…</div></div>
+  </div>
 </section>
 </main>
 
+<!-- ALT MENÜ (Sadece 2 Sade Sekme) -->
 <nav id="tb">
-  <button class="on" onclick="tab('bugun',this)"><span class="e">🕌</span>Bugün</button>
-  <button onclick="tab('ziyaret',this)"><span class="e">🗺️</span>Ziyaret</button>
-  <button onclick="tab('zikir',this)"><span class="e">📿</span>Zikir</button>
-  <button onclick="tab('defter',this)"><span class="e">📖</span>Defterim</button>
+  <button class="on" onclick="tab('bugun',this)"><span class="e">🕌</span>Bugün & Vakitler</button>
+  <button onclick="tab('ziyaret',this)"><span class="e">🗺️</span>Keşif & Türbeler</button>
 </nav>
 
 <div class="pd" id="pd" onclick="if(event.target===this)shKapat()"><div class="sh" id="sh"></div></div>
 
-<div id="pus"><div style="text-align:center"><div class="et">Kıble Yönü</div>
-  <h2 class="sr" style="font-size:22px;margin-top:4px" id="kdr">Telefonu yere paralel tut</h2></div>
+<!-- KIBLE PUSULASI EKRANI -->
+<div id="pus">
+  <div style="text-align:center"><div class="et">Kıble Yönü Pusulası</div>
+  <h2 class="sr" style="font-size:24px;margin-top:6px" id="kdr">Telefonu yere paralel tutun</h2></div>
   <div class="gl" id="gl"><div class="ok" id="kok"></div><div class="dr" id="kdg">—</div></div>
-  <div style="font-size:13px;color:var(--sol);text-align:center;max-width:280px" id="knt">Altın uç kıbleyi gösterene kadar telefonu döndür.</div>
-  <button class="btn ik" style="max-width:200px" onclick="pusKapat()">Kapat</button></div>
+  <div style="font-size:14px;color:var(--sol);text-align:center;max-width:300px" id="knt">Altın renkli ok kıbleyi gösterene kadar etrafınızda dönün.</div>
+  <button class="btn ik" style="max-width:220px" onclick="pusKapat()">Pusulayı Kapat</button>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* GÖNÜL PUSULASI — tek dosya, API anahtarı yok.
-   Vakit: Aladhan · Harita: OpenStreetMap+Overpass · Hikâye: Vikipedi · Meal: alquran.cloud */
+/* GÖNÜL PUSULASI — Sade, Hızlı, Her Yaşa Uygun Keşif Rehberi */
 const KABE={la:21.4225,ln:39.8262};
-const S={la:null,ln:null,tm:null,hj:null,np:[],rt:[],fl:{tu:1,ta:1,ca:0},yr:10000};
+const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:10000};
 const L2={g:(k,d)=>{try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}},
           s:(k,v)=>{try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
 const $=i=>document.getElementById(i);
@@ -171,9 +148,9 @@ function konum(z){const e=L2.g('konum',null);
   if(e&&!z){S.la=e.la;S.ln=e.ln;hazir()}
   if(!navigator.geolocation)return;
   navigator.geolocation.getCurrentPosition(p=>{S.la=p.coords.latitude;S.ln=p.coords.longitude;
-    L2.s('konum',{la:S.la,ln:S.ln});hazir()},()=>{if(!e)$('knm').textContent='konum izni yok'},
+    L2.s('konum',{la:S.la,ln:S.ln});hazir()},()=>{if(!e)$('knm').textContent='konum izni gerekli'},
     {enableHighAccuracy:true,timeout:12000,maximumAge:300000})}
-function hazir(){$('knm').textContent=S.la.toFixed(3)+', '+S.ln.toFixed(3);vakit();noktalar();hrtKur()}
+function hazir(){$('knm').textContent='Konum alındı ✓';vakit();noktalar();hrtKur()}
 
 /* --- namaz vakitleri --- */
 const VA={Fajr:'İmsak',Sunrise:'Güneş',Dhuhr:'Öğle',Asr:'İkindi',Maghrib:'Akşam',Isha:'Yatsı'};
@@ -184,9 +161,9 @@ async function vakit(){const d=new Date();
     const j=await r.json();S.tm=j.data.timings;S.hj=j.data.date.hijri;
     L2.s('vc',{t,tm:S.tm,hj:S.hj});vCiz()}
   catch(e){const c=L2.g('vc',null);if(c&&c.t===t){S.tm=c.tm;S.hj=c.hj;vCiz()}
-    else $('vkl').innerHTML='<div class="bo">Vakitler alınamadı, bağlantını kontrol et.</div>'}}
+    else $('vkl').innerHTML='<div class="bo">Vakitler yüklenemedi, internet bağlantınızı kontrol edin.</div>'}}
 function vCiz(){const h=S.hj;
-  $('hicri').innerHTML=h?`${h.day} ${h.month.tr||h.month.en} ${h.year}<br>Hicri`:'';
+  $('hicri').innerHTML=h?`${h.day} ${h.month.tr||h.month.en} ${h.year}<br>Hicri Tarih`:'';
   const n=aktif();
   $('vkl').innerHTML=SIRA.map(k=>`<div class="v1 ${k===n?'now':''}"><div class="n">${VA[k]}</div><div class="s">${S.tm[k].slice(0,5)}</div></div>`).join('');
   kndCiz();sayac()}
@@ -197,37 +174,37 @@ function sayac(){if(!S.tm)return;const d=new Date();
   const n=d.getHours()*3600+d.getMinutes()*60+d.getSeconds();let h=null,a='';
   for(const k of SIRA){const t=dk(S.tm[k])*60;if(t>n){h=t;a=VA[k];break}}
   if(h===null){h=86400+dk(S.tm.Fajr)*60;a='İmsak'}
-  const f=h-n;$('sad').textContent=a+' vaktine kalan';
+  const f=h-n;$('sad').textContent=a+' vaktine kalan süre';
   $('ssr').textContent=`${String(Math.floor(f/3600)).padStart(2,'0')}:${String(Math.floor(f%3600/60)).padStart(2,'0')}:${String(f%60).padStart(2,'0')}`}
 setInterval(sayac,1000);
 
-/* --- mübarek günler (hicri yaklaşık) --- */
-const MB=[[7,1,'Regaib / Recep'],[7,27,'Mirac Kandili'],[8,15,'Berat Kandili'],[9,1,'Ramazan Başlangıcı'],
+/* --- mübarek günler --- */
+const MB=[[7,1,'Regaib Kandili'],[7,27,'Mirac Kandili'],[8,15,'Berat Kandili'],[9,1,'Ramazan Başlangıcı'],
 [9,27,'Kadir Gecesi'],[10,1,'Ramazan Bayramı'],[12,10,'Kurban Bayramı'],[1,10,'Aşure Günü'],[3,12,'Mevlid Kandili']];
 function kndCiz(){if(!S.hj)return;const m=+S.hj.month.number,g=+S.hj.day;
   const l=MB.map(([am,ag,ad])=>{let f=(am-m)*29.53+(ag-g);if(f<0)f+=354.37;return{ad,g:Math.round(f)}})
-    .sort((a,b)=>a.g-b.g).slice(0,4);
-  $('knd').innerHTML=l.map(x=>`<div class="sa"><div class="g">🌙 ${x.ad}</div><div class="v" style="font-size:15px">${x.g===0?'bugün':'≈'+x.g+' gün'}</div></div>`).join('')}
+    .sort((a,b)=>a.g-b.g).slice(0,3);
+  $('knd').innerHTML=l.map(x=>`<div class="sa"><div class="g">🌙 ${x.ad}</div><div class="v" style="font-size:16px">${x.g===0?'Bugün!':'≈ '+x.g+' gün kaldı'}</div></div>`).join('')}
 
 /* --- kıble --- */
 function kAci(){const R=Math.PI/180,f1=S.la*R,f2=KABE.la*R,dl=(KABE.ln-S.ln)*R;
   return(Math.atan2(Math.sin(dl),Math.cos(f1)*Math.tan(f2)-Math.sin(f1)*Math.cos(dl))/R+360)%360}
 let pD=null;
-async function pusAc(){if(S.la===null){not('Önce konum izni ver');return}
+async function pusAc(){if(S.la===null){not('Önce konum iznine izin verin');return}
   $('pus').classList.add('acik');const h=kAci();$('kdg').textContent=Math.round(h)+'°';
   if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){
     try{if(await DeviceOrientationEvent.requestPermission()!=='granted'){
-      $('knt').textContent='Pusula izni yok. Yön: kuzeyden '+Math.round(h)+'° sağa.';return}}catch(e){}}
+      $('knt').textContent='Pusula izni verilmedi. Kuzeyden '+Math.round(h)+'° sağa yönelin.';return}}catch(e){}}
   pD=ev=>{let y=ev.webkitCompassHeading!==undefined?ev.webkitCompassHeading:(ev.alpha!==null?360-ev.alpha:null);
     if(y===null)return;const f=((h-y)+360)%360;
     $('kok').style.transform=`rotate(${f}deg)`;const t=Math.min(f,360-f)<7;
-    $('gl').classList.toggle('tam',t);$('kdr').textContent=t?'Kıble bu yönde ✓':'Telefonu döndür';
-    if(t&&navigator.vibrate)navigator.vibrate(30)};
+    $('gl').classList.toggle('tam',t);$('kdr').textContent=t?'Kıble tam bu yönde ✓':'Telefonu yavaşça döndürün';
+    if(t&&navigator.vibrate)navigator.vibrate(35)};
   addEventListener('deviceorientationabsolute',pD,true);addEventListener('deviceorientation',pD,true)}
 function pusKapat(){$('pus').classList.remove('acik');
   if(pD){removeEventListener('deviceorientationabsolute',pD,true);removeEventListener('deviceorientation',pD,true);pD=null}}
 
-/* --- ziyaret noktaları (Overpass) --- */
+/* --- ziyaret noktaları --- */
 const AY=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 function msf(a1,o1,a2,o2){const R=6371000,r=Math.PI/180;
   const x=Math.sin((a2-a1)*r/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2;
@@ -243,7 +220,7 @@ function sorgu(){const c=`${S.yr},${S.la},${S.ln}`,p=[];
   return p.length?`[out:json][timeout:30];(${p.join('')});out center 400;`:null}
 async function noktalar(){const q=sorgu();
   if(!q){S.np=[];nCiz();return}
-  $('nls').innerHTML='<div class="yk2">Çevredeki mekânlar taranıyor…</div>';
+  $('nls').innerHTML='<div class="yk2">Etraftaki türbe ve camiler taranıyor…</div>';
   for(const a of AY){try{
     const r=await fetch(a,{method:'POST',body:'data='+encodeURIComponent(q),
       headers:{'Content-Type':'application/x-www-form-urlencoded'}});
@@ -254,54 +231,53 @@ async function noktalar(){const q=sorgu();
       if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}
       else if(t.heritage||t.historic||t.start_date){tu='Tarihi Cami';ik='🏛️'}
       return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)}})
-      .filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,120);
-    nCiz();isaret();yolKontrol();return}catch(e){}}
-  $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı, biraz sonra tekrar dene.</div>'}
-function nCiz(){const l=S.np;$('nsy').textContent=l.length?l.length+' nokta':'';
+      .filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,100);
+    nCiz();isaretet();yolKontrol();return}catch(e){}}
+  $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı, lütfen daha sonra tekrar deneyin.</div>'}
+function nCiz(){const l=S.np;$('nsy').textContent=l.length?l.length+' mekân':'';
   $('nls').innerHTML=l.length?l.map((n,i)=>`<div class="nk"><div class="ik2">${n.ik}</div>
     <div style="flex:1;min-width:0" onclick="detay(${i})"><div class="ad">${esc(n.ad)}</div>
-    <div class="al">${n.tu} · ${km(n.m)}</div></div>
-    <button class="sc ${S.rt.some(r=>r.id===n.id)?'on':''}" onclick="rtEkle(${i},this)">+</button></div>`).join('')
-    :'<div class="bo">Bu yarıçapta kayıt bulunamadı. Yarıçapı büyüt veya filtreleri değiştir.</div>'}
+    <div class="al">${n.tu} · ${km(n.m)} uzakta (İncelemek için dokunun)</div></div></div>`).join('')
+    :'<div class="bo">Bu mesafede kayıtlı mekân bulunamadı. Üstteki mesafeyi büyütebilirsiniz.</div>'}
 
-/* --- filtre çipleri --- */
+/* --- filtreler --- */
 function cipler(){
-  $('flt').innerHTML=[['tu','🪦 Türbe & Yatır'],['ta','🏛️ Tarihi Cami'],['ca','🕌 Tüm Camiler']]
+  $('flt').innerHTML=[['tu','🪦 Türbe & Yatırlar'],['ta','🏛️ Tarihi Camiler'],['ca','🕌 Tüm Camiler']]
     .map(([k,a])=>`<button class="c1 ${S.fl[k]?'on':''}" onclick="fDeg('${k}',this)">${a}</button>`).join('');
   $('yrc').innerHTML=[3000,10000,25000,50000]
-    .map(v=>`<button class="c1 ${S.yr===v?'on':''}" onclick="yDeg(${v},this)">${v/1000} km</button>`).join('')}
+    .map(v=>`<button class="c1 ${S.yr===v?'on':''}" onclick="yDeg(${v},this)">${v/1000} km Çap</button>`).join('')}
 function fDeg(k,b){S.fl[k]=S.fl[k]?0:1;b.classList.toggle('on');L2.s('fl',S.fl);noktalar()}
 function yDeg(v,b){S.yr=v;L2.s('yr',v);document.querySelectorAll('#yrc .c1').forEach(x=>x.classList.remove('on'));
   b.classList.add('on');if(hr)hr.setZoom(v>20000?10:v>6000?12:14);noktalar()}
 
 /* --- harita --- */
 let hr=null,kt=null;
-function hrtKur(){if(hr){hr.setView([S.la,S.ln],13);isaret();return}
+function hrtKur(){if(hr){hr.setView([S.la,S.ln],13);isaretet();return}
   hr=L.map('hrt',{zoomControl:false}).setView([S.la,S.ln],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap katkıcıları'}).addTo(hr);
-  L.circleMarker([S.la,S.ln],{radius:7,color:'#1B2A4A',fillColor:'#3E7A62',fillOpacity:1,weight:3}).addTo(hr).bindPopup('Buradasın');
-  kt=L.layerGroup().addTo(hr);isaret()}
-function isaret(){if(!kt)return;kt.clearLayers();
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(hr);
+  L.circleMarker([S.la,S.ln],{radius:8,color:'#1B2A4A',fillColor:'#3E7A62',fillOpacity:1,weight:3}).addTo(hr).bindPopup('Buradasınız');
+  kt=L.layerGroup().addTo(hr);isaretet()}
+function isaretet(){if(!kt)return;kt.clearLayers();
   S.np.forEach((n,i)=>{const c=n.tu==='Türbe'?'#C9A227':n.tu==='Tarihi Cami'?'#2E5D4B':'#7C766C';
-    L.circleMarker([n.la,n.ln],{radius:6,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(kt).on('click',()=>detay(i))})}
+    L.circleMarker([n.la,n.ln],{radius:7,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(kt).on('click',()=>detay(i))})}
 
-/* --- detay + Vikipedi --- */
+/* --- detay penceresi --- */
 let aN=null;
 async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
-  $('sh').innerHTML=`<div class="tt"></div><div class="et">${n.tu} · ${km(n.m)} uzakta</div>
-    <h2 class="sr" style="font-size:23px;margin:4px 0 10px">${esc(n.ad)}</h2>
-    <div id="wk" class="yk2">Hayat hikâyesi aranıyor…</div>
-    <button class="btn" onclick="yolTarif()">🧭 Yol tarifi</button>
-    <div class="sr2"><button class="btn ik km" style="flex:1" onclick="favEkle()">☆ Gideceklerim</button>
-    <button class="btn ik km" style="flex:1" onclick="zyKaydet()">✓ Ziyaret ettim</button></div>`;
+  $('sh').innerHTML=`<div class="tt"></div><div class="et">${n.tu} · ${km(n.m)} mesafe</div>
+    <h2 class="sr" style="font-size:24px;margin:6px 0 12px">${esc(n.ad)}</h2>
+    <div id="wk" class="yk2">Mekânın tarihi bilgisi aranıyor…</div>
+    <div class="sr2">
+      <button class="btn ik km" style="flex:1" onclick="okuWiki()">🔊 Sesli Dinle</button>
+      <button class="btn" style="flex:1" onclick="yolTarif()">🧭 Yol Tarifi Al</button>
+    </div>`;
   const o=await wiki(n);const w=$('wk');if(!w)return;
   if(o){w.className='';w.innerHTML=(o.gr?`<img src="${o.gr}" alt="">`:'')+
-    `<div style="font-size:14.5px;line-height:1.65">${esc(o.mt)}</div>
+    `<div style="font-size:16px;line-height:1.7">${esc(o.mt)}</div>
      <div class="kn">Kaynak: Vikipedi · ${esc(o.bs)}</div>
-     <div class="sr2"><button class="btn ik km" style="flex:1" onclick="okuWiki()">🔊 Sesli dinle</button>
-     <a class="btn ik km" style="flex:1;text-decoration:none" href="${o.lk}" target="_blank">Tamamını oku</a></div>`;
+     <a class="btn ik km" style="margin-top:12px;text-decoration:none;display:block;text-align:center" href="${o.lk}" target="_blank">Vikipedi'de Tamamını Oku</a>`;
     window._wm=o.mt}
-  else{w.className='bo';w.textContent='Bu mekân için Vikipedi\'de kayıt yok. Ziyaret ettiğinde defterine kendi notunu yazabilirsin.'}}
+  else{w.className='bo';w.textContent='Bu mekân için henüz ayrıntılı bir Vikipedi kaydı bulunmuyor.'}}
 async function wiki(n){let b=null;const wp=n.t.wikipedia||n.t['wikipedia:tr'];
   if(wp)b=wp.includes(':')?wp.split(':').slice(1).join(':'):wp;
   if(!b){try{const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(n.ad));
@@ -312,41 +288,28 @@ async function wiki(n){let b=null;const wp=n.t.wikipedia||n.t['wikipedia:tr'];
     return{mt:j.extract,bs:j.title,gr:j.thumbnail?j.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null,
       lk:(j.content_urls&&j.content_urls.desktop.page)||'https://tr.wikipedia.org/wiki/'+encodeURIComponent(b)}}
   catch(e){return null}}
-function okuWiki(){oku(window._wm||'')}
+function okuWiki(){oku(window._wm||'Hikâye bulunamadı')}
 function shKapat(){$('pd').classList.remove('acik');dur()}
 function yolTarif(){open(`https://www.google.com/maps/dir/?api=1&destination=${aN.la},${aN.ln}`,'_blank')}
 
 /* --- sesli anlatım --- */
-function oku(t){if(!('speechSynthesis'in window)){not('Bu cihaz sesli okumayı desteklemiyor');return}
-  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='tr-TR';u.rate=.95;speechSynthesis.speak(u)}
+function oku(t){if(!('speechSynthesis'in window)){not('Sesli okuma bu cihazda desteklenmiyor');return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='tr-TR';u.rate=.92;speechSynthesis.speak(u)}
 function dur(){if('speechSynthesis'in window)speechSynthesis.cancel()}
 
 /* --- yol hikâyesi --- */
-function yolKontrol(){const y=S.np.find(n=>n.m<1000&&n.tu==='Türbe')||S.np.find(n=>n.m<600);
+function yolKontrol(){const y=S.np.find(n=>n.m<800&&n.tu==='Türbe')||S.np.find(n=>n.m<500);
   const e=$('yol');if(!y){e.style.display='none';return}
   e.style.display='block';e.dataset.i=S.np.indexOf(y);
-  e.innerHTML=`<b>${esc(y.ad)}</b>Şu an ${km(y.m)} mesafedesin — hikâyesini 2 dakikada okumak ister misin?`}
+  e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — tarihini okumak için dokunun.`}
 function yakinAc(){detay(+$('yol').dataset.i)}
 
-/* --- rota --- */
-function rtEkle(i,b){const n=S.np[i],v=S.rt.findIndex(r=>r.id===n.id);
-  if(v>-1)S.rt.splice(v,1);else{if(S.rt.length>=8){not('En fazla 8 durak');return}S.rt.push(n)}
-  b.classList.toggle('on');rtCiz()}
-function rtCiz(){$('rk').style.display=S.rt.length?'block':'none';
-  $('rls').innerHTML=S.rt.map((n,i)=>`<div class="sa"><div class="g">${i+1}. ${esc(n.ad)}</div>
-    <div style="font-size:12px;color:var(--sol)">${km(n.m)}</div></div>`).join('')}
-function rotaAc(){if(!S.rt.length)return;const s=S.rt[S.rt.length-1];
-  const a=S.rt.slice(0,-1).map(n=>n.la+','+n.ln).join('|');
-  let u=`https://www.google.com/maps/dir/?api=1&origin=${S.la},${S.ln}&destination=${s.la},${s.ln}&travelmode=driving`;
-  if(a)u+='&waypoints='+encodeURIComponent(a);open(u,'_blank')}
-function rotaSil(){S.rt=[];rtCiz();nCiz()}
-
 /* --- ayet & dua --- */
-const YA=[['Şüphesiz güçlükle beraber bir kolaylık vardır.','İnşirâh, 6'],
-['Rabbin sana yetmez mi? O, her şeye şahittir.','Fussilet, 53'],
-['Kalpler ancak Allah\'ı anmakla huzur bulur.','Ra\'d, 28'],
-['Ey Rabbim! İlmimi artır.','Tâhâ, 114'],['Sabredenlerle beraberim.','Bakara, 153'],
-['Bana dua edin, duanıza cevap veririm.','Mü\'min, 60'],['Allah\'a tevekkül edene O yeter.','Talâk, 3']];
+const YA=[['Şüphesiz güçlükle beraber bir kolaylık vardır.','İnşirâh Sûresi, 6'],
+['Rabbin sana yetmez mi? O, her şeye şahittir.','Fussilet Sûresi, 53'],
+['Kalpler ancak Allah\'ı anmakla huzur bulur.','Ra\'d Sûresi, 28'],
+['Ey Rabbim! İlmimi artır.','Tâhâ Sûresi, 114'],['Sabredenlerle beraberim.','Bakara Sûresi, 153'],
+['Bana dua edin, duanıza cevap veririm.','Mü\'min Sûresi, 60'],['Allah\'a tevekkül edene O yeter.','Talâk Sûresi, 3']];
 const DU=['Allah\'ım! Bana faydalı ilim, helâl rızık ve makbul amel nasip et.',
 'Rabbimiz! Bize dünyada da âhirette de iyilik ver, bizi ateş azabından koru.',
 'Allah\'ım! Kalbimi imanla, dilimi zikirle, gönlümü şükürle doldur.',
@@ -361,65 +324,17 @@ async function ayet(){const g=Math.floor(Date.now()/864e5);
   catch(e){const a=YA[g%YA.length];$('ayt').textContent=a[0];$('aykn').textContent=a[1]}}
 function duaCiz(){$('dua').textContent=DU[Math.floor(Date.now()/864e5)%DU.length]}
 function pay(m){if(navigator.share)navigator.share({title:'Gönül Pusulası',text:m}).catch(()=>{});
-  else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Kopyalandı')}}
-
-/* --- zikirmatik --- */
-let zk=L2.g('zikir',{s:0,h:33,t:0,g:new Date().toDateString()});
-function zYaz(){if(zk.g!==new Date().toDateString()){zk.g=new Date().toDateString();zk.t=0}
-  $('zd').textContent=zk.s;$('zhd').textContent=zk.h;$('ztp').textContent='bugün '+zk.t;L2.s('zikir',zk)}
-function zArt(){zk.s++;zk.t++;if(navigator.vibrate)navigator.vibrate(12);
-  if(zk.s===zk.h){not('Hedefe ulaştın — elhamdülillah');if(navigator.vibrate)navigator.vibrate([40,60,40])}zYaz()}
-function zSif(){zk.s=0;zYaz()}
-function zHedef(){const v=prompt('Zikir hedefi:',zk.h);if(v&&+v>0){zk.h=+v;zYaz()}}
-
-/* --- kaza takibi --- */
-const KA=['Sabah','Öğle','İkindi','Akşam','Yatsı','Vitir'];
-let kz=L2.g('kaza',[0,0,0,0,0,0]);
-function kCiz(){$('kls').innerHTML=KA.map((a,i)=>`<div class="sa"><div class="g">${a}</div><div class="g">
-  <button onclick="kDeg(${i},-1)">−</button><span class="v">${kz[i]}</span>
-  <button onclick="kDeg(${i},1)">+</button></div></div>`).join('');
-  const t=kz.reduce((a,b)=>a+b,0);$('ktp').textContent=t?'Toplam '+t+' vakit kaza kaydı var.':'Kaza kaydın yok.'}
-function kDeg(i,d){kz[i]=Math.max(0,kz[i]+d);L2.s('kaza',kz);kCiz()}
-
-/* --- Esmâ'ül Hüsna --- */
-const ES=`Allah,Er-Rahmân,Er-Rahîm,El-Melik,El-Kuddûs,Es-Selâm,El-Mü'min,El-Müheymin,El-Azîz,El-Cebbâr,El-Mütekebbir,El-Hâlık,El-Bâri',El-Musavvir,El-Gaffâr,El-Kahhâr,El-Vehhâb,Er-Rezzâk,El-Fettâh,El-Alîm,El-Kâbıd,El-Bâsıt,El-Hâfıd,Er-Râfi',El-Muizz,El-Müzill,Es-Semî',El-Basîr,El-Hakem,El-Adl,El-Latîf,El-Habîr,El-Halîm,El-Azîm,El-Gafûr,Eş-Şekûr,El-Aliyy,El-Kebîr,El-Hafîz,El-Mukît,El-Hasîb,El-Celîl,El-Kerîm,Er-Rakîb,El-Mucîb,El-Vâsi',El-Hakîm,El-Vedûd,El-Mecîd,El-Bâis,Eş-Şehîd,El-Hakk,El-Vekîl,El-Kaviyy,El-Metîn,El-Veliyy,El-Hamîd,El-Muhsî,El-Mübdi',El-Muîd,El-Muhyî,El-Mumît,El-Hayy,El-Kayyûm,El-Vâcid,El-Mâcid,El-Vâhid,El-Ehad,Es-Samed,El-Kâdir,El-Muktedir,El-Mukaddim,El-Muahhir,El-Evvel,El-Âhir,Ez-Zâhir,El-Bâtın,El-Vâlî,El-Müteâlî,El-Berr,Et-Tevvâb,El-Müntekim,El-Afüvv,Er-Raûf,Mâlikü'l-Mülk,Zü'l-Celâli ve'l-İkrâm,El-Muksit,El-Câmi',El-Ganî,El-Mugnî,El-Mâni',Ed-Dârr,En-Nâfi',En-Nûr,El-Hâdî,El-Bedî',El-Bâkî,El-Vâris,Er-Reşîd,Es-Sabûr`.split(',');
-function esmaCiz(){$('els').innerHTML=ES.map(e=>`<span>${e}</span>`).join('')}
-function esmaOku(){oku(ES.join(', '))}
-
-/* --- defter & favoriler --- */
-let df=L2.g('defter',[]),fv=L2.g('fav',[]);
-function zyKaydet(){const n=prompt('Bu ziyaretten aklında kalan (boş bırakabilirsin):','')||'';
-  df.unshift({ad:aN.ad,tu:aN.tu,la:aN.la,ln:aN.ln,not:n,
-    tr:new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})});
-  L2.s('defter',df);dCiz();shKapat();not('Deftere yazıldı')}
-function favEkle(){if(fv.some(f=>f.id===aN.id)){not('Zaten listende');return}
-  fv.push({id:aN.id,ad:aN.ad,la:aN.la,ln:aN.ln});L2.s('fav',fv);dCiz();not('Gideceklerine eklendi')}
-function favSil(i){fv.splice(i,1);L2.s('fav',fv);dCiz()}
-function dSil(i){if(confirm('Bu kayıt silinsin mi?')){df.splice(i,1);L2.s('defter',df);dCiz()}}
-function dCiz(){$('dsy').textContent=df.length?df.length+' ziyaret':'';
-  $('dls').innerHTML=df.length?df.map((d,i)=>`<div class="df"><div class="t">${d.tr} · ${d.tu}</div>
-    <div style="font-weight:600">${esc(d.ad)}</div>${d.not?`<div class="n2">${esc(d.not)}</div>`:''}
-    <button class="btn ik km" style="margin-top:6px;width:auto" onclick="dSil(${i})">Sil</button></div>`).join('')
-    :'<div class="bo">Henüz kayıt yok. Bir noktayı açıp "Ziyaret ettim" dediğinde burada birikir.</div>';
-  $('fls').innerHTML=fv.length?fv.map((f,i)=>`<div class="sa"><div class="g">📍 ${esc(f.ad)}</div><div class="g">
-    <button onclick="open('https://www.google.com/maps/dir/?api=1&destination=${f.la},${f.ln}','_blank')">🧭</button>
-    <button onclick="favSil(${i})">×</button></div></div>`).join(''):'<div class="bo">Gidilecek liste boş.</div>'}
-function ydkAl(){const m=btoa(unescape(encodeURIComponent(JSON.stringify({df,fv,kz,zk}))));
-  $('ydk').value=m;navigator.clipboard&&navigator.clipboard.writeText(m);not('Yedek çıkarıldı ve kopyalandı')}
-function ydkYuk(){try{const o=JSON.parse(decodeURIComponent(escape(atob($('ydk').value.trim()))));
-  if(o.df){df=o.df;L2.s('defter',df)}if(o.fv){fv=o.fv;L2.s('fav',fv)}
-  if(o.kz){kz=o.kz;L2.s('kaza',kz)}if(o.zk){zk=o.zk;L2.s('zikir',zk)}
-  dCiz();kCiz();zYaz();not('Geri yüklendi')}catch(e){not('Yedek metni okunamadı')}}
+  else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Metin kopyalandı')}}
 
 /* --- bildirim --- */
 function not(m){const d=document.createElement('div');d.textContent=m;
-  d.style.cssText='position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:11px 17px;border-radius:13px;font-size:13.5px;z-index:200;max-width:88%;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.25)';
-  document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
+  d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;max-width:88%;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.3)';
+  document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 
 /* --- başlat --- */
 if(L2.g('tema',false)){document.body.classList.add('koyu');$('tbtn').textContent='☀'}
 S.fl=L2.g('fl',S.fl);S.yr=L2.g('yr',S.yr);
-cipler();esmaCiz();kCiz();zYaz();dCiz();duaCiz();ayet();
+cipler();duaCiz();ayet();
 const _c=L2.g('vc',null);if(_c){S.tm=_c.tm;S.hj=_c.hj;vCiz()}
 konum(0);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.la!==null)vakit()});
