@@ -2,11 +2,21 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2E5D4B"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Gönül Pusulası"><title>Gönül Pusulası</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-:root{--kum:#F5EFE3;--kagit:#FFFBF3;--ye:#2E5D4B;--lac:#1B2A4A;--alt:#C9A227;--mt:#22201C;--sol:#7C766C;--cz:#E4DAC8}
-body.koyu{--kum:#12181A;--kagit:#1A2224;--ye:#7FC0A6;--lac:#AEC0E0;--alt:#D9B94E;--mt:#EAE4D8;--sol:#9A968C;--cz:#2A3436}
+/* --- Renk Paletleri (Light & Dark) --- */
+:root{
+  --kum:#F5EFE3;--kagit:#FFFBF3;--ye:#2E5D4B;--ye-ac:#3E7A62;
+  --lac:#1B2A4A;--alt:#C9A227;--mt:#22201C;--sol:#7C766C;
+  --cz:#E4DAC8;--golge:0 2px 14px rgba(43,35,20,.07);
+}
+body.koyu{
+  --kum:#12181A;--kagit:#1A2224;--ye:#7FC0A6;--ye-ac:#9BD3BC;
+  --lac:#AEC0E0;--alt:#D9B94E;--mt:#EAE4D8;--sol:#9A968C;
+  --cz:#2A3436;--golge:0 2px 14px rgba(0,0,0,.35);
+}
+/* --- Temel Ergonomi (Her Yaşa Uygun 44px+ Butonlar) --- */
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--kum);color:var(--mt);font:16px/1.55 Inter,system-ui,sans-serif;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
 h2,.sr{font-family:Amiri,Georgia,serif;font-weight:700;margin:0}
@@ -16,7 +26,7 @@ header .hc{margin-left:auto;font-size:12px;opacity:.9;text-align:right;line-heig
 header button{background:rgba(255,255,255,.2);border:0;color:#F5EFE3;width:40px;height:40px;border-radius:12px;font-size:18px}
 main{padding:16px;max-width:620px;margin:0 auto}
 section{display:none}section.aktif{display:block}
-.kart{background:var(--kagit);border:1.5px solid var(--cz);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 3px 16px rgba(43,35,20,.06)}
+.kart{background:var(--kagit);border:1.5px solid var(--cz);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--golge)}
 .bs{display:flex;align-items:center;gap:8px;margin-bottom:12px}.bs h2{font-size:19px}
 .et{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--sol);font-weight:700}
 .vk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -38,7 +48,7 @@ section{display:none}section.aktif{display:block}
 .cp::-webkit-scrollbar{display:none}
 .c1{flex:0 0 auto;background:var(--kagit);border:2px solid var(--cz);color:var(--sol);border-radius:999px;padding:9px 16px;font:700 13.5px Inter,sans-serif;min-height:44px;display:flex;align-items:center}
 .c1.on{background:var(--ye);border-color:var(--ye);color:#F5EFE3}
-.nk{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--cz)}
+.nk{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--cz);cursor:pointer}
 .nk:last-child{border-bottom:0}
 .nk .ik2{flex:0 0 46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:20px;background:var(--kum);border:1.5px solid var(--cz)}
 .nk .ad{font-weight:700;font-size:16px}.nk .al{font-size:13px;color:var(--sol);margin-top:2px}
@@ -58,8 +68,8 @@ section{display:none}section.aktif{display:block}
 .ok{position:absolute;width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:100px solid var(--alt);top:22px;transform-origin:50% 100%;transition:transform .12s linear}
 .gl.tam .ok{border-bottom-color:var(--ye)}
 .gl .dr{font-family:Amiri,serif;font-size:32px;font-weight:700;margin-top:64px}
+.stk{font-family:Amiri,serif;font-size:22px;font-weight:700;color:var(--alt);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0}
 .sa{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--cz)}
-.sa:last-child{border-bottom:0}.sa .g{display:flex;gap:8px;align-items:center}
 .bo{text-align:center;color:var(--sol);font-size:14.5px;padding:24px 12px}
 .yk2{text-align:center;color:var(--sol);font-size:14px;padding:18px}
 </style></head><body>
@@ -68,7 +78,7 @@ section{display:none}section.aktif{display:block}
 <button onclick="tema()" id="tbtn" aria-label="Tema Değiştir">☾</button></header>
 
 <main>
-<!-- BUGÜN SEKMESİ -->
+<!-- ================= BUGÜN SEKMESİ ================= -->
 <section id="s-bugun" class="aktif">
   <div class="uy" id="yol" onclick="yakinAc()"></div>
   <div class="kart">
@@ -77,9 +87,15 @@ section{display:none}section.aktif{display:block}
     <div class="vk" id="vkl"></div>
     <div class="sr2">
       <button class="btn" onclick="pusAc()">🧭 Kıbleyi Bul</button>
-      <button class="btn ik" onclick="konum(1)">📍 Konumu Yenile</button>
+      <button class="btn ik" onclick="konum(true)">📍 Konumu Yenile</button>
     </div>
   </div>
+  
+  <div class="kart" style="border-left: 4px solid var(--alt);">
+    <div class="bs"><span class="et">Günlük Hicri İlham</span></div>
+    <div class="ay" id="ilham" style="font-size: 16px; line-height: 1.6; color: var(--ye); font-weight:500;">İlim aramak her Müslümana farzdır.</div>
+  </div>
+
   <div class="kart">
     <div class="bs"><span class="et">Günün Ayeti</span></div>
     <div class="ay" id="ayt">yükleniyor…</div><div class="kn" id="aykn"></div>
@@ -98,7 +114,7 @@ section{display:none}section.aktif{display:block}
   </div>
 </section>
 
-<!-- KEŞİF (ZİYARET) SEKMESİ -->
+<!-- ================= KEŞİF SEKMESİ ================= -->
 <section id="s-ziyaret">
   <div class="cp" id="flt"></div><div class="cp" id="yrc"></div>
   <div id="hrt"></div>
@@ -106,19 +122,36 @@ section{display:none}section.aktif{display:block}
     <div class="bs"><h2>Çevredeki Türbeler ve Tarihi Yerler</h2>
       <span style="margin-left:auto;font-size:13px;color:var(--sol)" id="nsy"></span></div>
     <div id="nls"><div class="yk2">Etraftaki manevi mekânlar taranıyor…</div></div>
+    <button id="btnDaha" class="btn ik km" style="display:none;margin-top:10px;width:100%" onclick="dahaFazlaCiz()">Daha Fazla Göster (+40)</button>
+  </div>
+</section>
+
+<!-- ================= PROFİL SEKMESİ ================= -->
+<section id="s-profil">
+  <div class="kart">
+    <div class="bs"><span class="et">Manevi İstikrar</span></div>
+    <div class="stk" id="stk">🔥 — gün</div>
+    <div style="font-size:14px;color:var(--sol);text-align:center">Uygulamayı aksatmadan kullandığınız gün sayısı.</div>
+  </div>
+  <div class="kart">
+    <div class="bs"><span class="et">Keşif İstatistiği</span></div>
+    <div class="sa"><div class="g">🪦 Ziyaret Edilen Türbeler</div><div class="v" id="ptp">0</div></div>
+    <div class="sa"><div class="g">🏛️ Keşfedilen Tarihi Camiler</div><div class="v" id="ctp">0</div></div>
   </div>
 </section>
 </main>
 
-<!-- ALT MENÜ (Sadece 2 Sade Sekme) -->
+<!-- ALT MENÜ -->
 <nav id="tb">
-  <button class="on" onclick="tab('bugun',this)"><span class="e">🕌</span>Bugün & Vakitler</button>
-  <button onclick="tab('ziyaret',this)"><span class="e">🗺️</span>Keşif & Türbeler</button>
+  <button class="on" onclick="tab('bugun',this)"><span class="e">🕌</span>Bugün</button>
+  <button onclick="tab('ziyaret',this)"><span class="e">🗺️</span>Keşif</button>
+  <button onclick="tab('profil',this)"><span class="e">👤</span>Profil</button>
 </nav>
 
+<!-- DETAY PENCERESİ -->
 <div class="pd" id="pd" onclick="if(event.target===this)shKapat()"><div class="sh" id="sh"></div></div>
 
-<!-- KIBLE PUSULASI EKRANI -->
+<!-- PUSULA -->
 <div id="pus">
   <div style="text-align:center"><div class="et">Kıble Yönü Pusulası</div>
   <h2 class="sr" style="font-size:24px;margin-top:6px" id="kdr">Telefonu yere paralel tutun</h2></div>
@@ -129,213 +162,380 @@ section{display:none}section.aktif{display:block}
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* GÖNÜL PUSULASI — Sade, Hızlı, Her Yaşa Uygun Keşif Rehberi */
+/* --- GÖNÜL PUSULASI V4 — Optimize Edilmiş Yüksek Performanslı Sürüm --- */
 const KABE={la:21.4225,ln:39.8262};
-const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:10000};
+const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:10000,limit:40};
 const L2={g:(k,d)=>{try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}},
           s:(k,v)=>{try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
 const $=i=>document.getElementById(i);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-function tab(a,b){document.querySelectorAll('section').forEach(s=>s.classList.remove('aktif'));
-  $('s-'+a).classList.add('aktif');document.querySelectorAll('#tb button').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');scrollTo(0,0);if(a==='ziyaret'&&hr)setTimeout(()=>hr.invalidateSize(),120)}
-function tema(){document.body.classList.toggle('koyu');const k=document.body.classList.contains('koyu');
-  L2.s('tema',k);$('tbtn').textContent=k?'☀':'☾'}
+// ================= İSTİKRAR TAKİBİ =================
+function istikrarTakip(){
+  const d=new Date(), t=d.toDateString();
+  let s=L2.g('streak',{son:null,gun:0});
+  if(s.son===t)return;
+  if(s.son){
+    const dson=new Date(s.son), fark=(d-dson)/(864e5);
+    if(fark<2)s.gun++; else s.gun=1;
+  } else {s.gun=1;}
+  s.son=t; L2.s('streak',s); stkCiz();
+}
+function stkCiz(){const s=L2.g('streak',{gun:0});$('stk').textContent='🔥 '+s.gun+' gün';}
+
+// ================= GÜNLÜK HİCRİ İLHAM =================
+const ILHAM_DIZI=[
+  'İlim aramak her Müslümana farzdır.',
+  'Kalpler ancak Allah\'ı anmakla huzur bulur.',
+  'Kolaylaştırın, zorlaştırmayın; müjdeleyin, nefret ettirmeyin.',
+  'Allah, tövbe edenleri ve temizlenenleri sever.',
+  'Sabır, imanın yarısıdır.',
+  'Güzel söz sadakadır.',
+  'Şüphesiz güçlükle beraber bir kolaylık vardır.'
+];
+function ilhamCiz(){const g=Math.floor(Date.now()/864e5);$('ilham').textContent=ILHAM_DIZI[g%ILHAM_DIZI.length];}
+
+// ================= ZİYARET ET =================
+function ziyaretEt(i,btn){
+  const n=S.np[i]; let z=L2.g('visitedPoints',[]);
+  if(z.includes(n.id)){not('Bu mekânı zaten ziyaret ettiniz.');return;}
+  z.push(n.id); L2.s('visitedPoints',z);
+  btn.textContent='Ziyaret Edildi ✓'; btn.style.background='var(--ye-ac)';
+  nCiz(); isaretet(); profildoldur(); not('Ziyaretiniz kaydedildi. Maşallah!');
+}
+function profildoldur(){
+  const z=L2.g('visitedPoints',[]);
+  const tVisited = S.np.filter(n=>n.tu==='Türbe' && z.includes(n.id)).length;
+  const cVisited = S.np.filter(n=>n.tu!=='Türbe' && z.includes(n.id)).length;
+  $('ptp').textContent=tVisited;
+  $('ctp').textContent=cVisited;
+}
+
+// ================= SEKMELER & TEMA =================
+function tab(a,b){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('aktif'));
+  $('s-'+a).classList.add('aktif');
+  document.querySelectorAll('#tb button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); scrollTo(0,0);
+  if(a==='ziyaret'&&hr){setTimeout(()=>hr.invalidateSize(),120);if(S.la&&S.np.length===0)noktalar(false);}
+}
+function tema(){
+  document.body.classList.toggle('koyu');const k=document.body.classList.contains('koyu');
+  L2.s('tema',k);$('tbtn').textContent=k?'☀':'☾';
+}
 
 /* --- konum --- */
-function konum(z){const e=L2.g('konum',null);
-  if(e&&!z){S.la=e.la;S.ln=e.ln;hazir()}
+function konum(zorla){
+  const e=L2.g('konum',null);
+  if(e&&!zorla){S.la=e.la;S.ln=e.ln;hazir()}
   if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(p=>{S.la=p.coords.latitude;S.ln=p.coords.longitude;
-    L2.s('konum',{la:S.la,ln:S.ln});hazir()},()=>{if(!e)$('knm').textContent='konum izni gerekli'},
-    {enableHighAccuracy:true,timeout:12000,maximumAge:300000})}
-function hazir(){$('knm').textContent='Konum alındı ✓';vakit();noktalar();hrtKur()}
+  navigator.geolocation.getCurrentPosition(p=>{
+    S.la=p.coords.latitude;S.ln=p.coords.longitude;
+    L2.s('konum',{la:S.la,ln:S.ln});hazir();if(zorla)noktalar(true);
+  },()=>{if(!e)$('knm').textContent='konum izni gerekli'},
+  {enableHighAccuracy:true,timeout:10000,maximumAge:300000});
+}
+function hazir(){$('knm').textContent='Konum alındı ✓';vakit();hrtKur();}
 
 /* --- namaz vakitleri --- */
 const VA={Fajr:'İmsak',Sunrise:'Güneş',Dhuhr:'Öğle',Asr:'İkindi',Maghrib:'Akşam',Isha:'Yatsı'};
 const SIRA=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
-async function vakit(){const d=new Date();
+async function vakit(){
+  const d=new Date();
   const t=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
-  try{const r=await fetch(`https://api.aladhan.com/v1/timings/${t}?latitude=${S.la}&longitude=${S.ln}&method=13`);
+  try{
+    const r=await fetch(`https://api.aladhan.com/v1/timings/${t}?latitude=${S.la}&longitude=${S.ln}&method=13`);
     const j=await r.json();S.tm=j.data.timings;S.hj=j.data.date.hijri;
-    L2.s('vc',{t,tm:S.tm,hj:S.hj});vCiz()}
-  catch(e){const c=L2.g('vc',null);if(c&&c.t===t){S.tm=c.tm;S.hj=c.hj;vCiz()}
-    else $('vkl').innerHTML='<div class="bo">Vakitler yüklenemedi, internet bağlantınızı kontrol edin.</div>'}}
-function vCiz(){const h=S.hj;
+    L2.s('vc',{t,tm:S.tm,hj:S.hj});vCiz();
+  }catch(e){
+    const c=L2.g('vc',null);if(c&&c.t===t){S.tm=c.tm;S.hj=c.hj;vCiz()}
+    else $('vkl').innerHTML='<div class="bo">Vakitler yüklenemedi.</div>';
+  }
+}
+function vCiz(){
+  const h=S.hj;
   $('hicri').innerHTML=h?`${h.day} ${h.month.tr||h.month.en} ${h.year}<br>Hicri Tarih`:'';
   const n=aktif();
   $('vkl').innerHTML=SIRA.map(k=>`<div class="v1 ${k===n?'now':''}"><div class="n">${VA[k]}</div><div class="s">${S.tm[k].slice(0,5)}</div></div>`).join('');
-  kndCiz();sayac()}
+  kndCiz();sayac();
+}
 const dk=s=>{const[a,b]=s.slice(0,5).split(':').map(Number);return a*60+b};
-function aktif(){const n=new Date().getHours()*60+new Date().getMinutes();let a='Isha';
-  for(const k of SIRA)if(n>=dk(S.tm[k]))a=k;return a}
-function sayac(){if(!S.tm)return;const d=new Date();
+function aktif(){
+  const n=new Date().getHours()*60+new Date().getMinutes();let a='Isha';
+  for(const k of SIRA)if(n>=dk(S.tm[k]))a=k;return a;
+}
+function sayac(){
+  if(!S.tm)return;const d=new Date();
   const n=d.getHours()*3600+d.getMinutes()*60+d.getSeconds();let h=null,a='';
   for(const k of SIRA){const t=dk(S.tm[k])*60;if(t>n){h=t;a=VA[k];break}}
   if(h===null){h=86400+dk(S.tm.Fajr)*60;a='İmsak'}
   const f=h-n;$('sad').textContent=a+' vaktine kalan süre';
-  $('ssr').textContent=`${String(Math.floor(f/3600)).padStart(2,'0')}:${String(Math.floor(f%3600/60)).padStart(2,'0')}:${String(f%60).padStart(2,'0')}`}
+  $('ssr').textContent=`${String(Math.floor(f/3600)).padStart(2,'0')}:${String(Math.floor(f%3600/60)).padStart(2,'0')}:${String(f%60).padStart(2,'0')}`;
+}
 setInterval(sayac,1000);
 
 /* --- mübarek günler --- */
 const MB=[[7,1,'Regaib Kandili'],[7,27,'Mirac Kandili'],[8,15,'Berat Kandili'],[9,1,'Ramazan Başlangıcı'],
 [9,27,'Kadir Gecesi'],[10,1,'Ramazan Bayramı'],[12,10,'Kurban Bayramı'],[1,10,'Aşure Günü'],[3,12,'Mevlid Kandili']];
-function kndCiz(){if(!S.hj)return;const m=+S.hj.month.number,g=+S.hj.day;
+function kndCiz(){
+  if(!S.hj)return;const m=+S.hj.month.number,g=+S.hj.day;
   const l=MB.map(([am,ag,ad])=>{let f=(am-m)*29.53+(ag-g);if(f<0)f+=354.37;return{ad,g:Math.round(f)}})
     .sort((a,b)=>a.g-b.g).slice(0,3);
-  $('knd').innerHTML=l.map(x=>`<div class="sa"><div class="g">🌙 ${x.ad}</div><div class="v" style="font-size:16px">${x.g===0?'Bugün!':'≈ '+x.g+' gün kaldı'}</div></div>`).join('')}
+  $('knd').innerHTML=l.map(x=>`<div class="sa"><div class="g">🌙 ${x.ad}</div><div class="v" style="font-size:16px">${x.g===0?'Bugün!':'≈ '+x.g+' gün kaldı'}</div></div>`).join('');
+}
 
 /* --- kıble --- */
-function kAci(){const R=Math.PI/180,f1=S.la*R,f2=KABE.la*R,dl=(KABE.ln-S.ln)*R;
-  return(Math.atan2(Math.sin(dl),Math.cos(f1)*Math.tan(f2)-Math.sin(f1)*Math.cos(dl))/R+360)%360}
+function kAci(){
+  const R=Math.PI/180,f1=S.la*R,f2=KABE.la*R,dl=(KABE.ln-S.ln)*R;
+  return(Math.atan2(Math.sin(dl),Math.cos(f1)*Math.tan(f2)-Math.sin(f1)*Math.cos(dl))/R+360)%360;
+}
 let pD=null;
-async function pusAc(){if(S.la===null){not('Önce konum iznine izin verin');return}
+async function pusAc(){
+  if(S.la===null){not('Önce konum iznine izin verin');return}
   $('pus').classList.add('acik');const h=kAci();$('kdg').textContent=Math.round(h)+'°';
   if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission){
     try{if(await DeviceOrientationEvent.requestPermission()!=='granted'){
-      $('knt').textContent='Pusula izni verilmedi. Kuzeyden '+Math.round(h)+'° sağa yönelin.';return}}catch(e){}}
-  pD=ev=>{let y=ev.webkitCompassHeading!==undefined?ev.webkitCompassHeading:(ev.alpha!==null?360-ev.alpha:null);
+      $('knt').textContent='Pusula izni verilmedi.';return}}catch(e){}}
+  pD=ev=>{
+    let y=ev.webkitCompassHeading!==undefined?ev.webkitCompassHeading:(ev.alpha!==null?360-ev.alpha:null);
     if(y===null)return;const f=((h-y)+360)%360;
     $('kok').style.transform=`rotate(${f}deg)`;const t=Math.min(f,360-f)<7;
-    $('gl').classList.toggle('tam',t);$('kdr').textContent=t?'Kıble tam bu yönde ✓':'Telefonu yavaşça döndürün';
-    if(t&&navigator.vibrate)navigator.vibrate(35)};
-  addEventListener('deviceorientationabsolute',pD,true);addEventListener('deviceorientation',pD,true)}
-function pusKapat(){$('pus').classList.remove('acik');
-  if(pD){removeEventListener('deviceorientationabsolute',pD,true);removeEventListener('deviceorientation',pD,true);pD=null}}
+    $('gl').classList.toggle('tam',t);$('kdr').textContent=t?'Kıble tam bu yönde ✓':'Telefonu döndürün';
+    if(t&&navigator.vibrate)navigator.vibrate(35);
+  };
+  addEventListener('deviceorientationabsolute',pD,true);addEventListener('deviceorientation',pD,true);
+}
+function pusKapat(){
+  $('pus').classList.remove('acik');
+  if(pD){removeEventListener('deviceorientationabsolute',pD,true);removeEventListener('deviceorientation',pD,true);pD=null}
+}
 
-/* --- ziyaret noktaları --- */
+/* ================= YÜKSEK HIZLI OVERPASS MOTORU ================= */
 const AY=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
-function msf(a1,o1,a2,o2){const R=6371000,r=Math.PI/180;
+function msf(a1,o1,a2,o2){
+  const R=6371000,r=Math.PI/180;
   const x=Math.sin((a2-a1)*r/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2;
-  return 2*R*Math.asin(Math.sqrt(x))}
+  return 2*R*Math.asin(Math.sqrt(x));
+}
 const km=m=>m<950?Math.round(m)+' m':(m/1000).toFixed(1)+' km';
-function sorgu(){const c=`${S.yr},${S.la},${S.ln}`,p=[];
-  if(S.fl.tu)p.push(`nwr["historic"="tomb"](around:${c});`,`nwr["building"="mausoleum"](around:${c});`,
-    `nwr["historic"="memorial"]["memorial"~"tomb|grave"](around:${c});`);
-  if(S.fl.ta)p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"]["heritage"](around:${c});`,
-    `nwr["amenity"="place_of_worship"]["religion"="muslim"]["historic"](around:${c});`,
-    `nwr["amenity"="place_of_worship"]["religion"="muslim"]["start_date"](around:${c});`);
-  if(S.fl.ca)p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"](around:${Math.min(S.yr,6000)},${S.la},${S.ln});`);
-  return p.length?`[out:json][timeout:30];(${p.join('')});out center 400;`:null}
-async function noktalar(){const q=sorgu();
+
+function sorgu(){
+  const r=S.yr, lat=S.la, ln=S.ln;
+  const p=[];
+  if(S.fl.tu) p.push(`nwr["historic"~"tomb|memorial"](around:${r},${lat},${ln});`,`nwr["building"="mausoleum"](around:${r},${lat},${ln});`);
+  if(S.fl.ta) p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"]["historic"](around:${r},${lat},${ln});`);
+  if(S.fl.ca) p.push(`nwr["amenity"="place_of_worship"]["religion"="muslim"](around:${Math.min(r,5000)},${lat},${ln});`);
+  return p.length?`[out:json][timeout:8];(${p.join('')});out center 150;`:null;
+}
+
+async function noktalar(zorla){
+  if(S.la===null)return;
+  const cacheKey=`np_${S.yr}_${S.fl.tu}${S.fl.ta}${S.fl.ca}`;
+  const cached=L2.g(cacheKey,null);
+  
+  // 24 saatlik önbellek kontrolü (anında hız için)
+  if(!zorla && cached && (Date.now()-cached.time)<86400000){
+    S.np=cached.data;
+    S.limit=40; nCiz(); isaretet(); yolKontrol(); profildoldur();
+    return;
+  }
+
+  const q=sorgu();
   if(!q){S.np=[];nCiz();return}
-  $('nls').innerHTML='<div class="yk2">Etraftaki türbe ve camiler taranıyor…</div>';
-  for(const a of AY){try{
-    const r=await fetch(a,{method:'POST',body:'data='+encodeURIComponent(q),
-      headers:{'Content-Type':'application/x-www-form-urlencoded'}});
-    const j=await r.json();
-    S.np=(j.elements||[]).map(e=>{const la=e.lat??(e.center&&e.center.lat),ln=e.lon??(e.center&&e.center.lon),t=e.tags||{};
-      const ad=t['name:tr']||t.name;if(!la||!ln||!ad)return null;
-      let tu='Cami',ik='🕌';
-      if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}
-      else if(t.heritage||t.historic||t.start_date){tu='Tarihi Cami';ik='🏛️'}
-      return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)}})
-      .filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,100);
-    nCiz();isaretet();yolKontrol();return}catch(e){}}
-  $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı, lütfen daha sonra tekrar deneyin.</div>'}
-function nCiz(){const l=S.np;$('nsy').textContent=l.length?l.length+' mekân':'';
-  $('nls').innerHTML=l.length?l.map((n,i)=>`<div class="nk"><div class="ik2">${n.ik}</div>
-    <div style="flex:1;min-width:0" onclick="detay(${i})"><div class="ad">${esc(n.ad)}</div>
-    <div class="al">${n.tu} · ${km(n.m)} uzakta (İncelemek için dokunun)</div></div></div>`).join('')
-    :'<div class="bo">Bu mesafede kayıtlı mekân bulunamadı. Üstteki mesafeyi büyütebilirsiniz.</div>'}
+  $('nls').innerHTML='<div class="yk2">Etraftaki manevi mekânlar hızla taranıyor…</div>';
+  
+  for(const a of AY){
+    try{
+      const r=await fetch(a,{method:'POST',body:'data='+encodeURIComponent(q),
+        headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      const j=await r.json();
+      S.np=(j.elements||[]).map(e=>{
+        const la=e.lat??e.center?.lat, ln=e.lon??e.center?.lon, t=e.tags||{};
+        const ad=t['name:tr']||t.name;
+        if(!la||!ln||!ad)return null;
+        let tu='Cami',ik='🕌';
+        if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}
+        else if(t.historic){tu='Tarihi Cami';ik='🏛️'}
+        return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)};
+      }).filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,120);
+
+      // Veriyi yerel önbelleğe kaydet
+      L2.s(cacheKey,{time:Date.now(),data:S.np});
+      S.limit=40;
+      nCiz();isaretet();yolKontrol();profildoldur();
+      return;
+    }catch(e){}
+  }
+  
+  // İnternet veya sunucu hatasında eldeki eski önbelleği göster
+  if(cached){
+    S.np=cached.data; S.limit=40; nCiz(); isaretet();
+    not('Çevrimdışı önbellekten yüklendi.');
+  } else {
+    $('nls').innerHTML='<div class="bo">Sunucuya ulaşılamadı. Daha sonra tekrar deneyin.</div>';
+  }
+}
+
+// Kademeli sayfalama (< 40 eleman çizilerek mobil donma engellenir)
+function nCiz(){
+  const l=S.np;
+  $('nsy').textContent=l.length?l.length+' mekân':'0 mekân';
+  const parca = l.slice(0,S.limit);
+  
+  $('nls').innerHTML=parca.length?parca.map((n,i)=>`<div class="nk" onclick="detay(${i})">
+    <div class="ik2">${n.ik}</div>
+    <div style="flex:1;min-width:0">
+      <div class="ad">${esc(n.ad)}</div>
+      <div class="al">${n.tu} · ${km(n.m)} (İncelemek için dokunun)</div>
+    </div></div>`).join('')
+    :'<div class="bo">Mekân bulunamadı. Filtreleri veya mesafeyi büyütebilirsiniz.</div>';
+    
+  $('btnDaha').style.display = (l.length > S.limit) ? 'inline-flex' : 'none';
+}
+function dahaFazlaCiz(){
+  S.limit+=40;
+  nCiz();
+}
 
 /* --- filtreler --- */
 function cipler(){
   $('flt').innerHTML=[['tu','🪦 Türbe & Yatırlar'],['ta','🏛️ Tarihi Camiler'],['ca','🕌 Tüm Camiler']]
     .map(([k,a])=>`<button class="c1 ${S.fl[k]?'on':''}" onclick="fDeg('${k}',this)">${a}</button>`).join('');
   $('yrc').innerHTML=[3000,10000,25000,50000]
-    .map(v=>`<button class="c1 ${S.yr===v?'on':''}" onclick="yDeg(${v},this)">${v/1000} km Çap</button>`).join('')}
-function fDeg(k,b){S.fl[k]=S.fl[k]?0:1;b.classList.toggle('on');L2.s('fl',S.fl);noktalar()}
-function yDeg(v,b){S.yr=v;L2.s('yr',v);document.querySelectorAll('#yrc .c1').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');if(hr)hr.setZoom(v>20000?10:v>6000?12:14);noktalar()}
+    .map(v=>`<button class="c1 ${S.yr===v?'on':''}" onclick="yDeg(${v},this)">${v/1000} km Çap</button>`).join('');
+}
+function fDeg(k,b){
+  S.fl[k]=S.fl[k]?0:1; b.classList.toggle('on');
+  L2.s('fl',S.fl); noktalar(false);
+}
+function yDeg(v,b){
+  S.yr=v; L2.s('yr',v);
+  document.querySelectorAll('#yrc .c1').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  if(hr)hr.setZoom(v>20000?10:v>6000?12:14);
+  noktalar(false);
+}
 
 /* --- harita --- */
 let hr=null,kt=null;
-function hrtKur(){if(hr){hr.setView([S.la,S.ln],13);isaretet();return}
+function hrtKur(){
+  if(hr){hr.setView([S.la,S.ln],13);isaretet();return}
   hr=L.map('hrt',{zoomControl:false}).setView([S.la,S.ln],13);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(hr);
   L.circleMarker([S.la,S.ln],{radius:8,color:'#1B2A4A',fillColor:'#3E7A62',fillOpacity:1,weight:3}).addTo(hr).bindPopup('Buradasınız');
-  kt=L.layerGroup().addTo(hr);isaretet()}
-function isaretet(){if(!kt)return;kt.clearLayers();
-  S.np.forEach((n,i)=>{const c=n.tu==='Türbe'?'#C9A227':n.tu==='Tarihi Cami'?'#2E5D4B':'#7C766C';
-    L.circleMarker([n.la,n.ln],{radius:7,color:'#fff',weight:2,fillColor:c,fillOpacity:1}).addTo(kt).on('click',()=>detay(i))})}
+  kt=L.layerGroup().addTo(hr);isaretet();
+}
+function isaretet(){
+  if(!kt)return; kt.clearLayers();
+  const v = L2.g('visitedPoints',[]);
+  S.np.forEach((n,i)=>{
+    const renk = v.includes(n.id) ? '#3E7A62' : (n.tu==='Türbe' ? '#C9A227' : '#7C766C');
+    L.circleMarker([n.la,n.ln],{radius:7,color:'#fff',weight:2,fillColor:renk,fillOpacity:1}).addTo(kt).on('click',()=>detay(i));
+  });
+}
 
-/* --- detay penceresi --- */
+/* --- detay penceresi & ses durdur --- */
 let aN=null;
-async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
-  $('sh').innerHTML=`<div class="tt"></div><div class="et">${n.tu} · ${km(n.m)} mesafe</div>
+async function detay(i){
+  const n=S.np[i]; aN=n; $('pd').classList.add('acik');
+  const z = L2.g('visitedPoints',[]);
+  const isZiyaret = z.includes(n.id);
+  
+  $('sh').innerHTML=`<div class="tt"></div><div class="et">${n.tu} · ${km(n.m)}</div>
     <h2 class="sr" style="font-size:24px;margin:6px 0 12px">${esc(n.ad)}</h2>
-    <div id="wk" class="yk2">Mekânın tarihi bilgisi aranıyor…</div>
+    <div id="wk" class="yk2">Tarihi bilgi aranıyor…</div>
     <div class="sr2">
-      <button class="btn ik km" style="flex:1" onclick="okuWiki()">🔊 Sesli Dinle</button>
-      <button class="btn" style="flex:1" onclick="yolTarif()">🧭 Yol Tarifi Al</button>
+      <button class="btn ik km" style="flex:1;background:var(--ye);color:#fff;" onclick="okuWiki()">🔊 Anlatımı Dinle</button>
+      <button id="btnDur" class="btn ik km" style="flex:1;background:#f44336;color:#fff;display:none;" onclick="durAnlatim()">🛑 Durdur</button>
+    </div>
+    <div class="sr2">
+      <button class="btn" style="flex:1" onclick="yolTarif()">🧭 Yol Tarifi</button>
+      <button class="btn ik km" style="flex:1;background:${isZiyaret?'var(--ye-ac)':'var(--alt)'};color:#fff;" onclick="ziyaretEt(${i},this)">${isZiyaret?'Ziyaret Edildi ✓':'Ziyaret Ettim'}</button>
     </div>`;
-  const o=await wiki(n);const w=$('wk');if(!w)return;
-  if(o){w.className='';w.innerHTML=(o.gr?`<img src="${o.gr}" alt="">`:'')+
-    `<div style="font-size:16px;line-height:1.7">${esc(o.mt)}</div>
-     <div class="kn">Kaynak: Vikipedi · ${esc(o.bs)}</div>
-     <a class="btn ik km" style="margin-top:12px;text-decoration:none;display:block;text-align:center" href="${o.lk}" target="_blank">Vikipedi'de Tamamını Oku</a>`;
-    window._wm=o.mt}
-  else{w.className='bo';w.textContent='Bu mekân için henüz ayrıntılı bir Vikipedi kaydı bulunmuyor.'}}
-async function wiki(n){let b=null;const wp=n.t.wikipedia||n.t['wikipedia:tr'];
+  
+  const o=await wiki(n); const w=$('wk'); if(!w)return;
+  if(o){
+    w.className=''; w.innerHTML=(o.gr?`<img src="${o.gr}" alt="">`:'')+
+      `<div style="font-size:16px;line-height:1.7">${esc(o.mt)}</div>
+       <div class="kn">Kaynak: Vikipedi</div>`;
+    window._wm=o.mt;
+  } else {
+    w.className='bo'; w.textContent='Vikipedi kaydı bulunamadı.';
+  }
+}
+async function wiki(n){
+  let b=null;const wp=n.t.wikipedia||n.t['wikipedia:tr'];
   if(wp)b=wp.includes(':')?wp.split(':').slice(1).join(':'):wp;
-  if(!b){try{const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(n.ad));
-    const j=await r.json();if(j.pages&&j.pages[0])b=j.pages[0].key}catch(e){}}
+  if(!b){try{
+    const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(n.ad));
+    const j=await r.json();if(j.pages&&j.pages[0])b=j.pages[0].key
+  }catch(e){}}
   if(!b)return null;
-  try{const r=await fetch('https://tr.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(b));
+  try{
+    const r=await fetch('https://tr.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(b));
     if(!r.ok)return null;const j=await r.json();if(!j.extract)return null;
     return{mt:j.extract,bs:j.title,gr:j.thumbnail?j.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null,
-      lk:(j.content_urls&&j.content_urls.desktop.page)||'https://tr.wikipedia.org/wiki/'+encodeURIComponent(b)}}
-  catch(e){return null}}
-function okuWiki(){oku(window._wm||'Hikâye bulunamadı')}
-function shKapat(){$('pd').classList.remove('acik');dur()}
+      lk:(j.content_urls&&j.content_urls.desktop.page)}
+  }catch(e){return null}
+}
+
+function okuWiki(){
+  $('btnDur').style.display='inline-flex';
+  oku(window._wm||'Hikâye bulunamadı');
+}
+function durAnlatim(){dur(); $('btnDur').style.display='none';}
+function shKapat(){$('pd').classList.remove('acik');durAnlatim()}
 function yolTarif(){open(`https://www.google.com/maps/dir/?api=1&destination=${aN.la},${aN.ln}`,'_blank')}
 
 /* --- sesli anlatım --- */
-function oku(t){if(!('speechSynthesis'in window)){not('Sesli okuma bu cihazda desteklenmiyor');return}
-  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='tr-TR';u.rate=.92;speechSynthesis.speak(u)}
+function oku(t){
+  if(!('speechSynthesis'in window)){not('Sesli okuma desteklenmiyor');return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang='tr-TR';u.rate=.92;
+  u.onend=()=>$('btnDur').style.display='none';
+  speechSynthesis.speak(u);
+}
 function dur(){if('speechSynthesis'in window)speechSynthesis.cancel()}
 
 /* --- yol hikâyesi --- */
-function yolKontrol(){const y=S.np.find(n=>n.m<800&&n.tu==='Türbe')||S.np.find(n=>n.m<500);
+function yolKontrol(){
+  const y=S.np.find(n=>n.m<800&&n.tu==='Türbe')||S.np.find(n=>n.m<500);
   const e=$('yol');if(!y){e.style.display='none';return}
   e.style.display='block';e.dataset.i=S.np.indexOf(y);
-  e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — tarihini okumak için dokunun.`}
+  e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — tarihini dinleyin.`;
+}
 function yakinAc(){detay(+$('yol').dataset.i)}
 
 /* --- ayet & dua --- */
-const YA=[['Şüphesiz güçlükle beraber bir kolaylık vardır.','İnşirâh Sûresi, 6'],
-['Rabbin sana yetmez mi? O, her şeye şahittir.','Fussilet Sûresi, 53'],
-['Kalpler ancak Allah\'ı anmakla huzur bulur.','Ra\'d Sûresi, 28'],
-['Ey Rabbim! İlmimi artır.','Tâhâ Sûresi, 114'],['Sabredenlerle beraberim.','Bakara Sûresi, 153'],
-['Bana dua edin, duanıza cevap veririm.','Mü\'min Sûresi, 60'],['Allah\'a tevekkül edene O yeter.','Talâk Sûresi, 3']];
-const DU=['Allah\'ım! Bana faydalı ilim, helâl rızık ve makbul amel nasip et.',
-'Rabbimiz! Bize dünyada da âhirette de iyilik ver, bizi ateş azabından koru.',
-'Allah\'ım! Kalbimi imanla, dilimi zikirle, gönlümü şükürle doldur.',
-'Allah\'ım! Beni doğru yola ilet ve o yolda sabit kıl.',
-'Rabbim! Göğsüme genişlik ver, işimi kolaylaştır.',
-'Allah\'ım! Ana babama, geçmişlerimize ve tüm müminlere rahmet et.'];
-async function ayet(){const g=Math.floor(Date.now()/864e5);
-  try{const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet');
+async function ayet(){
+  const g=Math.floor(Date.now()/864e5);
+  try{
+    const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet');
     const j=await r.json();if(!j.data||!j.data.text)throw 0;
     $('ayt').textContent=j.data.text;
-    $('aykn').textContent=j.data.surah.name+' Sûresi, '+j.data.numberInSurah+'. âyet (Diyanet meali)'}
-  catch(e){const a=YA[g%YA.length];$('ayt').textContent=a[0];$('aykn').textContent=a[1]}}
+    $('aykn').textContent=j.data.surah.name+' Sûresi, '+j.data.numberInSurah+'. âyet';
+  }catch(e){}
+}
+const DU=['Allah\'ım! Bana faydalı ilim nasip et.'];
 function duaCiz(){$('dua').textContent=DU[Math.floor(Date.now()/864e5)%DU.length]}
-function pay(m){if(navigator.share)navigator.share({title:'Gönül Pusulası',text:m}).catch(()=>{});
-  else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Metin kopyalandı')}}
+function pay(m){
+  if(navigator.share)navigator.share({title:'Gönül Pusulası',text:m}).catch(()=>{});
+  else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Metin kopyalandı');}
+}
 
 /* --- bildirim --- */
-function not(m){const d=document.createElement('div');d.textContent=m;
-  d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;max-width:88%;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.3)';
-  document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+function not(m){
+  const d=document.createElement('div');d.textContent=m;
+  d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;max-width:88%;text-align:center;';
+  document.body.appendChild(d);setTimeout(()=>d.remove(),2600);
+}
 
 /* --- başlat --- */
 if(L2.g('tema',false)){document.body.classList.add('koyu');$('tbtn').textContent='☀'}
 S.fl=L2.g('fl',S.fl);S.yr=L2.g('yr',S.yr);
-cipler();duaCiz();ayet();
+cipler(); duaCiz(); ayet(); ilhamCiz(); istikrarTakip(); profildoldur();
 const _c=L2.g('vc',null);if(_c){S.tm=_c.tm;S.hj=_c.hj;vCiz()}
-konum(0);
+konum(false);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.la!==null)vakit()});
 </script></body></html>
