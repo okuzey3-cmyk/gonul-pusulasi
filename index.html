@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="tr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#2E5D4B">
 <!-- iOS Native App Etiketleri -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -22,7 +22,7 @@ body.koyu{
   --cz:#2A3436;--golge:0 2px 14px rgba(0,0,0,.35);
 }
 
-/* --- NATIVE APP HİSSİ (Sayfa Sündürme ve Seçimi Kapatma) --- */
+/* --- NATIVE APP HİSSİ --- */
 html, body { overscroll-behavior-y: none; }
 header, nav, .btn, .cp, .kart h2, .et, .stk, #tb button, .bs { -webkit-user-select: none; user-select: none; }
 input, textarea, select { font-size: 16px !important; }
@@ -40,7 +40,7 @@ header button{background:rgba(255,255,255,.2);border:0;color:#F5EFE3;width:40px;
 main{padding:16px;max-width:620px;margin:0 auto}
 section{display:none}section.aktif{display:block}
 
-/* --- Kartlar & Formlar --- */
+/* --- Kartlar & Bileşenler --- */
 .kart{background:var(--kagit);border:1.5px solid var(--cz);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--golge)}
 .bs{display:flex;align-items:center;gap:8px;margin-bottom:12px}.bs h2{font-size:19px}
 .et{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--sol);font-weight:700}
@@ -51,17 +51,12 @@ section{display:none}section.aktif{display:block}
 .sy{text-align:center;padding:6px 0 14px}.sy .k{font-size:13px;color:var(--sol)}
 .sy .d{font-family:Amiri,serif;font-size:38px;font-weight:700;color:var(--ye);letter-spacing:1px}
 
-/* --- Butonlar --- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--ye);color:#F8F4EC;border:0;border-radius:14px;padding:14px 18px;font:700 15px Inter,sans-serif;width:100%;cursor:pointer;min-height:50px}
 .btn.ik{background:transparent;color:var(--ye);border:2px solid var(--ye)}
 .btn.km{padding:10px 14px;font-size:14px;border-radius:11px;min-height:44px}
 .sr2{display:flex;gap:10px;margin-top:10px}
-
-/* --- Metin & Uyarı --- */
 .ay{font-family:Amiri,serif;font-size:19px;line-height:1.8}
 .kn{font-size:13px;color:var(--sol);margin-top:10px}
-.uy{background:linear-gradient(100deg,var(--alt),#E0BE55);color:#2A2208;border-radius:16px;padding:14px 16px;margin-bottom:14px;font-size:14px;font-weight:600;display:none}
-.uy b{display:block;font-family:Amiri,serif;font-size:17px;margin-bottom:3px}
 
 /* --- Harita & Ziyaret --- */
 #hrt{height:280px;border-radius:18px;border:1.5px solid var(--cz);margin-bottom:14px;z-index:1}
@@ -79,13 +74,13 @@ section{display:none}section.aktif{display:block}
 #tb button{flex:1;background:none;border:0;color:var(--sol);font:700 11.5px Inter,sans-serif;display:grid;gap:4px;justify-items:center;padding:8px 0;min-height:50px}
 #tb button .e{font-size:24px;line-height:1}#tb button.on{color:var(--ye)}
 
-/* --- Detay (Sheet) --- */
-.pd{position:fixed;inset:0;z-index:100;background:rgba(20,16,8,.6);display:none;align-items:flex-end}
+/* --- Detay (Sheet) YENİ SWIPE DESTEĞİ İLE --- */
+.pd{position:fixed;inset:0;z-index:100;background:rgba(20,16,8,.6);display:none;align-items:flex-end;transition:opacity 0.3s}
 .pd.acik{display:flex}
-.sh{background:var(--kagit);width:100%;max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px 20px calc(28px + env(safe-area-inset-bottom));animation:yk .28s ease}
+.sh{background:var(--kagit);width:100%;max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px 20px calc(28px + env(safe-area-inset-bottom));animation:yk .28s ease; will-change:transform;}
 @keyframes yk{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sh img{width:100%;border-radius:16px;margin:12px 0}
-.tt{width:46px;height:5px;background:var(--cz);border-radius:10px;margin:0 auto 14px}
+.tt{width:46px;height:6px;background:var(--cz);border-radius:10px;margin:0 auto 14px; opacity:0.8;}
 
 /* --- Pusula --- */
 #pus{position:fixed;inset:0;z-index:110;background:var(--kum);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px}
@@ -102,8 +97,7 @@ section{display:none}section.aktif{display:block}
 .dergi-kart-ic{padding:14px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .dergi-kart-ic h3{margin:0 0 4px;font-family:Amiri,serif;font-size:18px;color:var(--lac)}
 .dergi-kart-ic p{margin:0;font-size:13px;color:var(--sol)}
-#dergiModu{position:fixed;inset:0;z-index:200;background:var(--kagit);display:none;flex-direction:column;animation:fade .3s ease}
-@keyframes fade{from{opacity:0}to{opacity:1}}
+#dergiModu{position:fixed;inset:0;z-index:200;background:var(--kagit);display:none;flex-direction:column;animation:yk .3s ease; will-change:transform;}
 .dm-ust{background:var(--ye);color:#F5EFE3;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,.15)}
 .dm-ust button{background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px}
 .dm-icerik{flex:1;overflow-y:auto;padding-bottom:calc(40px + env(safe-area-inset-bottom))}
@@ -120,7 +114,7 @@ section{display:none}section.aktif{display:block}
 .yk2{text-align:center;color:var(--sol);font-size:14px;padding:18px}
 </style></head><body>
 
-<!-- AÇILIŞ (SPLASH) EKRANI (Native Hissi İçin) -->
+<!-- AÇILIŞ (SPLASH) EKRANI -->
 <div id="splashEkran" style="position:fixed; inset:0; background:var(--ye); z-index:9999; display:flex; align-items:center; justify-content:center; transition:opacity 0.6s ease;">
   <h1 style="color:#F5EFE3; font-family:Amiri,serif; font-size:36px; text-shadow:0 4px 12px rgba(0,0,0,0.2);">Gönül Pusulası</h1>
 </div>
@@ -208,17 +202,17 @@ section{display:none}section.aktif{display:block}
   <button onclick="tab('profil',this)"><span class="e">👤</span>Profil</button>
 </nav>
 
-<!-- DETAY PENCERESİ (Harita Özeti) -->
+<!-- DETAY PENCERESİ (Kaydırarak Kapanır) -->
 <div class="pd" id="pd" onclick="if(event.target===this)shKapat()"><div class="sh" id="sh"></div></div>
 
-<!-- TAM EKRAN DERGİ OKUYUCU MODU -->
+<!-- TAM EKRAN DERGİ OKUYUCU MODU (Kaydırarak Kapanır) -->
 <div id="dergiModu">
-  <div class="dm-ust">
-    <button onclick="dergiKapat()">← Geri</button>
+  <div class="dm-ust" id="dmUstTutamacı">
+    <button onclick="dergiKapat()">↓ Kaydır</button>
     <div style="font-family:Amiri,serif; font-size:20px; font-weight:700;">Gönül Dergisi</div>
     <button id="btnDergiSes" onclick="dergiSesliOku()">🔊 Dinle</button>
   </div>
-  <div class="dm-icerik">
+  <div class="dm-icerik" id="dmIcerikScroll">
     <img id="dmKapak" class="dm-kapak" src="" style="display:none;" alt="">
     <div style="padding: 24px 20px 0;">
       <h1 class="sr" id="dmBaslik" style="font-size:36px; color:var(--ye); line-height:1.2; margin-bottom:8px;">Başlık</h1>
@@ -235,28 +229,22 @@ section{display:none}section.aktif{display:block}
   <button class="btn ik" style="max-width:220px" onclick="pusKapat()">Pusulayı Kapat</button>
 </div>
 
-<!-- iOS ANA EKRANA EKLE BALONU (Native Hissi) -->
+<!-- iOS ANA EKRANA EKLE BALONU -->
 <div id="iosKurulum" style="position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); color:#1B2A4A; padding:16px; border-radius:18px; box-shadow:0 10px 30px rgba(0,0,0,0.15); width:90%; max-width:400px; text-align:center; z-index:9000; display:none; border:1px solid #E4DAC8; font-size:14px; font-weight:600;">
   <div style="margin-bottom:8px;">Tam ekran uygulama deneyimi için:</div>
   <div>Aşağıdaki <b style="font-size:18px;">⍗</b> (Paylaş) butonuna basın<br>ve <b>"Ana Ekrana Ekle"</b>yi seçin.</div>
   <button onclick="document.getElementById('iosKurulum').style.display='none'" style="margin-top:12px; background:var(--ye); color:#fff; border:none; padding:8px 16px; border-radius:10px; font-weight:600; width:100%;">Anladım</button>
-  <div style="position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:10px solid rgba(255,255,255,0.95);"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* --- NATIVE APP AÇILIŞ VE KURULUM KONTROLÜ --- */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const sp = document.getElementById('splashEkran');
-    if(sp) { sp.style.opacity = '0'; setTimeout(() => sp.remove(), 600); }
-  }, 800);
-});
-const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+/* --- 1. AÇILIŞ VE İŞLETİM SİSTEMİ KONTROLÜ --- */
+const isIos = () => /iphone|ipad|ipod|macintosh/.test(window.navigator.userAgent.toLowerCase());
+window.addEventListener('load', () => { setTimeout(() => { const sp = $('splashEkran'); if(sp) { sp.style.opacity = '0'; setTimeout(() => sp.remove(), 600); } }, 800); });
 const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-if (isIos() && !isInStandaloneMode()) { setTimeout(() => { document.getElementById('iosKurulum').style.display = 'block'; }, 3000); }
+if (isIos() && !isInStandaloneMode()) { setTimeout(() => { $('iosKurulum').style.display = 'block'; }, 3000); }
 
-/* --- GÖNÜL PUSULASI ÇEKİRDEK --- */
+/* --- 2. GÖNÜL PUSULASI ÇEKİRDEK --- */
 const KABE={la:21.4225,ln:39.8262};
 const S={la:null,ln:null,tm:null,hj:null,np:[],fl:{tu:1,ta:1,ca:0},yr:5000}; 
 const L2={g:(k,d)=>{try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}}, s:(k,v)=>{try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
@@ -268,32 +256,22 @@ function istikrarTakip(){
   if(s.son!==t){ if(s.son&&((d-new Date(s.son))/864e5)<2)s.gun++;else s.gun=1; s.son=t; L2.s('streak',s); }
   $('stk').textContent='🔥 '+s.gun+' gün';
 }
-const ILHAM_DIZI=['İlim aramak her Müslümana farzdır.','Kalpler ancak Allah\'ı anmakla huzur bulur.','Sabır, imanın yarısıdır.','Güzel söz sadakadır.'];
-function ilhamCiz(){$('ilham').textContent=ILHAM_DIZI[Math.floor(Date.now()/864e5)%ILHAM_DIZI.length];}
-function ziyaretEt(id,btn){
-  let z=L2.g('visitedPoints',[]); if(z.includes(id))return;
-  z.push(id); L2.s('visitedPoints',z); btn.textContent='Ziyaret Edildi ✓'; btn.style.background='var(--ye-ac)';
-  nCiz(); isaretet(); profildoldur(); not('Ziyaretiniz profilinize işlendi.');
-}
+function ilhamCiz(){ const d=['İlim aramak her Müslümana farzdır.','Kalpler ancak Allah\'ı anmakla huzur bulur.','Sabır, imanın yarısıdır.','Güzel söz sadakadır.']; $('ilham').textContent=d[Math.floor(Date.now()/864e5)%d.length]; }
+function ziyaretEt(id,btn){ let z=L2.g('visitedPoints',[]); if(z.includes(id))return; z.push(id); L2.s('visitedPoints',z); btn.textContent='Ziyaret Edildi ✓'; btn.style.background='var(--ye-ac)'; nCiz(); isaretet(); profildoldur(); not('Ziyaretiniz profilinize işlendi.'); }
 function profildoldur(){$('ptp').textContent=L2.g('visitedPoints',[]).length;}
-function tab(a,b){document.querySelectorAll('section').forEach(s=>s.classList.remove('aktif'));
-  $('s-'+a).classList.add('aktif');document.querySelectorAll('#tb button').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');scrollTo(0,0);if(a==='ziyaret'&&hr)setTimeout(()=>hr.invalidateSize(),120)}
+function tab(a,b){document.querySelectorAll('section').forEach(s=>s.classList.remove('aktif')); $('s-'+a).classList.add('aktif');document.querySelectorAll('#tb button').forEach(x=>x.classList.remove('on')); b.classList.add('on');scrollTo(0,0);if(a==='ziyaret'&&hr)setTimeout(()=>hr.invalidateSize(),120)}
 function tema(){document.body.classList.toggle('koyu');L2.s('tema',document.body.classList.contains('koyu'));$('tbtn').textContent=document.body.classList.contains('koyu')?'☀':'☾'}
 
-/* --- Konum & Vakit --- */
+/* --- 3. KONUM & VAKİT --- */
 function konum(z){const e=L2.g('konum',null);if(e&&!z){S.la=e.la;S.ln=e.ln;hazir()}
-  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{S.la=p.coords.latitude;S.ln=p.coords.longitude;L2.s('konum',{la:S.la,ln:S.ln});hazir()},
-  ()=>{if(!e)$('knm').textContent='konum izni gerekli'},{enableHighAccuracy:true,timeout:12000,maximumAge:300000})}
+  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{S.la=p.coords.latitude;S.ln=p.coords.longitude;L2.s('konum',{la:S.la,ln:S.ln});hazir()},()=>{if(!e)$('knm').textContent='konum izni gerekli'},{enableHighAccuracy:true,timeout:12000,maximumAge:300000})}
 function hazir(){$('knm').textContent='Konum alındı ✓';vakit();noktalar();hrtKur();}
 const VA={Fajr:'İmsak',Sunrise:'Güneş',Dhuhr:'Öğle',Asr:'İkindi',Maghrib:'Akşam',Isha:'Yatsı'};
 const SIRA=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
 async function vakit(){const d=new Date(), t=`${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
-  try{const r=await fetch(`https://api.aladhan.com/v1/timings/${t}?latitude=${S.la}&longitude=${S.ln}&method=13`);
-    const j=await r.json();S.tm=j.data.timings;S.hj=j.data.date.hijri;L2.s('vc',{t,tm:S.tm,hj:S.hj});vCiz()}
+  try{const r=await fetch(`https://api.aladhan.com/v1/timings/${t}?latitude=${S.la}&longitude=${S.ln}&method=13`); const j=await r.json();S.tm=j.data.timings;S.hj=j.data.date.hijri;L2.s('vc',{t,tm:S.tm,hj:S.hj});vCiz()}
   catch(e){const c=L2.g('vc',null);if(c&&c.t===t){S.tm=c.tm;S.hj=c.hj;vCiz()}}}
-function vCiz(){$('hicri').innerHTML=S.hj?`${S.hj.day} ${S.hj.month.tr||S.hj.month.en} ${S.hj.year}<br>Hicri`:'';
-  const n=aktif();$('vkl').innerHTML=SIRA.map(k=>`<div class="v1 ${k===n?'now':''}"><div class="n">${VA[k]}</div><div class="s">${S.tm[k].slice(0,5)}</div></div>`).join('');sayac()}
+function vCiz(){$('hicri').innerHTML=S.hj?`${S.hj.day} ${S.hj.month.tr||S.hj.month.en} ${S.hj.year}<br>Hicri`:''; const n=aktif();$('vkl').innerHTML=SIRA.map(k=>`<div class="v1 ${k===n?'now':''}"><div class="n">${VA[k]}</div><div class="s">${S.tm[k].slice(0,5)}</div></div>`).join('');sayac()}
 const dk=s=>{const[a,b]=s.slice(0,5).split(':').map(Number);return a*60+b};
 function aktif(){const n=new Date().getHours()*60+new Date().getMinutes();let a='Isha';for(const k of SIRA)if(n>=dk(S.tm[k]))a=k;return a}
 function sayac(){if(!S.tm)return;const d=new Date(),n=d.getHours()*3600+d.getMinutes()*60+d.getSeconds();let h=null,a='';
@@ -301,7 +279,7 @@ function sayac(){if(!S.tm)return;const d=new Date(),n=d.getHours()*3600+d.getMin
   const f=h-n;$('sad').textContent=a+' vaktine kalan';$('ssr').textContent=`${String(Math.floor(f/3600)).padStart(2,'0')}:${String(Math.floor(f%3600/60)).padStart(2,'0')}:${String(f%60).padStart(2,'0')}`}
 setInterval(sayac,1000);
 
-/* --- Pusula --- */
+/* --- 4. PUSULA --- */
 function kAci(){const R=Math.PI/180,f1=S.la*R,f2=KABE.la*R,dl=(KABE.ln-S.ln)*R;return(Math.atan2(Math.sin(dl),Math.cos(f1)*Math.tan(f2)-Math.sin(f1)*Math.cos(dl))/R+360)%360}
 let pD=null;
 async function pusAc(){if(S.la===null)return;$('pus').classList.add('acik');const h=kAci();$('kdg').textContent=Math.round(h)+'°';
@@ -312,7 +290,7 @@ async function pusAc(){if(S.la===null)return;$('pus').classList.add('acik');cons
   addEventListener('deviceorientationabsolute',pD,true);addEventListener('deviceorientation',pD,true)}
 function pusKapat(){$('pus').classList.remove('acik');if(pD){removeEventListener('deviceorientationabsolute',pD,true);removeEventListener('deviceorientation',pD,true);pD=null}}
 
-/* --- Ziyaret Noktaları (Önbellekli Hızlı) --- */
+/* --- 5. ZİYARET & ÖNBELLEK --- */
 const AY=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
 function msf(a1,o1,a2,o2){const R=6371000,r=Math.PI/180;return 2*R*Math.asin(Math.sqrt(Math.sin((a2-a1)*r/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin((o2-o1)*r/2)**2))}
 const km=m=>m<950?Math.round(m)+' m':(m/1000).toFixed(1)+' km';
@@ -328,44 +306,50 @@ async function noktalar(){
   if(cache && (simdi - cache.z) < 86400000) { S.np = cache.v; nCiz(); isaretet(); dergiListesiCiz(); return; }
 
   const q=sorgu(); if(!q){S.np=[];nCiz();return}
-  $('nls').innerHTML='<div class="yk2">Etraftaki manevi mekânlar taranıyor (İlk tarama kısa sürebilir)…</div>';
+  $('nls').innerHTML='<div class="yk2">Etraftaki manevi mekânlar taranıyor...</div>';
   for(const a of AY){try{
-    const r=await fetch(a,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
-    const j=await r.json();
+    const r=await fetch(a,{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}}); const j=await r.json();
     S.np=(j.elements||[]).map(e=>{const la=e.lat??(e.center&&e.center.lat),ln=e.lon??(e.center&&e.center.lon),t=e.tags||{};
-      const ad=t['name:tr']||t.name;if(!la||!ln||!ad)return null;
-      let tu='Cami',ik='🕌';
-      if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}
-      else if(t.heritage||t.historic||t.start_date){tu='Tarihi Cami';ik='🏛️'}
+      const ad=t['name:tr']||t.name;if(!la||!ln||!ad)return null; let tu='Cami',ik='🕌';
+      if(t.historic==='tomb'||t.building==='mausoleum'||/tomb|grave/.test(t.memorial||'')){tu='Türbe';ik='🪦'}else if(t.heritage||t.historic||t.start_date){tu='Tarihi Cami';ik='🏛️'}
       return{id:e.type+'/'+e.id,ad,tu,ik,la,ln,t,m:msf(S.la,S.ln,la,ln)}}).filter(Boolean).sort((x,y)=>x.m-y.m).slice(0,50);
-    L2.s(ckAd, {z: simdi, v: S.np});
-    nCiz();isaretet();dergiListesiCiz();yolKontrol();return}catch(e){}}
-  $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı. İnternetinizi kontrol edin.</div>'}
+    L2.s(ckAd, {z: simdi, v: S.np}); nCiz();isaretet();dergiListesiCiz();yolKontrol();return}catch(e){}}
+  $('nls').innerHTML='<div class="bo">Harita sunucusuna ulaşılamadı.</div>'}
 
 function nCiz(){const l=S.np;$('nsy').textContent=l.length?l.length+' mekân':'';
   $('nls').innerHTML=l.length?l.map((n,i)=>`<div class="nk"><div class="ik2">${n.ik}</div>
     <div style="flex:1;min-width:0" onclick="detay(${i})"><div class="ad">${esc(n.ad)}</div>
     <div class="al">${n.tu} · ${km(n.m)}</div></div>
     <button class="btn km ik" style="flex:0 0 auto;width:auto;border:none" onclick="dergiAc('${esc(n.ad)}')">📖 Dergi</button>
-    </div>`).join(''):'<div class="bo">Mekân bulunamadı. Üstten Çapı büyütebilirsiniz.</div>'}
+    </div>`).join(''):'<div class="bo">Mekân bulunamadı.</div>'}
 
 function cipler(){$('flt').innerHTML=[['tu','🪦 Türbe'],['ta','🏛️ Tarihi'],['ca','🕌 Cami']].map(([k,a])=>`<button class="c1 ${S.fl[k]?'on':''}" onclick="fDeg('${k}',this)">${a}</button>`).join('');
   $('yrc').innerHTML=[3000,5000,10000,25000].map(v=>`<button class="c1 ${S.yr===v?'on':''}" onclick="yDeg(${v},this)">${v/1000} km</button>`).join('')}
 function fDeg(k,b){S.fl[k]=S.fl[k]?0:1;b.classList.toggle('on');L2.s('fl',S.fl);noktalar()}
 function yDeg(v,b){S.yr=v;L2.s('yr',v);document.querySelectorAll('#yrc .c1').forEach(x=>x.classList.remove('on'));b.classList.add('on');if(hr)hr.setZoom(v>20000?10:v>6000?12:14);noktalar()}
 
-/* --- Harita --- */
+/* --- 6. HARİTA --- */
 let hr=null,kt=null;
 function hrtKur(){if(hr){hr.setView([S.la,S.ln],13);isaretet();return}
   hr=L.map('hrt',{zoomControl:false}).setView([S.la,S.ln],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(hr);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OSM'}).addTo(hr);
   L.circleMarker([S.la,S.ln],{radius:8,color:'#1B2A4A',fillColor:'#3E7A62',fillOpacity:1,weight:3}).addTo(hr).bindPopup('Buradasınız');
   kt=L.layerGroup().addTo(hr);isaretet()}
 function isaretet(){if(!kt)return;kt.clearLayers();const v=L2.g('visitedPoints',[]);
   S.np.forEach((n,i)=>{const r = v.includes(n.id)?'#3E7A62':(n.tu==='Türbe'?'#C9A227':'#7C766C');
     L.circleMarker([n.la,n.ln],{radius:7,color:'#fff',weight:2,fillColor:r,fillOpacity:1}).addTo(kt).on('click',()=>detay(i))})}
 
-/* --- Detay Penceresi (Özet) --- */
+/* --- 7. YENİ: NATIVE YOL TARİFİ (DEEP LINKING) --- */
+function yolTarif(lat, lng){
+  const appMap = isIos() ? `maps://?daddr=${lat},${lng}&dirflg=d` : `intent://maps.google.com/maps?daddr=${lat},${lng}&dirflg=d#Intent;scheme=https;package=com.google.android.apps.maps;end`;
+  const webMap = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  
+  // Eğer cihazda uygulama varsa Native açar, yoksa tarayıcıdan Google Haritalara düşer.
+  setTimeout(()=>{ window.location.href = appMap; }, 10);
+  setTimeout(()=>{ window.open(webMap, '_blank'); }, 600); // Yedek (Fallback)
+}
+
+/* --- 8. DETAY PENCERESİ --- */
 let aN=null;
 async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
   const isZ = L2.g('visitedPoints',[]).includes(n.id);
@@ -374,31 +358,24 @@ async function detay(i){const n=S.np[i];aN=n;$('pd').classList.add('acik');
     <div class="sr2" style="margin-bottom:14px;"><button class="btn km" style="flex:1" onclick="dergiAc('${esc(n.ad)}')">📖 Dergide Derinlemesine Oku</button></div>
     <div id="wk" class="yk2">Özet aranıyor…</div>
     <div class="sr2">
-      <button class="btn ik" style="flex:1" onclick="yolTarif()">🧭 Yol Tarifi</button>
+      <button class="btn ik" style="flex:1" onclick="yolTarif(${n.la},${n.ln})">🧭 Yol Tarifi</button>
       <button class="btn" style="flex:1; background:${isZ?'var(--ye-ac)':'var(--alt)'}; border:none;" onclick="ziyaretEt('${n.id}',this)">${isZ?'Ziyaret Edildi ✓':'✓ Ziyaret Ettim'}</button>
     </div>`;
   const o=await wikiOzet(n.ad);const w=$('wk');if(!w)return;
-  if(o){w.className='';w.innerHTML=(o.gr?`<img src="${o.gr}" alt="">`:'')+`<div style="font-size:16px;line-height:1.6">${esc(o.mt)}</div>`;}
-  else{w.className='bo';w.textContent='Vikipedi özeti bulunamadı.'}}
+  if(o){w.className='';w.innerHTML=(o.gr?`<img src="${o.gr}" alt="">`:'')+`<div style="font-size:16px;line-height:1.6">${esc(o.mt)}</div>`;}else{w.className='bo';w.textContent='Vikipedi özeti bulunamadı.'}}
 function shKapat(){$('pd').classList.remove('acik');durAnlatim()}
-function yolTarif(){open(`https://www.google.com/maps/dir/?api=1&destination=${aN.la},${aN.ln}`,'_blank')}
 
-/* --- Dergi Listesi --- */
 function dergiListesiCiz(){
-  const yakindakiler = S.np.filter(n=> n.tu==='Türbe').slice(0,5);
-  if(yakindakiler.length > 0){
-    $('dergiYakinda').innerHTML = yakindakiler.map(n=>`<div class="dergi-kart" onclick="dergiAc('${esc(n.ad)}')"><div class="dergi-kart-ic"><h3>${esc(n.ad)}</h3><p>${km(n.m)} yakınınızda. Hayatını derinlemesine okuyun.</p></div></div>`).join('');
-  } else {$('dergiYakinda').innerHTML = '<div class="bo">Çevrenizde dergi formatına uygun türbe bulunamadı.</div>';}
+  const y = S.np.filter(n=> n.tu==='Türbe').slice(0,5);
+  if(y.length > 0){ $('dergiYakinda').innerHTML = y.map(n=>`<div class="dergi-kart" onclick="dergiAc('${esc(n.ad)}')"><div class="dergi-kart-ic"><h3>${esc(n.ad)}</h3><p>${km(n.m)} yakınınızda.</p></div></div>`).join('');
+  } else {$('dergiYakinda').innerHTML = '<div class="bo">Çevrenizde uygun türbe bulunamadı.</div>';}
 }
 
-/* --- TAM EKRAN DERGİ MODU --- */
+/* --- 9. DERGİ MODU --- */
 let dergiMetniSaf = "";
 async function dergiAc(aranacakAd){
   shKapat(); $('dergiModu').style.display='flex'; $('dmKapak').style.display='none';
-  $('dmBaslik').textContent = aranacakAd;
-  $('dmMetin').innerHTML = '<div class="yk2">Manevi kütüphaneden hayat hikayesi derleniyor... 📖 Lütfen bekleyin.</div>';
-  $('btnDergiSes').textContent = "🔊 Dinle";
-  
+  $('dmBaslik').textContent = aranacakAd; $('dmMetin').innerHTML = '<div class="yk2">Dergi yükleniyor...</div>'; $('btnDergiSes').textContent = "🔊 Dinle";
   const ozet = await wikiOzet(aranacakAd); let gercekBaslik = aranacakAd;
   if(ozet){gercekBaslik = ozet.bs; $('dmBaslik').textContent = gercekBaslik; if(ozet.gr){ $('dmKapak').src = ozet.gr; $('dmKapak').style.display='block'; }}
   try{
@@ -406,52 +383,65 @@ async function dergiAc(aranacakAd){
     const j = await r.json(); const extract = Object.values(j.query.pages)[0].extract;
     if(extract){
       let temizHtml = extract.replace(/<span class="mw-editsection">.*?<\/span>/g, '');
-      $('dmMetin').innerHTML = temizHtml;
-      const geciciDiv = document.createElement("div"); geciciDiv.innerHTML = temizHtml; dergiMetniSaf = geciciDiv.textContent || geciciDiv.innerText || "";
-    } else { $('dmMetin').innerHTML = '<div class="bo">Bu mübarek şahsiyet için detaylı kaynak yazısı bulunamadı.</div>'; dergiMetniSaf = ""; }
-  }catch(e){ $('dmMetin').innerHTML = '<div class="bo">Bağlantı hatası oluştu. Lütfen tekrar deneyin.</div>'; }
+      $('dmMetin').innerHTML = temizHtml; const geciciDiv = document.createElement("div"); geciciDiv.innerHTML = temizHtml; dergiMetniSaf = geciciDiv.textContent || geciciDiv.innerText || "";
+    } else { $('dmMetin').innerHTML = '<div class="bo">Detaylı kaynak yazısı bulunamadı.</div>'; dergiMetniSaf = ""; }
+  }catch(e){ $('dmMetin').innerHTML = '<div class="bo">Bağlantı hatası oluştu.</div>'; }
 }
-function dergiKapat(){$('dergiModu').style.display='none'; durAnlatim();}
+function dergiKapat(){$('dergiModu').style.display='none'; durAnlatim(); $('dergiModu').style.transform = 'translateY(0)';}
 
-/* --- SES MOTORU (Durdurulabilir) --- */
+/* --- 10. YENİ: KAYDIRARAK KAPATMA (SWIPE GESTURES) FİZİĞİ --- */
+function kaydirmaEkle(elId, icerikId, kapatFonksiyonu) {
+  const el = $(elId), icerik = icerikId ? $(icerikId) : el;
+  if(!el) return;
+  let startY=0, curY=0, isSwiping=false;
+  
+  el.addEventListener('touchstart', e => {
+    // Sadece içeriğin en üstündeyse (scroll 0) aşağı kaydırmaya izin ver
+    if(icerik.scrollTop > 5) return; 
+    startY = e.touches[0].clientY; isSwiping = true; el.style.transition = 'none';
+  }, {passive:true});
+  
+  el.addEventListener('touchmove', e => {
+    if(!isSwiping) return;
+    curY = e.touches[0].clientY; const diff = curY - startY;
+    // Eğer aşağı çekiyorsa
+    if(diff > 0) {
+      if(e.cancelable) e.preventDefault(); // Sayfanın normal esnemesini durdur
+      el.style.transform = `translateY(${diff}px)`;
+    }
+  }, {passive:false});
+  
+  el.addEventListener('touchend', e => {
+    if(!isSwiping) return;
+    isSwiping = false; el.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const diff = curY - startY;
+    if(diff > 140) { // 140px aşağı çekildiyse KAPAT
+      el.style.transform = `translateY(100%)`; setTimeout(() => kapatFonksiyonu(), 300);
+    } else { // Yeterli çekilmediyse GERİ YAYLAN
+      el.style.transform = 'translateY(0)'; setTimeout(() => {el.style.transition=''}, 300);
+    }
+  });
+}
+// Swipe Fiziklerini İlgili Ekranlara Uygula
+kaydirmaEkle('sh', 'sh', shKapat); 
+kaydirmaEkle('dergiModu', 'dmIcerikScroll', dergiKapat);
+
+/* --- 11. SES & DİĞER ARAÇLAR --- */
 let okuyor = false;
 function dergiSesliOku(){
   if(!dergiMetniSaf) return;
-  if(okuyor){ durAnlatim(); } 
-  else { $('btnDergiSes').textContent = "🛑 Durdur"; okuSesli(dergiMetniSaf, () => { $('btnDergiSes').textContent = "🔊 Dinle"; okuyor = false; }); okuyor = true; }
+  if(okuyor){ durAnlatim(); } else { $('btnDergiSes').textContent = "🛑 Durdur"; okuSesli(dergiMetniSaf, () => { $('btnDergiSes').textContent = "🔊 Dinle"; okuyor = false; }); okuyor = true; }
 }
-function okuSesli(t, bitince_fonksiyon){
-  if(!('speechSynthesis'in window)){not('Ses desteklenmiyor');return;}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t.substring(0, 4000)); u.lang='tr-TR'; u.rate=0.92;
-  if(bitince_fonksiyon) u.onend = bitince_fonksiyon; speechSynthesis.speak(u);
-}
+function okuSesli(t, b_fn){ if(!('speechSynthesis'in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t.substring(0, 4000)); u.lang='tr-TR'; u.rate=0.92; if(b_fn) u.onend=b_fn; speechSynthesis.speak(u); }
 function durAnlatim(){ if('speechSynthesis'in window) speechSynthesis.cancel(); okuyor = false; $('btnDergiSes').textContent = "🔊 Dinle"; }
 
-/* --- Wikipedia Özet (Kapaklar İçin) --- */
-async function wikiOzet(aranan){
-  try{ const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(aranan));
-    const j=await r.json();
-    if(j.pages&&j.pages[0]){
-      const r2=await fetch('https://tr.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(j.pages[0].key));
-      const j2=await r2.json(); return{mt:j2.extract, bs:j2.title, gr:j2.thumbnail?j2.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null}
-    }
-  }catch(e){} return null;
-}
-
-/* --- Yol & Araçlar --- */
-function yolKontrol(){const y=S.np.find(n=>n.m<800&&n.tu==='Türbe');
-  const e=$('yol');if(!y){e.style.display='none';return} e.style.display='block';e.dataset.i=S.np.indexOf(y); e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — keşfetmek için dokunun.`}
+async function wikiOzet(a){try{const r=await fetch('https://tr.wikipedia.org/w/rest.php/v1/search/page?limit=1&q='+encodeURIComponent(a));const j=await r.json();if(j.pages&&j.pages[0]){const r2=await fetch('https://tr.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(j.pages[0].key));const j2=await r2.json();return{mt:j2.extract, bs:j2.title, gr:j2.thumbnail?j2.thumbnail.source.replace(/\/\d+px-/,'/640px-'):null}}}catch(e){}return null;}
+function yolKontrol(){const y=S.np.find(n=>n.m<800&&n.tu==='Türbe');const e=$('yol');if(!y){e.style.display='none';return} e.style.display='block';e.dataset.i=S.np.indexOf(y); e.innerHTML=`<b>${esc(y.ad)}</b>Çok yakınınızda (${km(y.m)}) — okumak için dokunun.`}
 function yakinAc(){detay(+$('yol').dataset.i)}
-async function ayet(){const g=Math.floor(Date.now()/864e5);
-  try{const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet'); const j=await r.json();if(!j.data||!j.data.text)throw 0;
-    $('ayt').textContent=j.data.text; $('aykn').textContent=j.data.surah.name+' Sûresi, '+j.data.numberInSurah+'. âyet'}catch(e){}}
+async function ayet(){const g=Math.floor(Date.now()/864e5);try{const r=await fetch('https://api.alquran.cloud/v1/ayah/'+((g*37)%6236+1)+'/tr.diyanet'); const j=await r.json();if(!j.data||!j.data.text)throw 0;$('ayt').textContent=j.data.text; $('aykn').textContent=j.data.surah.name+' Sûresi, '+j.data.numberInSurah+'. âyet'}catch(e){}}
 function pay(m){if(navigator.share)navigator.share({title:'Gönül Pusulası',text:m}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(m);not('Kopyalandı')}}
-function not(m){const d=document.createElement('div');d.textContent=m;
-  d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;text-align:center;';
-  document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+function not(m){const d=document.createElement('div');d.textContent=m;d.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--lac);color:#F5EFE3;padding:12px 20px;border-radius:14px;font-size:14.5px;z-index:200;text-align:center;';document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 
-/* --- Başlat --- */
 if(L2.g('tema',false)){document.body.classList.add('koyu');$('tbtn').textContent='☀'}
 S.fl=L2.g('fl',S.fl);S.yr=L2.g('yr',S.yr);
 cipler(); ayet(); ilhamCiz(); istikrarTakip(); profildoldur(); konum(0);
