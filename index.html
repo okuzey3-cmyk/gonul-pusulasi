@@ -87,6 +87,35 @@
   .beat-image.full-bleed img{max-height:70vh; object-fit:cover;}
   .beat-image img{cursor:zoom-in;}
 
+  /* Ken Burns hareketi */
+  @keyframes kenburns{
+    0%{ transform: scale(1.06) translate(0,0); }
+    100%{ transform: scale(1.16) translate(-1.5%,-1%); }
+  }
+  .beat-image img, .reader-hero img, .story-card img{
+    animation: kenburns 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* Çerçeveli sanat eseri hissi */
+  .beat-image{
+    padding:14px;
+    background: linear-gradient(180deg, rgba(176,141,87,0.12), rgba(176,141,87,0.02));
+    border:1px solid rgba(176,141,87,0.35);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 12px 30px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .beat-image img{display:block; width:100%;}
+  .beat-caption{
+    font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68;
+    padding:12px 6px 2px; letter-spacing:.05em; text-align:center;
+    border-top:1px dashed rgba(176,141,87,0.25); margin-top:12px;
+  }
+
+  /* Paragraf metni yukarı kayarak belirsin */
+  .article p{opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s ease;}
+  .article p.in-view{opacity:1; transform:translateY(0);}
+
   /* ---------- LIGHTBOX (fotoğraf büyütme) ---------- */
   #lightbox{position:fixed; inset:0; z-index:1000; background:rgba(10,7,5,0.96); display:none; align-items:center; justify-content:center; touch-action:pinch-zoom pan-x pan-y; overflow:auto;}
   #lightbox.open{display:flex;}
@@ -983,17 +1012,224 @@ DATA["1920ler"] = {
   ]
 };
 
-let currentDecade = null;
+DATA["1920ler"].stories.push({
+  id: "insulin-discovery",
+  year: "1921 – 1923",
+  place: "Toronto, Kanada",
+  title: "Ölüm Cezasını Kaldıran Keşif",
+  teaser: "Genç bir cerrah ve öğrencisi, bir yaz boyunca çalışarak şeker hastalığının ölümcül hükmünü kaldırdı.",
+  cover: WM('Banting_and_Best.jpg'),
+  beats: [
+    { text: "1921'e kadar tip 1 diyabet teşhisi neredeyse kesin bir ölüm cezasıydı — özellikle çocuklarda hastalık hızla ilerliyor, hastalar birkaç ay ya da yıl içinde hayatını kaybediyordu. Tek 'tedavi', hastaları açlığa yakın diyetlerle birkaç ay yaşatmaktan ibaretti." },
+    { text: "Toronto'da genç bir cerrah olan Frederick Banting, pankreasın kan şekerini düzenleyen bir madde ürettiğine dair bir teorisi vardı. Üniversiteden küçük bir laboratuvar ve öğrenci asistanı Charles Best'i ödünç aldı; ikili, 1921 yazını köpekler üzerinde deneyler yaparak geçirdi." },
+    { text: "Aylar süren başarısız denemelerin ardından, pankreastan elde ettikleri özütü şeker hastalığı olan bir köpeğe enjekte ettiklerinde kan şekerinin düştüğünü gördüler. Biyokimyacı James Collip'in de katılımıyla özütü insanlar için güvenli hale getirmeye çalıştılar." },
+    { text: "Ocak 1922'de, ölmek üzere olan 14 yaşındaki Leonard Thompson, bu yeni maddenin ilk insan denemesine katıldı. İlk enjeksiyon yeterince saflaştırılmamıştı, ama birkaç gün sonraki ikinci doz kan şekerini normale döndürdü — çocuk gözle görülür şekilde iyileşti." },
+    { text: "Keşif, 'insülin' adıyla hızla dünyaya yayıldı. Banting ve ekibi, buluşlarının patentini sadece bir dolara üniversiteye devretti — amaçlarının kâr değil, mümkün olan en çok insana ulaşmak olduğunu söylediler. Bir yaz boyunca süren yorucu bir araştırma, milyonlarca insan için ölüm cezasını kronik ama yaşanabilir bir duruma çevirdi." }
+  ]
+});
 
-function openRandomStory(){
-  const allStories = [];
+DATA["1920ler"].stories.push({
+  id: "ederle-channel",
+  year: "1926",
+  place: "İngiliz Kanalı, Fransa – İngiltere",
+  title: "Erkeklerin Rekorunu İki Saat Geride Bırakan Kadın",
+  teaser: "Herkes onun yüzemeyeceğini söyledi. O, kanalı geçen tüm erkeklerden daha hızlı yüzdü.",
+  cover: WM('G._Ederle_LCCN2014718380.jpg'),
+  beats: [
+    { text: "1920'lerde İngiliz Kanalı'nı yüzerek geçmek, dünyanın en zorlu dayanıklılık sınavlarından biri olarak kabul ediliyordu — o güne kadar sadece beş kişi başarmıştı, hepsi erkekti. Çoğu uzman, bir kadının bu kadar uzun ve soğuk bir mesafeyi yüzerek geçemeyeceğini düşünüyordu." },
+    { text: "Amerikalı yüzücü Gertrude Ederle, 1925'teki ilk denemesinde antrenörünün müdahalesiyle sudan çıkarılmıştı — aslında hâlâ güçlüydü, ama antrenörü onun boğulmak üzere olduğunu sanmıştı. Ederle bu karara kızgındı ve bir yıl sonra yeni bir antrenörle tekrar denemeye karar verdi." },
+    { text: "6 Ağustos 1926'da Fransa kıyısından denize girdi. Soğuğa karşı vücuduna kalın bir yağ tabakası sürmüş, kendi tasarladığı, dönemin standartlarına göre 'skandal' sayılan iki parçalı bir mayo giymişti." },
+    { text: "14 saat 31 dakika süren yüzüşü boyunca fırtınalı dalgalarla, soğuk suyla ve yorgunlukla mücadele etti. Teknede yanında giden babası, onu motive etmek için vaat ettiği yeni arabayı hatırlatıp durdu." },
+    { text: "İngiltere kıyısına ulaştığında, kanalı geçen tüm erkeklerin rekorunu neredeyse iki saat farkla kırmıştı. New York'a döndüğünde onu karşılamak için düzenlenen konfeti yağmurlu geçit töreni, o zamana kadar bir sporcuya yapılmış en büyük kutlamalardan biriydi — 'kadınlar dayanıklılık gerektiren sporlarda yer alamaz' önyargısını kalıcı olarak sarstı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "penicillin",
+  year: "1928",
+  place: "Londra, İngiltere",
+  title: "Unutulan Bir Petri Kabından Doğan Devrim",
+  teaser: "Tatilden dönen bir bakteriyolog, laboratuvarındaki bir 'kaza'nın tıbbı sonsuza dek değiştireceğini fark etti.",
+  cover: WM('Sir_Alexander_Fleming_1881-1955_Discoverer_of_penicillin_lived_here.jpg'),
+  beats: [
+    { text: "1928'de Londra'daki St Mary's Hastanesi'nde çalışan İskoç bakteriyolog Alexander Fleming, stafilokok bakterisi üzerine araştırmalar yapıyordu. Tatile çıkmadan önce, üzerinde bakteri kültürleri bulunan bazı petri kaplarını laboratuvar tezgâhında unuttu." },
+    { text: "Eylül 1928'de tatilden döndüğünde, kaplardan birinde beklenmedik bir şey gördü: kabın içine bir küf mantarı bulaşmıştı ve küfün etrafındaki bakteriler tuhaf bir şekilde ölmüştü — sanki küf, bakterileri kendiliğinden yok ediyordu." },
+    { text: "Çoğu bilim insanı böyle bir 'kirlenmiş' deneyi çöpe atıp geçerdi. Fleming'in merakı buna izin vermedi; küfü inceledi ve onun Penicillium cinsine ait olduğunu belirledi. Küfün salgıladığı maddeye 'penisilin' adını verdi." },
+    { text: "Fleming, penisilinin bakterileri öldürme gücünü fark etmesine rağmen, onu saf ve stabil bir ilaca dönüştürmenin yolunu bulamadı; bulgusunu 1929'da yayımladı ama bilim dünyası bu makaleye o dönem pek ilgi göstermedi." },
+    { text: "Penisilinin gerçek tıbbi devrimi, on yıldan fazla bir süre sonra, başka bilim insanlarının (Howard Florey ve Ernst Chain) onu üretilebilir bir ilaca dönüştürmesiyle gerçekleşti. Ama başlangıç noktası hep aynı kaldı: Fleming'in unuttuğu, sonra dikkatle incelediği bir petri kabı — dünyanın ilk antibiyotiğinin doğduğu an." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "goddard-rocket",
+  year: "1926",
+  place: "Auburn, Massachusetts, ABD",
+  title: "Bir Teyzenin Çiftliğinden Uzaya Uzanan İlk Adım",
+  teaser: "10 metreye bile ulaşamayan küçük bir roket, uzay çağının ilk kıvılcımını çaktı.",
+  cover: WM('Robert_Goddard%27s_Rocket_After_Flight_-_GPN-2002-000129.jpg'),
+  beats: [
+    { text: "1920'lerde roket fikri çoğunlukla bilim kurgu romanlarına ait, ciddiye alınmayan bir konuydu. Fizik profesörü Robert Goddard, katı yakıtlı roketlerin sınırlı olduğuna inanıyor, çok daha güçlü bir alternatif üzerinde çalışıyordu: sıvı yakıtlı roket." },
+    { text: "Goddard'ın teorik makaleleri, dönemin basınında alay konusu olmuştu — bir gazete onun roketle Ay'a ulaşma fikrini 'lise düzeyinde bile bilinen fizik yasalarını anlamamak' diye eleştirmişti. Buna rağmen Goddard, çalışmalarına sessizce devam etti." },
+    { text: "16 Mart 1926'da, Massachusetts'teki teyzesinin çiftlik arazisinde, benzin ve sıvı oksijenle çalışan küçük bir roketi fırlattı. Roket sadece 2,5 saniye havada kaldı, 12,5 metre yükseldi ve 56 metre öteye düştü." },
+    { text: "Mesafe ve süre gülünç derecede kısa görünse de, bu fırlatma dünya tarihinin ilk sıvı yakıtlı roket uçuşuydu — bugün kullanılan tüm modern roket ve uzay araçlarının teknik atası sayılır. Goddard, o günü sade bir dille günlüğüne not etti: 'roket kendi ağırlığını kaldırdı.'" },
+    { text: "Goddard, hayattayken pek tanınmadan 1945'te öldü. Ama yıllar sonra Apollo programıyla insanlığı Ay'a taşıyan roket teknolojisinin temelleri, o küçük çiftlik arazisinde, alay konusu olmuş bir profesörün inatla sürdürdüğü sessiz denemelerle atılmıştı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "kdka-radio",
+  year: "1920",
+  place: "Pittsburgh, Pennsylvania, ABD",
+  title: "Bir Çatı Katından Milyonlara Ulaşan Ses",
+  teaser: "Bir mühendisin garajdaki meraklı denemeleri, evlere sesin girdiği bir çağı başlattı.",
+  cover: WM('KDKA_-_Early_studio_-_circa_1921.jpg'),
+  beats: [
+    { text: "1920'lerin başında radyo, çoğunlukla amatör operatörlerin birbirine Mors alfabesiyle mesaj gönderdiği teknik bir meraktı. Pittsburgh'da Westinghouse şirketinde mühendis olan Frank Conrad, garajından düzenli olarak plak çalıp yayın yapıyordu — kısa sürede küçük bir dinleyici kitlesi edindi." },
+    { text: "Bu ilgiyi fark eden Westinghouse yöneticileri, radyoyu sadece bir meraklı hobisi olmaktan çıkarıp düzenli, kamuya açık bir yayın hizmetine dönüştürmeye karar verdi. Fabrikanın çatısına küçük bir kulübe kurup KDKA çağrı işaretiyle yayına hazırlandılar." },
+    { text: "2 Kasım 1920 akşamı, KDKA ilk resmi yayınını yaptı: o günkü ABD başkanlık seçiminin sonuçlarını canlı olarak duyurdu. Yayın, telefonla gelen sonuçları bir spikerin mikrofona okumasıyla, aralarda gramofon müziğiyle sürdürüldü." },
+    { text: "O gece, evinde radyo alıcısı olan az sayıda kişi, seçim sonuçlarını gazetenin ertesi gün basılmasını beklemeden, aynı akşam öğrenebildi. Bu, dünyada düzenli bir program takvimiyle yayın yapan ilk ticari radyo istasyonunun doğuşuydu." },
+    { text: "KDKA'nın başarısı hızla yayıldı; birkaç yıl içinde ülke genelinde yüzlerce radyo istasyonu kuruldu. Bir mühendisin garajındaki meraklı denemeleri, on yıl içinde milyonlarca evi aynı anda haberlere, müziğe ve spora bağlayan kitlesel bir iletişim aracına dönüştü." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "norge-north-pole",
+  year: "1926",
+  place: "Svalbard'dan Alaska'ya, Kuzey Kutbu üzerinden",
+  title: "Bir Hava Gemisiyle Kutbun Üzerinden",
+  teaser: "Uçakla ulaşılamayan bir hedefe, devasa bir gaz balonuyla üç ayrı milletten bir ekip ulaştı.",
+  cover: WM('Airship_Norge_Ny-%C3%85lesund.jpg'),
+  beats: [
+    { text: "Norveçli kutup kaşifi Roald Amundsen, kariyerinin büyük bölümünü Güney Kutbu'na ulaşarak geçirmişti (1911), ama Kuzey Kutbu'na kara ya da hava yoluyla güvenilir bir şekilde ulaşmak hâlâ başarılamamıştı. 1925'teki uçakla yapılan bir deneme, yakıt sorunları yüzünden yarım kalmıştı." },
+    { text: "Amundsen, bu kez farklı bir strateji izledi: İtalyan mühendis Umberto Nobile'nin tasarladığı 'Norge' adlı yarı sert hava gemisini kullanmaya karar verdi — bir uçağın aksine, motor arızası durumunda havada onarılabilecek, daha güvenilir bir araçtı." },
+    { text: "Ekip, Norveçli, İtalyan ve Amerikalı üyelerden (finansör Lincoln Ellsworth dahil) oluşuyordu. 11 Mayıs 1926'da Svalbard'dan havalanan Norge, buzlanma ve sisle mücadele ederek Kuzey Kutbu'nun üzerinden geçti." },
+    { text: "Kutbun üzerinden geçerken ekip, Norveç, İtalya ve ABD bayraklarını aşağıya, buzun üzerine bıraktı. Bu, Kuzey Kutbu'na ulaştığı doğrulanabilen ilk seferdi — önceki bazı iddialar (Peary'nin 1909'daki karadan ulaşma iddiası dahil) tartışmalı kalmıştı." },
+    { text: "72 saat süren yolculuğun ardından Norge, Alaska'nın Teller kasabasına indi — Avrupa ile Amerika arasında kutup buz tabakasının üzerinden geçen ilk uçuştu. Üç farklı milletin ortak emeği, onlarca yıllık kutup arayışını nihayet sonuca ulaştırmıştı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "farnsworth-tv",
+  year: "1927",
+  place: "San Francisco, Kaliforniya, ABD",
+  title: "Bir Traktör Sürerken Doğan Fikir",
+  teaser: "14 yaşında bir çiftlik çocuğunun aklına gelen fikir, birkaç yıl sonra televizyonu icat etti.",
+  cover: WM('Philo_T_Farnsworth.jpg'),
+  beats: [
+    { text: "1920'lerin ortasında televizyon fikri üzerinde çalışan birkaç mühendis vardı, ama hepsi görüntüyü dönen mekanik disklerle tarıyordu — yavaş ve düşük kaliteli bir yöntemdi. Idaho'da bir çiftlikte büyüyen 14 yaşındaki Philo Farnsworth'ün aklına, bir tarlayı sürerken tamamen farklı bir fikir gelmişti: görüntüyü satır satır, elektronik olarak taramak." },
+    { text: "Farnsworth, resmi bir mühendislik eğitimi almadan, lisedeki fizik öğretmenine bu fikri anlattığında öğretmeni onu ciddiye aldı ve fikri kağıda çizmesine yardım etti — yıllar sonra bu çizim, patent davalarında kritik bir kanıt olacaktı." },
+    { text: "1926'da San Francisco'da küçük bir laboratuvar kuran Farnsworth, 'görüntü ayrıştırıcı' (image dissector) adını verdiği bir tüp geliştirdi — ışığı elektron akışına çeviren, tamamen elektronik bir kamera sistemiydi." },
+    { text: "7 Eylül 1927'de, henüz 21 yaşındayken, ekibiyle birlikte basit bir çizgi görüntüsünü bu sistemle ilk kez ileten cihazdan alıcı ekrana aktarmayı başardı. Görüntü net bir şekilde belirdiğinde heyecanla bağırdı: 'İşte bu! Başardık, elektronik televizyon bu!'" },
+    { text: "Farnsworth'ün buluşu, sonraki yıllarda büyük şirketlerle uzun patent davalarına konu oldu, ama tarihsel gerçek değişmedi: modern televizyonun temelini atan elektronik tarama fikri, bir çiftlik çocuğunun tarlada sürdüğü traktörün üzerinde doğmuştu." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "womens-suffrage",
+  year: "1848 – 1920",
+  place: "ABD",
+  title: "Yetmiş İki Yıllık Bir Bekleyişin Sonu",
+  teaser: "İlk toplantıyı düzenleyen kadınların hiçbiri, kanunun kabul edildiği günü görecek kadar yaşamadı.",
+  cover: WM('WOMAN_SUFFRAGE_CAMERON_HOUSE,_HEADQUARTERS_LCCN2016865285.jpg'),
+  beats: [
+    { text: "1848'de New York'un Seneca Falls kasabasında bir araya gelen bir grup kadın ve erkek, kadınların oy hakkını talep eden bir bildirge yayımladı. O dönem bu fikir, çoğu kişiye gülünç ya da tehlikeli geliyordu — kadınların oy kullanma hakkı, o güne kadar hiçbir ülkede kabul edilmemişti." },
+    { text: "Sonraki yetmiş yılda kuşaklar boyu kadın hakları savunucusu bu mücadeleyi sürdürdü — mitingler düzenlediler, dilekçeler topladılar, Beyaz Saray'ın önünde nöbet tuttular, bazıları tutuklanıp hapiste açlık grevine girdi. Hareketi başlatan ilk isimlerin neredeyse hiçbiri, mücadelenin sonucunu görecek kadar yaşamadı." },
+    { text: "I. Dünya Savaşı sırasında kadınların fabrikalarda, hastanelerde ve cephe gerisinde üstlendiği roller, kamuoyunun bakış açısını değiştirmeye başladı. Kongre, 1919'da 19. Anayasa Değişikliği'ni onayladı; şimdi değişikliğin yürürlüğe girmesi için eyaletlerin dörtte üçünün onayı gerekiyordu." },
+    { text: "18 Ağustos 1920'de Tennessee eyaleti, gereken 36. eyalet olarak değişikliği onayladı — oylamada belirleyici oy, annesinin son anda gönderdiği bir mektuptan etkilenip fikrini değiştiren genç bir milletvekiline aitti. Değişiklik, birkaç gün içinde resmen yürürlüğe girdi." },
+    { text: "26 Ağustos 1920'de 19. Anayasa Değişikliği ABD Anayasası'na eklendiğinde, milyonlarca kadın ilk kez oy kullanma hakkına kavuştu. Yetmiş iki yıl süren bu mücadele, bir hakkın verilmeyip kazanıldığının — sabırla, ısrarla ve nesiller boyu süren bir dayanışmayla kazanıldığının somut kanıtıydı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "duke-kahanamoku",
+  year: "1912 – 1924",
+  place: "Hawaii, ABD",
+  title: "Sudaki Kraliyet ve Dalganın Elçisi",
+  teaser: "Bir Hawaii'li yüzücü, hem havuzda rekorlar kırdı hem de dünyaya sörf yapmayı öğretti.",
+  cover: WM('Duke_Kahanamoku_1920c.jpg'),
+  beats: [
+    { text: "1900'lerin başında Hawaii'de doğan Duke Kahanamoku, çocukluğunu Waikiki kıyılarında yüzerek ve kadim bir Hawaii geleneği olan tahta üzerinde dalga sürmeyi (he'e nalu) öğrenerek geçirdi. O dönem sörf, dünyanın geri kalanında neredeyse hiç bilinmiyordu." },
+    { text: "1912 Stockholm Olimpiyatları'nda 100 metre serbest stilde altın madalya kazanarak dünya çapında tanınan bir yüzücü oldu. 1920 Antwerp Olimpiyatları'nda unvanını başarıyla savundu — bu, o dönem için ender bir başarıydı." },
+    { text: "Kahanamoku, olimpiyat başarısının verdiği üne, Hawaii'nin kadim sörf geleneğini dünyaya tanıtmak için bilinçli olarak kullandı. Avustralya ve Kaliforniya kıyılarında düzenlediği gösteri sörfleriyle, o güne kadar sadece Hawaii'ye özgü olan bu sporu ilk kez geniş kitlelere tanıttı." },
+    { text: "1925'te Kaliforniya kıyısında bir balıkçı teknesi devrildiğinde, Kahanamoku sörf tahtasını kullanarak sekiz kişiyi sudan kurtardı — bu olay, cankurtaranlık tarihinde sörf tahtasının bir kurtarma aracı olarak kullanıldığı ilk büyük vaka olarak kabul edilir." },
+    { text: "Kahanamoku, 1924 Paris Olimpiyatları'nda genç Johnny Weissmuller'a karşı gümüş madalya aldığında bile sportmenliğiyle övgü topladı. Bugün 'modern sörfün babası' olarak anılıyor — hem havuzda hem denizde, bir adanın kadim bir geleneğini dünyaya armağan eden bir elçi oldu." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "transcontinental-flight",
+  year: "1923",
+  place: "New York'tan San Diego'ya, ABD",
+  title: "Bir Kıtayı 27 Saatte Aşan İki Pilot",
+  teaser: "İki başarısız denemenin ardından, bir çift pilot Amerika'yı hiç inmeden baştan sona uçtu.",
+  cover: WM('Plane_that_had_non-stop_flight_in_1923_from_coast_to_coast_LCCN2016892496.jpg'),
+  beats: [
+    { text: "1920'lerin başında ABD'nin doğu ve batı kıyıları arasında uçmak, defalarca yakıt ikmali gerektiren, günler süren bir yolculuktu. Ordu pilotları Oakley Kelly ve John Macready, bu mesafeyi tek bir inişle, hiç durmadan aşmanın mümkün olduğuna inanıyordu." },
+    { text: "İkili, Hollanda yapımı Fokker T-2 uçağını bu göreve göre özel olarak değiştirdi: yakıt kapasitesini artırdılar, kokpit ile kabin arasına bir geçiş kapısı ekleyip pilotların uçuş sırasında yer değiştirmesini sağladılar." },
+    { text: "İlk iki deneme (1922'de) başarısızlıkla sonuçlandı — motor arızaları ve kötü hava koşulları yüzünden yolculuğu yarıda kesmek zorunda kaldılar. Ama pes etmeyip uçağı yeniden düzenlediler." },
+    { text: "2 Mayıs 1923'te New York'tan havalanan ikili, bu kez yönü tersine çevirip doğudan batıya uçtu. 26 saat 50 dakika süren, kesintisiz bir uçuşun ardından, 3 Mayıs'ta Kaliforniya'daki San Diego'ya indiler — 4.000 kilometreden fazla bir mesafeyi tek bir duraksama olmadan geçmişlerdi." },
+    { text: "Bu uçuş, kıtaları aşan ticari havacılığın önünü açan kritik bir kanıt oldu: bir uçağın, doğru mühendislik ve azimle, bir kıtayı bir günden kısa sürede geçebileceğini gösterdi. Birkaç yıl sonra Lindbergh'in Atlantik'i geçişine ilham veren cesaretin aynısı, bu iki pilotun sabırlı denemelerinde de vardı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "hot-five",
+  year: "1925 – 1928",
+  place: "Chicago, Illinois, ABD",
+  title: "Beş Kişilik Bir Stüdyo Kaydından Doğan Devrim",
+  teaser: "Bir trompetçi, kayıt stüdyosunda doğaçlamayı caz müziğinin merkezine yerleştirdi.",
+  cover: WM('Louis_Armstrong_restored.jpg'),
+  beats: [
+    { text: "1920'lerin ortasında caz müziği hâlâ çoğunlukla toplu, düzenlenmiş melodilerle çalınıyordu — solistlerin uzun doğaçlamalar yapması pek yaygın değildi. New Orleans'tan Chicago'ya taşınan genç trompetçi Louis Armstrong, bu anlayışı kökten değiştirecek bir vizyona sahipti." },
+    { text: "1925'te Armstrong, kendi adını taşıyan küçük bir kayıt grubu kurdu: 'Hot Five'. Grup, o dönemin standart büyük orkestralarından çok daha küçüktü — sadece beş müzisyenden oluşuyordu, ama bu küçüklük onlara çok daha fazla özgürlük tanıyordu." },
+    { text: "Hot Five'ın kayıtlarında Armstrong, trompetiyle uzun, karmaşık doğaçlama pasajlar çaldı — bu, dönemin dinleyicileri için tamamen yeni bir deneyimdi. 'Heebie Jeebies' adlı kayıtta, sözlerini unuttuğunu iddia ederek anlamsız hecelerle doğaçlama yaptığı 'scat' tekniği, bu türün en ünlü örneklerinden biri oldu." },
+    { text: "Bu kayıtlar, caz müziğinde soloculuğun ve bireysel doğaçlamanın merkezi bir öğe hâline gelmesini sağladı — o güne kadar toplu çalınan bir tür, artık tek bir müzisyenin yaratıcılığını öne çıkaran bir sanata dönüşüyordu." },
+    { text: "Hot Five ve ardından gelen Hot Seven kayıtları, bugün caz tarihinin en etkili plaklarından sayılıyor. Bir grup küçük stüdyo kaydı, caz müziğinin sonraki yüz yılını şekillendiren bir dönüm noktası oldu — hepsi, beş müzisyenin bir arada özgürce doğaçlama yapma cesaretiyle başladı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "vegemite-invention",
+  year: "1922",
+  place: "Melbourne, Avustralya",
+  title: "Bir İthalat Krizinden Doğan Ulusal Lezzet",
+  teaser: "Savaş sonrası bir ithalat sorunu, bir genç kimyageri mutfakta yepyeni bir tat aramaya itti.",
+  cover: WM('Vegemite_and_Marmite.jpg'),
+  beats: [
+    { text: "I. Dünya Savaşı'nın ardından Avustralya, İngiltere'den ithal edilen 'Marmite' adlı maya bazlı ezmenin tedarikinde sıkıntı yaşıyordu — savaş sırasında kesintiye uğrayan ithalat hatları henüz tam toparlanmamıştı. Melbourne'deki bir gıda şirketi, bu boşluğu kendi ürünüyle doldurmak istedi." },
+    { text: "Şirket, genç kimyager Cyril Callister'ı görevlendirdi: bira üretiminin bir yan ürünü olan maya artıklarından, besleyici ve lezzetli bir ezme geliştirmesini istediler. Callister, aylarca laboratuvarda farklı tarifler denedi." },
+    { text: "1922'de tarifini tamamladı: koyu kahverengi, tuzlu ve yoğun umami tadında bir ekmek ezmesi. Ürüne halktan öneriler toplanarak 'Vegemite' adı verildi — 'vegetable' (sebze) ve 'Marmite'in bir kombinasyonuydu." },
+    { text: "İlk yıllarda ürün beklenen ilgiyi görmedi; halk, yabancı bir tada alışmakta zorlandı. Şirket, ürünü doktorların ve beslenme uzmanlarının önerisiyle, B vitamini açısından zengin bir besin olarak tanıtmaya başladı — özellikle II. Dünya Savaşı sırasında askerlere dağıtılan rasyonlarda yer alması, ürünün ulusal bir sembole dönüşmesini hızlandırdı." },
+    { text: "Bugün Vegemite, Avustralya'nın en tanınan ulusal ürünlerinden biri — neredeyse her Avustralya mutfağında bir kavanozu bulunuyor. Bir savaş sonrası ithalat krizinin çözümü olarak başlayan bu tarif, bir ülkenin kimliğinin sembollerinden birine dönüştü." }
+  ]
+});
+
+let currentDecade = null;
+let randomQueue = null;
+
+function shuffleArray(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function initRandomQueue(){
+  const all = [];
   Object.keys(DATA).forEach(key=>{
     const d = DATA[key];
     if(!d) return;
-    d.stories.forEach(s=> allStories.push({decadeKey:key, id:s.id}));
+    d.stories.forEach(s=> all.push({decadeKey:key, id:s.id}));
   });
-  const pick = allStories[Math.floor(Math.random()*allStories.length)];
-  openStory(pick.decadeKey, pick.id);
+  randomQueue = shuffleArray(all);
+}
+
+function openRandomStory(){
+  if(!randomQueue || randomQueue.length === 0) initRandomQueue();
+  const next = randomQueue.shift();
+  randomQueue.push(next);
+  openStory(next.decadeKey, next.id);
 }
 
 function renderHome(){
@@ -1093,6 +1329,14 @@ function observeBeats(){
     });
   }, {threshold:0.15});
   els.forEach(el=>obs.observe(el));
+
+  const paras = document.querySelectorAll('.article p');
+  const pObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in-view'); }
+    });
+  }, {threshold:0.2});
+  paras.forEach(p=>pObs.observe(p));
 }
 
 window.addEventListener('scroll', ()=>{
