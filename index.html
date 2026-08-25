@@ -201,6 +201,37 @@
   .analogy-box{display:flex; gap:12px; margin:8px 0 30px; padding:16px 18px; background:rgba(107,150,168,0.08); border-left:3px solid #6B96A8;}
   .analogy-icon{font-size:20px; flex-shrink:0;}
   .analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:16px; line-height:1.6; color:#C9DCE3;}
+
+  /* ---------- KÜRE HARİTASI ---------- */
+  .map-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin:0 auto 20px; padding:14px 28px; max-width:320px;
+    background:transparent; border:1px solid rgba(107,180,220,0.5); color:#7FC4E8;
+    font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase;
+    cursor:pointer; border-radius:4px; transition:background .25s ease;
+  }
+  .map-btn:active{background:rgba(107,180,220,0.15);}
+
+  #mapView{padding-top:20px;}
+  .map-header{padding:50px 20px 10px;}
+  .map-hint{text-align:center; font-size:12px; color:#8C7F68; font-style:italic; margin-top:8px; font-family:'Crimson Pro',serif;}
+  #globeContainer{width:100%; height:52vh; min-height:340px; position:relative; touch-action:none; cursor:grab;}
+  #globeContainer:active{cursor:grabbing;}
+  #globeContainer canvas{display:block; margin:0 auto;}
+
+  .map-sheet{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    max-height:0; overflow:hidden; background:rgba(18,13,9,0.97);
+    border-top:1px solid rgba(201,164,92,0.4); border-radius:20px 20px 0 0;
+    transition:max-height .35s ease; backdrop-filter:blur(6px);
+  }
+  .map-sheet.open{max-height:60vh; overflow-y:auto; box-shadow:0 -10px 40px rgba(0,0,0,0.6);}
+  .map-sheet-handle{width:36px; height:4px; background:rgba(201,164,92,0.4); border-radius:2px; margin:12px auto 8px;}
+  .map-sheet-title{font-family:'Oswald',sans-serif; font-size:19px; text-align:center; color:var(--gold); padding:0 20px 14px;}
+  .map-story-item{display:flex; gap:12px; padding:12px 20px; border-top:1px solid rgba(201,164,92,0.12); cursor:pointer;}
+  .map-story-item img{width:56px; height:56px; object-fit:cover; border-radius:6px; filter:sepia(30%) contrast(1.05); flex-shrink:0;}
+  .map-story-item-title{font-family:'Oswald',sans-serif; font-size:15px; color:var(--paper);}
+  .map-story-item-meta{font-family:'Special Elite',monospace; font-size:10px; color:var(--gold); letter-spacing:.05em; margin-top:3px;}
 </style>
 </head>
 <body>
@@ -225,6 +256,7 @@
   </div>
   <div class="decades" id="searchResults" style="display:none;"></div>
   <button class="random-btn" id="randomBtnHome" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>
+  <button class="map-btn" onclick="openMapView()">🌍 Haritada Keşfet</button>
   <div class="decades" id="decadeGrid"></div>
 </div>
 
@@ -259,6 +291,23 @@
   <div class="lb-hint">Kapatmak için dışına dokun</div>
 </div>
 
+<!-- HARİTA (KÜRE) -->
+<div id="mapView" class="view">
+  <button class="back-btn" onclick="showHome()">‹ Arşive Dön</button>
+  <div class="map-header">
+    <div class="decade-label" style="text-align:center;">Dünya Haritası</div>
+    <h2 style="text-align:center; font-family:'Oswald',sans-serif; font-size:26px; margin-top:6px;">Hikayeleri Keşfet</h2>
+    <div class="map-hint">Küreyi parmağınla döndür, altın noktalara dokun</div>
+  </div>
+  <div id="globeContainer"></div>
+  <div id="mapSheet" class="map-sheet">
+    <div class="map-sheet-handle"></div>
+    <div id="mapSheetTitle" class="map-sheet-title"></div>
+    <div id="mapSheetList"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ============ VERİ KÜTÜPHANESİ ============
    Her hikaye: baslik, yil, yer, kapak görseli, teaser, ve
@@ -2057,6 +2106,220 @@ window.addEventListener('scroll', ()=>{
   const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
   bar.style.width = Math.min(pct, 100) + '%';
 });
+
+/* ============ KÜRE HARİTASI ============ */
+const LOCATIONS = {
+  "empire-state":[40.7128,-74.0060], "golden-gate":[37.7749,-122.4194], "snow-white":[34.0928,-118.3287],
+  "hoover-dam":[36.0161,-114.7377], "rockefeller-center":[40.7128,-74.0060], "amelia-earhart":[47.5615,-52.7126],
+  "sydney-harbour-bridge":[-33.8523,151.2108], "jesse-owens":[52.5200,13.4050], "queen-mary":[55.9008,-4.4004],
+  "byrd-antarctica":[-78.5,-164.0], "worlds-fair-1939":[40.7128,-74.0060], "nylon":[39.7391,-75.5398],
+  "monopoly":[39.9526,-75.1652], "bluebird":[40.7350,-113.8747], "chocolate-chip-cookie":[42.0834,-70.9370],
+  "wright-brothers":[36.0134,-75.6759], "ford-motor":[42.3314,-83.0458], "sf-earthquake":[37.7749,-122.4194],
+  "marie-curie":[48.8566,2.3522], "marconi-radio":[50.0333,-5.2667], "nyc-subway":[40.7128,-74.0060],
+  "trans-siberian":[55.7558,37.6173], "louisiana-purchase-expo":[38.6270,-90.1994], "teddy-bear":[40.6782,-73.9442],
+  "einstein-1905":[46.9480,7.4474], "bleriot-channel":[50.9513,1.8587], "birth-of-cinema-going":[40.4406,-79.9959],
+  "boy-scouts":[50.6889,-1.9557], "great-white-fleet":[36.8508,-76.2859], "kelloggs-corn-flakes":[42.3212,-85.1797],
+  "everest-1953":[27.9881,86.9250], "disneyland-1955":[33.8121,-117.9190], "sputnik-1957":[45.9646,63.3052],
+  "roger-bannister":[51.7520,-1.2577], "salk-vaccine":[40.4406,-79.9959], "uss-nautilus":[89,0],
+  "boeing-707":[47.6062,-122.3321], "rosa-parks":[32.3792,-86.3077], "univac-1952":[40.7128,-74.0060],
+  "transistor-radio":[39.7684,-86.1581], "barbie-1959":[40.7128,-74.0060], "antarctic-crossing":[-85,0],
+  "st-lawrence-seaway":[45.5019,-73.5674], "velcro":[46.9480,7.4474], "diners-club":[40.7128,-74.0060],
+  "lindbergh-1927":[40.7128,-74.0060], "king-tut-tomb":[25.7402,32.6014], "winter-olympics-1924":[45.9237,6.8694],
+  "insulin-discovery":[43.6532,-79.3832], "ederle-channel":[50.9,1.5], "penicillin":[51.5074,-0.1278],
+  "goddard-rocket":[42.1959,-71.8314], "kdka-radio":[40.4406,-79.9959], "norge-north-pole":[78.2232,15.6267],
+  "farnsworth-tv":[37.7749,-122.4194], "womens-suffrage":[38.9072,-77.0369], "duke-kahanamoku":[21.3069,-157.8583],
+  "transcontinental-flight":[40.7128,-74.0060], "hot-five":[41.8781,-87.6298], "vegemite-invention":[-37.8136,144.9631],
+  "apollo-11":[28.5721,-80.6480], "telstar-1":[44.6362,-70.7556], "mlk-dream":[38.9072,-77.0369],
+  "ali-liston":[25.7907,-80.1300], "barnard-heart":[-33.9249,18.4241], "atm-enfield":[51.6521,-0.0808],
+  "arpanet":[34.0689,-118.4452], "ford-gt40":[47.9500,0.2000], "boeing-747":[47.9253,-122.2011],
+  "woodstock":[41.7059,-74.8746], "green-revolution":[19.4326,-99.1332], "tiros-1":[28.5721,-80.6480],
+  "compact-cassette":[51.4416,5.4697], "ibm-360":[42.0965,-76.0424], "cuyahoga-fire":[41.4993,-81.6944],
+  "togg-yerlilik":[40.4306,29.1503], "macintosh-1984":[37.3230,-122.0322], "dynatac-mobile":[41.8781,-87.6298],
+  "post-it-notes":[44.9537,-93.0900], "rubiks-cube":[47.4979,19.0402], "space-shuttle-columbia":[28.5721,-80.6480],
+  "ibm-pc-5150":[26.3683,-80.1289], "nes-1985":[35.0116,135.7681], "tetris-1984":[55.7558,37.6173],
+  "titanic-wreck":[41.7325,-49.9469], "berlin-wall-fall":[52.5200,13.4050], "world-wide-web":[46.2333,6.0500],
+  "compact-disc":[51.4416,5.4697], "cnn-1980":[33.7490,-84.3880], "live-aid-1985":[51.5560,-0.2795],
+  "voyager-neptune":[34.1478,-118.1445]
+};
+
+function locateStory(id){
+  for(const key in DATA){
+    const d = DATA[key];
+    if(!d) continue;
+    const s = d.stories.find(x=>x.id===id);
+    if(s) return {decadeKey:key, decade:d, story:s};
+  }
+  return null;
+}
+
+let globeInited = false;
+let globeScene, globeCamera, globeRenderer, globeGroup, globeRaycaster;
+let globeMarkers = [];
+let globeDragging = false, globeDragMoved = false;
+let globeLastX = 0, globeLastY = 0;
+let globeVelX = 0.0015, globeVelY = 0;
+
+function openMapView(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('mapView').classList.add('active');
+  closeMapSheet();
+  if(!globeInited){ initGlobe(); }
+  window.scrollTo(0,0);
+}
+
+function initGlobe(){
+  const container = document.getElementById('globeContainer');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  globeScene = new THREE.Scene();
+  globeCamera = new THREE.PerspectiveCamera(45, width/height, 0.1, 100);
+  globeCamera.position.z = 3.1;
+
+  globeRenderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  globeRenderer.setSize(width, height);
+  globeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(globeRenderer.domElement);
+
+  globeGroup = new THREE.Group();
+  globeScene.add(globeGroup);
+
+  const geo = new THREE.SphereGeometry(1, 48, 48);
+  const loader = new THREE.TextureLoader();
+  const earthTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Solarsystemscope_texture_2k_earth_daymap.jpg?width=1600";
+  const mat = new THREE.MeshBasicMaterial({map: loader.load(earthTexUrl)});
+  const earth = new THREE.Mesh(geo, mat);
+  globeGroup.add(earth);
+
+  const glowGeo = new THREE.SphereGeometry(1.015, 48, 48);
+  const glowMat = new THREE.MeshBasicMaterial({color:0xC9A45C, transparent:true, opacity:0.06, side:THREE.BackSide});
+  globeGroup.add(new THREE.Mesh(glowGeo, glowMat));
+
+  const markerGeo = new THREE.SphereGeometry(0.022, 12, 12);
+  const groups = {};
+  Object.keys(LOCATIONS).forEach(id=>{
+    const found = locateStory(id);
+    if(!found) return;
+    const [lat,lng] = LOCATIONS[id];
+    const key = lat.toFixed(1) + ',' + lng.toFixed(1);
+    if(!groups[key]) groups[key] = {lat, lng, items:[]};
+    groups[key].items.push(found);
+  });
+
+  Object.values(groups).forEach(g=>{
+    const phi = (90 - g.lat) * (Math.PI/180);
+    const theta = (g.lng + 180) * (Math.PI/180);
+    const r = 1.03;
+    const x = -r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.cos(phi);
+    const z = r * Math.sin(phi) * Math.sin(theta);
+    const markerMat = new THREE.MeshBasicMaterial({color: g.items.length > 1 ? 0xE8542E : 0xD9A55C});
+    const marker = new THREE.Mesh(markerGeo, markerMat);
+    marker.position.set(x,y,z);
+    marker.userData.group = g;
+    globeGroup.add(marker);
+    globeMarkers.push(marker);
+  });
+
+  globeRaycaster = new THREE.Raycaster();
+  globeRaycaster.params.Mesh.threshold = 0.01;
+
+  const dom = globeRenderer.domElement;
+  dom.addEventListener('pointerdown', onGlobePointerDown);
+  dom.addEventListener('pointermove', onGlobePointerMove);
+  window.addEventListener('pointerup', onGlobePointerUp);
+  dom.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
+
+  window.addEventListener('resize', onGlobeResize);
+
+  globeInited = true;
+  animateGlobe();
+}
+
+function onGlobeResize(){
+  if(!globeInited) return;
+  const container = document.getElementById('globeContainer');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  globeCamera.aspect = width/height;
+  globeCamera.updateProjectionMatrix();
+  globeRenderer.setSize(width, height);
+}
+
+function onGlobePointerDown(e){
+  globeDragging = true;
+  globeDragMoved = false;
+  globeLastX = e.clientX;
+  globeLastY = e.clientY;
+}
+function onGlobePointerMove(e){
+  if(!globeDragging) return;
+  const dx = e.clientX - globeLastX;
+  const dy = e.clientY - globeLastY;
+  if(Math.abs(dx) > 3 || Math.abs(dy) > 3) globeDragMoved = true;
+  globeGroup.rotation.y += dx * 0.005;
+  globeGroup.rotation.x += dy * 0.005;
+  globeGroup.rotation.x = Math.max(-1.2, Math.min(1.2, globeGroup.rotation.x));
+  globeVelX = dx * 0.0006;
+  globeLastX = e.clientX;
+  globeLastY = e.clientY;
+}
+function onGlobePointerUp(e){
+  if(!globeDragging) return;
+  globeDragging = false;
+  if(!globeDragMoved){
+    handleGlobeTap(e);
+  }
+}
+
+function handleGlobeTap(e){
+  const container = document.getElementById('globeContainer');
+  const rect = container.getBoundingClientRect();
+  const mouse = new THREE.Vector2(
+    ((e.clientX - rect.left) / rect.width) * 2 - 1,
+    -((e.clientY - rect.top) / rect.height) * 2 + 1
+  );
+  globeRaycaster.setFromCamera(mouse, globeCamera);
+  const hits = globeRaycaster.intersectObjects(globeMarkers);
+  if(hits.length > 0){
+    openMapSheet(hits[0].object.userData.group);
+  }
+}
+
+function animateGlobe(){
+  if(!globeInited) return;
+  requestAnimationFrame(animateGlobe);
+  if(!globeDragging){
+    globeGroup.rotation.y += globeVelX;
+    globeVelX *= 0.96;
+    if(Math.abs(globeVelX) < 0.0006) globeVelX = 0.0009;
+  }
+  globeRenderer.render(globeScene, globeCamera);
+}
+
+function openMapSheet(group){
+  const sheet = document.getElementById('mapSheet');
+  const title = document.getElementById('mapSheetTitle');
+  const list = document.getElementById('mapSheetList');
+  title.textContent = group.items[0].story.place;
+  list.innerHTML = '';
+  group.items.forEach(found=>{
+    const item = document.createElement('div');
+    item.className = 'map-story-item';
+    item.onclick = ()=>{ closeMapSheet(); openStory(found.decadeKey, found.story.id); };
+    item.innerHTML = `<img src="${found.story.cover}" alt="">
+      <div>
+        <div class="map-story-item-title">${found.story.title}</div>
+        <div class="map-story-item-meta">${found.decade.title} · ${found.story.year}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+  sheet.classList.add('open');
+}
+
+function closeMapSheet(){
+  document.getElementById('mapSheet').classList.remove('open');
+}
 
 renderHome();
 setTimeout(()=>{ const c = document.getElementById('curtain'); if(c) c.style.display='none'; }, 1600);
