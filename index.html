@@ -28,7 +28,39 @@
   }
 
   .view{display:none;}
-  .view.active{display:block;}
+  .view.active{display:block; animation: viewIn .5s ease both;}
+  @keyframes viewIn{
+    0%{ opacity:0; transform:translateY(14px) scale(0.99); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* Açılış perdesi */
+  #curtain{position:fixed; inset:0; z-index:2000; display:flex; pointer-events:none;}
+  #curtain .panel{flex:1; background:linear-gradient(180deg,#2a0f0f,#150A10 60%); box-shadow: inset 0 0 60px rgba(0,0,0,0.6);}
+  #curtain .panel.left{animation: curtainLeft 1.1s cubic-bezier(.77,0,.18,1) .3s forwards;}
+  #curtain .panel.right{animation: curtainRight 1.1s cubic-bezier(.77,0,.18,1) .3s forwards;}
+  @keyframes curtainLeft{ to{ transform:translateX(-100%); } }
+  @keyframes curtainRight{ to{ transform:translateX(100%); } }
+  #curtain .spotlight{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Oswald',sans-serif; color:var(--gold); font-size:15px; letter-spacing:.35em; text-transform:uppercase; opacity:0; animation: spotFade 1.6s ease .1s forwards;}
+  @keyframes spotFade{ 0%{opacity:0;} 30%{opacity:1;} 70%{opacity:1;} 100%{opacity:0;} }
+
+  /* Kartların sırayla belirmesi */
+  @keyframes cardIn{
+    0%{ opacity:0; transform:translateY(22px); }
+    100%{ opacity:1; transform:translateY(0); }
+  }
+  .decade-card, .story-card{ animation: cardIn .6s ease both; }
+
+  /* Rastgele buton nabız efekti */
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(176,141,87,0.0); }
+    50%{ box-shadow: 0 0 18px 2px rgba(176,141,87,0.35); }
+  }
+  .random-btn{ animation: pulseGlow 3s ease-in-out infinite; }
+  .random-btn:active{ transform: scale(0.94); }
+
+  /* Geri/ileri butonlarına dokunma tepkisi */
+  .back-btn:active, .decade-card:active, .story-card:active{ transform: scale(0.97); }
 
   /* ---------- ANA EKRAN ---------- */
   #home{min-height:100vh; padding:56px 20px 80px;}
@@ -123,7 +155,10 @@
 
   /* ---------- LIGHTBOX (fotoğraf büyütme) ---------- */
   #lightbox{position:fixed; inset:0; z-index:1000; background:rgba(10,7,5,0.96); display:none; align-items:center; justify-content:center; touch-action:pinch-zoom pan-x pan-y; overflow:auto;}
-  #lightbox.open{display:flex;}
+  #lightbox.open{display:flex; animation: lbFade .25s ease both;}
+  #lightbox.open img{animation: lbZoom .3s cubic-bezier(.2,.9,.3,1.2) both;}
+  @keyframes lbFade{ from{opacity:0;} to{opacity:1;} }
+  @keyframes lbZoom{ from{opacity:0; transform:scale(0.85);} to{opacity:1; transform:scale(1);} }
   #lightbox img{max-width:100%; width:auto; height:auto; margin:auto; display:block; touch-action:pinch-zoom;}
   #lightbox .lb-close{position:fixed; top:16px; right:16px; z-index:1001; width:40px; height:40px; border:1px solid var(--gold); background:rgba(21,16,12,0.85); color:var(--gold); font-size:20px; line-height:1; cursor:pointer;}
   #lightbox .lb-hint{position:fixed; bottom:18px; left:0; right:0; text-align:center; font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; letter-spacing:.1em; pointer-events:none;}
@@ -131,6 +166,7 @@
   .end-mark{text-align:center; padding:40px 0 10px;}
   .end-mark .reel-divider{margin:0 auto 16px;}
   .end-mark span{font-family:'Special Elite',monospace; font-size:12px; color:var(--gold); letter-spacing:.2em;}
+  .end-random-btn{display:block; margin:28px auto 0;}
 
   /* ---------- BURASI BUGÜN ---------- */
   .today-section{margin:48px -22px 20px; padding:0;}
@@ -151,6 +187,11 @@
 <body>
 <div class="grain"></div>
 <div class="progress-bar" id="progressBar"></div>
+<div id="curtain">
+  <div class="panel left"></div>
+  <div class="panel right"></div>
+  <div class="spotlight">Bir Seans Başlıyor</div>
+</div>
 
 <!-- ANA EKRAN -->
 <div id="home" class="view active">
@@ -1546,11 +1587,14 @@ function openRandomStory(){
 function renderHome(){
   const grid = document.getElementById('decadeGrid');
   grid.innerHTML = '';
+  let i = 0;
   Object.keys(DATA).forEach(key=>{
     const d = DATA[key];
     if(!d) return;
     const card = document.createElement('div');
     card.className = d.isAnalysis ? 'decade-card analysis-card' : 'decade-card';
+    card.style.animationDelay = (i * 0.08) + 's';
+    i++;
     card.onclick=()=>showCategory(key);
     const label = d.isAnalysis ? 'Güncel Analiz' : 'Dönem';
     card.innerHTML = `<div class="decade-label">${label}</div>
@@ -1573,9 +1617,10 @@ function showCategory(key){
   document.getElementById('catTitle').textContent = d.title;
   const list = document.getElementById('storyList');
   list.innerHTML = '';
-  d.stories.forEach(s=>{
+  d.stories.forEach((s,i)=>{
     const card = document.createElement('div');
     card.className='story-card';
+    card.style.animationDelay = (i * 0.06) + 's';
     card.onclick=()=>openStory(key, s.id);
     card.innerHTML = `<img src="${s.cover}" alt="">
       <div class="story-card-body">
@@ -1620,7 +1665,8 @@ function openStory(decadeKey, storyId){
   });
   const end = document.createElement('div');
   end.className='end-mark';
-  end.innerHTML = `<div class="reel-divider"></div><span>SON</span>`;
+  end.innerHTML = `<div class="reel-divider"></div><span>SON</span>
+    <button class="random-btn end-random-btn" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>`;
   article.appendChild(end);
 
   if(s.today){
@@ -1687,6 +1733,7 @@ window.addEventListener('scroll', ()=>{
 });
 
 renderHome();
+setTimeout(()=>{ const c = document.getElementById('curtain'); if(c) c.style.display='none'; }, 1600);
 </script>
 </body>
 </html>
