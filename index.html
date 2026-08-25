@@ -2,70 +2,2064 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Önizleme A — Premium Sinema</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Arşiv | Tarihin Sinema Odası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
-  :root{ --paper:#EDE3D0; --gold:#C9A45C; --rust:#8C3B2E; --film-black:#120D09; }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{background:var(--film-black); color:var(--paper); font-family:'Crimson Pro',serif; padding:50px 18px;}
-  .eyebrow{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.3em; color:var(--gold); text-align:center; text-transform:uppercase;}
-  h1{font-family:'Oswald',sans-serif; font-size:42px; text-align:center; margin:10px 0 6px; background:linear-gradient(180deg,#F3E4C4,#C9A45C); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .sub{text-align:center; font-style:italic; color:#B7A88C; font-size:14px; margin-bottom:38px;}
-
-  .card{
-    position:relative; height:150px; border-radius:14px; margin-bottom:18px; overflow:hidden;
-    background:
-      linear-gradient(180deg, rgba(18,13,9,0.15) 0%, rgba(18,13,9,0.85) 75%, rgba(18,13,9,0.97) 100%),
-      linear-gradient(135deg, #3a2a1c, #1c140d);
-    box-shadow: 0 14px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(201,164,92,0.25);
-    display:flex; align-items:flex-end; padding:18px; backdrop-filter:saturate(1.2);
+  :root{
+    --paper:#EDE3D0;
+    --paper-dim:#E2D5BC;
+    --ink:#241A12;
+    --sepia:#4A3623;
+    --gold:#C9A45C;
+    --rust:#8C3B2E;
+    --film-black:#120D09;
+    --card-bg:#1c140d;
+    --muted:#9C948A;
+    --grain-opacity:0.05;
   }
-  .card::before{
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--film-black); color:var(--paper); font-family:'Crimson Pro',serif;}
+  body{-webkit-font-smoothing:antialiased; overflow-x:hidden;}
+
+  /* film grain overlay */
+  .grain{position:fixed; inset:0; pointer-events:none; z-index:999; opacity:var(--grain-opacity); mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .view{display:none;}
+  .view.active{display:block; animation: viewIn .5s ease both;}
+  @keyframes viewIn{
+    0%{ opacity:0; transform:translateY(14px) scale(0.99); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* Açılış perdesi */
+  #curtain{position:fixed; inset:0; z-index:2000; display:flex; pointer-events:none;}
+  #curtain .panel{flex:1; background:linear-gradient(180deg,#2a0f0f,#150A10 60%); box-shadow: inset 0 0 60px rgba(0,0,0,0.6);}
+  #curtain .panel.left{animation: curtainLeft 1.1s cubic-bezier(.77,0,.18,1) .3s forwards;}
+  #curtain .panel.right{animation: curtainRight 1.1s cubic-bezier(.77,0,.18,1) .3s forwards;}
+  @keyframes curtainLeft{ to{ transform:translateX(-100%); } }
+  @keyframes curtainRight{ to{ transform:translateX(100%); } }
+  #curtain .spotlight{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Oswald',sans-serif; color:var(--gold); font-size:15px; letter-spacing:.35em; text-transform:uppercase; opacity:0; animation: spotFade 1.6s ease .1s forwards;}
+  @keyframes spotFade{ 0%{opacity:0;} 30%{opacity:1;} 70%{opacity:1;} 100%{opacity:0;} }
+
+  /* Kartların sırayla belirmesi */
+  @keyframes cardIn{
+    0%{ opacity:0; transform:translateY(22px); }
+    100%{ opacity:1; transform:translateY(0); }
+  }
+  .decade-card, .story-card{ animation: cardIn .6s ease both; }
+
+  /* Rastgele buton nabız efekti */
+  @keyframes pulseGlow{
+    0%,100%{ box-shadow: 0 0 0 0 rgba(176,141,87,0.0); }
+    50%{ box-shadow: 0 0 18px 2px rgba(176,141,87,0.35); }
+  }
+  .random-btn{ animation: pulseGlow 3s ease-in-out infinite; }
+  .random-btn:active{ transform: scale(0.94); }
+
+  /* Geri/ileri butonlarına dokunma tepkisi */
+  .back-btn:active, .decade-card:active, .story-card:active{ transform: scale(0.97); }
+
+  /* ---------- ANA EKRAN ---------- */
+  #home{min-height:100vh; padding:56px 20px 80px;}
+  .brand{text-align:center; margin-bottom:8px;}
+  .brand .eyebrow{font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.25em; color:var(--gold); text-transform:uppercase;}
+  .brand h1{font-family:'Oswald',sans-serif; font-weight:700; font-size:44px; letter-spacing:.02em; margin-top:10px; background:linear-gradient(180deg,#F3E4C4,var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .brand .sub{font-family:'Crimson Pro',serif; font-style:italic; color:#B7A88C; margin-top:6px; font-size:15px;}
+  .reel-divider{width:60px; height:2px; background:var(--gold); margin:26px auto 34px; opacity:.6;}
+
+  .random-btn{display:block; margin:0 auto 34px; padding:14px 28px; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; transition:background .25s ease, color .25s ease;}
+  .random-btn:hover{background:var(--gold); color:var(--film-black);}
+
+  .search-wrap{max-width:520px; margin:0 auto 24px; padding:0 20px;}
+  .search-input{width:100%; padding:14px 16px; background:rgba(176,141,87,0.06); border:1px solid rgba(176,141,87,0.35); color:var(--paper); font-family:'Crimson Pro',serif; font-size:16px; outline:none; transition:border-color .2s ease;}
+  .search-input::placeholder{color:#8C7F68;}
+  .search-input:focus{border-color:var(--gold);}
+  .search-result-count{max-width:520px; margin:0 auto 14px; padding:0 20px; font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; letter-spacing:.1em;}
+  .search-no-results{max-width:520px; margin:0 auto 20px; padding:0 20px; font-size:14px; color:#8C7F68; font-style:italic;}
+
+  .progress-bar{position:fixed; top:0; left:0; height:3px; background:var(--gold); z-index:60; width:0%; transition:width .1s linear;}
+
+  .decades{display:grid; grid-template-columns:1fr; gap:16px; max-width:520px; margin:0 auto;}
+  .decade-card{
+    position:relative; height:150px; border-radius:14px; overflow:hidden; cursor:pointer;
+    background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#3a2a1c,#1c140d);
+    box-shadow:0 14px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(201,164,92,0.25);
+    display:flex; align-items:flex-end; padding:18px;
+    transition:transform .2s ease;
+  }
+  .decade-card:active{transform:scale(0.98);}
+  .decade-card::before{
     content:''; position:absolute; inset:0; opacity:.35; mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
-  .card .glow{position:absolute; top:-40px; right:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(201,164,92,0.35), transparent 70%);}
-  .card-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; position:relative; z-index:2;}
-  .card-title{font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; margin-top:4px; position:relative; z-index:2; text-shadow:0 2px 12px rgba(0,0,0,0.6);}
-  .card-count{font-size:12px; color:#D9CDB4; margin-top:4px; position:relative; z-index:2;}
-  .card-arrow{position:absolute; right:18px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:20px; z-index:2;}
+  .decade-glow{position:absolute; top:-40px; right:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(201,164,92,0.35), transparent 70%); pointer-events:none;}
+  .decade-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; position:relative; z-index:2;}
+  .decade-title{font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; margin-top:4px; position:relative; z-index:2; color:var(--paper); text-shadow:0 2px 12px rgba(0,0,0,0.6);}
+  .decade-count{font-size:12px; color:#D9CDB4; margin-top:4px; position:relative; z-index:2;}
+  .decade-arrow{position:absolute; right:18px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:20px; z-index:2;}
 
-  .card1{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#4a3319,#1c140d);}
-  .card2{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#3a1c1c,#140d0d);}
-  .card3{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#1c2f3a,#0d1519);}
+  .analysis-card{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#1c2f3a,#0d1519);}
+  .analysis-card .decade-glow{background:radial-gradient(circle, rgba(127,191,160,0.30), transparent 70%);}
+  .analysis-card .decade-label{color:#7FBFA0;}
+  .analysis-card .decade-arrow{color:#7FBFA0;}
+
+  /* ---------- KATEGORİ / HİKAYE LİSTESİ ---------- */
+  #category{min-height:100vh; padding:0 0 60px;}
+  .cat-header{padding:50px 20px 24px; text-align:center; border-bottom:1px solid rgba(176,141,87,0.25);}
+  .back-btn{position:fixed; top:18px; left:16px; z-index:50; background:rgba(21,16,12,0.85); border:1px solid var(--gold); color:var(--gold); font-family:'Special Elite',monospace; font-size:12px; padding:8px 14px; cursor:pointer; letter-spacing:.05em;}
+  .cat-header .decade-label{display:block;}
+  .cat-header h2{font-family:'Oswald',sans-serif; font-size:34px; margin-top:8px;}
+  .story-list{max-width:560px; margin:28px auto 0; padding:0 20px; display:grid; gap:18px;}
+  .story-card{display:flex; gap:14px; border:1px solid rgba(176,141,87,0.25); background:rgba(176,141,87,0.04); cursor:pointer; overflow:hidden; transition:border-color .25s ease;}
+  .story-card:hover{border-color:var(--gold);}
+  .story-card img{width:110px; height:110px; object-fit:cover; filter:sepia(35%) contrast(1.05);}
+  .story-card-body{padding:12px 14px 12px 0; display:flex; flex-direction:column; justify-content:center;}
+  .story-year{font-family:'Special Elite',monospace; font-size:10px; color:var(--gold); letter-spacing:.15em;}
+  .story-title{font-family:'Oswald',sans-serif; font-size:18px; margin-top:4px; line-height:1.25;}
+  .story-teaser{font-size:13px; color:#B7A88C; margin-top:6px; line-height:1.4;}
+
+  /* ---------- OKUMA MODU ---------- */
+  #reader{min-height:100vh;}
+  .reader-hero{position:relative; height:78vh; min-height:460px; overflow:hidden;}
+  .reader-hero img{width:100%; height:100%; object-fit:cover; filter:sepia(25%) contrast(1.05) brightness(.85); cursor:zoom-in;}
+  .reader-hero::after{content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(21,16,12,0.15) 0%, rgba(21,16,12,0.55) 55%, var(--film-black) 100%);}
+  .hero-text{position:absolute; bottom:34px; left:0; right:0; padding:0 22px; z-index:2;}
+  .hero-text .decade-label{color:var(--gold); font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.2em;}
+  .hero-text h1{font-family:'Oswald',sans-serif; font-size:38px; line-height:1.1; margin-top:10px; text-shadow:0 2px 10px rgba(0,0,0,.5);}
+  .hero-text .place-time{font-size:14px; color:#D9CDB4; margin-top:10px; font-style:italic;}
+
+  .article{max-width:640px; margin:0 auto; padding:44px 22px 100px; background:var(--film-black);}
+  .article p{font-size:19px; line-height:1.75; color:#E9DFC9; margin-bottom:26px;}
+  .article p:first-of-type::first-letter{font-family:'Oswald',sans-serif; font-size:58px; float:left; line-height:0.85; padding-right:10px; padding-top:6px; color:var(--gold); font-weight:600;}
+  .beat-image{margin:36px -22px 36px; opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease;}
+  .beat-image.in-view{opacity:1; transform:translateY(0);}
+  .beat-image img{width:100%; display:block; filter:sepia(30%) contrast(1.05);}
+  .beat-caption{font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; padding:10px 22px 0; letter-spacing:.03em;}
+  .beat-image.full-bleed img{max-height:70vh; object-fit:cover;}
+  .beat-image img{cursor:zoom-in;}
+
+  /* Ken Burns hareketi */
+  @keyframes kenburns{
+    0%{ transform: scale(1.06) translate(0,0); }
+    100%{ transform: scale(1.16) translate(-1.5%,-1%); }
+  }
+  .beat-image img, .reader-hero img, .story-card img{
+    animation: kenburns 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* Çerçeveli sanat eseri hissi */
+  .beat-image{
+    padding:14px;
+    background: linear-gradient(180deg, rgba(176,141,87,0.12), rgba(176,141,87,0.02));
+    border:1px solid rgba(176,141,87,0.35);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 12px 30px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .beat-image img{display:block; width:100%;}
+  .beat-caption{
+    font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68;
+    padding:12px 6px 2px; letter-spacing:.05em; text-align:center;
+    border-top:1px dashed rgba(176,141,87,0.25); margin-top:12px;
+  }
+
+  /* Paragraf metni yukarı kayarak belirsin */
+  .article p{opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s ease;}
+  .article p.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- LIGHTBOX (fotoğraf büyütme) ---------- */
+  #lightbox{position:fixed; inset:0; z-index:1000; background:rgba(10,7,5,0.96); display:none; align-items:center; justify-content:center; touch-action:pinch-zoom pan-x pan-y; overflow:auto;}
+  #lightbox.open{display:flex; animation: lbFade .25s ease both;}
+  #lightbox.open img{animation: lbZoom .3s cubic-bezier(.2,.9,.3,1.2) both;}
+  @keyframes lbFade{ from{opacity:0;} to{opacity:1;} }
+  @keyframes lbZoom{ from{opacity:0; transform:scale(0.85);} to{opacity:1; transform:scale(1);} }
+  #lightbox img{max-width:100%; width:auto; height:auto; margin:auto; display:block; touch-action:pinch-zoom;}
+  #lightbox .lb-close{position:fixed; top:16px; right:16px; z-index:1001; width:40px; height:40px; border:1px solid var(--gold); background:rgba(21,16,12,0.85); color:var(--gold); font-size:20px; line-height:1; cursor:pointer;}
+  #lightbox .lb-hint{position:fixed; bottom:18px; left:0; right:0; text-align:center; font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; letter-spacing:.1em; pointer-events:none;}
+
+  .end-mark{text-align:center; padding:40px 0 10px;}
+  .end-mark .reel-divider{margin:0 auto 16px;}
+  .end-mark span{font-family:'Special Elite',monospace; font-size:12px; color:var(--gold); letter-spacing:.2em;}
+  .end-random-btn{display:block; margin:28px auto 0;}
+
+  /* ---------- BURASI BUGÜN ---------- */
+  .today-section{margin:48px -22px 20px; padding:0;}
+  .today-label{text-align:center; font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.25em; color:var(--gold); text-transform:uppercase; margin-bottom:14px;}
+  .today-frame{padding:10px; background:linear-gradient(180deg, rgba(176,141,87,0.10), rgba(176,141,87,0.02)); border:1px solid rgba(176,141,87,0.3); box-shadow:0 12px 30px rgba(0,0,0,0.35); overflow:hidden;}
+  .today-frame img{width:100%; display:block; filter:none; animation: kenburns 22s ease-in-out infinite alternate;}
+  .today-caption{font-family:'Crimson Pro',serif; font-style:italic; font-size:13px; color:#B7A88C; text-align:center; padding:12px 22px 0;}
+
+  .sources-section{margin:36px 0 20px; padding:18px 20px; border:1px solid rgba(107,150,168,0.3); background:rgba(107,150,168,0.05);}
+  .sources-section .today-label{color:#6B96A8; text-align:left; margin-bottom:10px;}
+  .source-item{font-family:'Special Elite',monospace; font-size:11px; color:#9FB8C4; line-height:1.8; word-break:break-all;}
+
+  .analogy-box{display:flex; gap:12px; margin:8px 0 30px; padding:16px 18px; background:rgba(107,150,168,0.08); border-left:3px solid #6B96A8;}
+  .analogy-icon{font-size:20px; flex-shrink:0;}
+  .analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:16px; line-height:1.6; color:#C9DCE3;}
 </style>
 </head>
 <body>
-  <div class="eyebrow">Bir seans başlıyor</div>
-  <h1>ARŞİV</h1>
-  <div class="sub">Gerçek olaylar, gerçek fotoğraflar — izler gibi oku</div>
+<div class="grain"></div>
+<div class="progress-bar" id="progressBar"></div>
+<div id="curtain">
+  <div class="panel left"></div>
+  <div class="panel right"></div>
+  <div class="spotlight">Bir Seans Başlıyor</div>
+</div>
 
-  <div class="card card1"><div class="glow"></div>
-    <div>
-      <div class="card-label">Dönem</div>
-      <div class="card-title">1930'lar</div>
-      <div class="card-count">15 hikâye — Büyük Buhran'ın gölgesinde cesaret</div>
-    </div>
-    <div class="card-arrow">→</div>
+<!-- ANA EKRAN -->
+<div id="home" class="view active">
+  <div class="brand">
+    <div class="eyebrow">Bir seans başlıyor</div>
+    <h1>ARŞİV</h1>
+    <div class="sub">Gerçek olaylar, gerçek fotoğraflar — izler gibi oku</div>
   </div>
+  <div class="reel-divider"></div>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" class="search-input" placeholder="Hikaye, dönem, konu ara…" oninput="handleSearch(this.value)">
+  </div>
+  <div class="decades" id="searchResults" style="display:none;"></div>
+  <button class="random-btn" id="randomBtnHome" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>
+  <div class="decades" id="decadeGrid"></div>
+</div>
 
-  <div class="card card2"><div class="glow"></div>
-    <div>
-      <div class="card-label">Dönem</div>
-      <div class="card-title">1960'lar</div>
-      <div class="card-count">15 hikâye — Uzay ve iletişimin sınırları</div>
-    </div>
-    <div class="card-arrow">→</div>
+<!-- KATEGORİ EKRANI -->
+<div id="category" class="view">
+  <button class="back-btn" onclick="showHome()">‹ Arşive Dön</button>
+  <div class="cat-header">
+    <span class="decade-label" id="catLabel"></span>
+    <h2 id="catTitle"></h2>
   </div>
+  <div class="story-list" id="storyList"></div>
+</div>
 
-  <div class="card card3"><div class="glow"></div>
-    <div>
-      <div class="card-label">Güncel Analiz</div>
-      <div class="card-title">Analiz</div>
-      <div class="card-count">1 rapor — Doğrulanmış, derin bakış</div>
+<!-- OKUMA MODU -->
+<div id="reader" class="view">
+  <button class="back-btn" onclick="showCategory(currentDecade)">‹ Geri</button>
+  <div class="reader-hero">
+    <img id="readerHeroImg" src="" alt="">
+    <div class="hero-text">
+      <div class="decade-label" id="readerDecade"></div>
+      <h1 id="readerTitle"></h1>
+      <div class="place-time" id="readerMeta"></div>
     </div>
-    <div class="card-arrow">→</div>
   </div>
+  <div class="article" id="readerArticle"></div>
+</div>
+
+<!-- FOTOĞRAF BÜYÜTME (LIGHTBOX) -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox(event)">✕</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-hint">Kapatmak için dışına dokun</div>
+</div>
+
+<script>
+/* ============ VERİ KÜTÜPHANESİ ============
+   Her hikaye: baslik, yil, yer, kapak görseli, teaser, ve
+   "beats" dizisi: sırayla paragraf + o paragrafa ait görsel.
+   Görseller Wikimedia Commons üzerinden Special:FilePath ile
+   hotlink ediliyor (kamu malı / serbest lisanslı gerçek arşiv fotoğrafları).
+*/
+const WM = f => `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=1200`;
+
+const DATA = {
+  "1930lar": {
+    title: "1930'lar",
+    subtitle: "Büyük Buhran'ın gölgesinde, imkânsızı başaranlar",
+    stories: [
+      {
+        id: "empire-state",
+        year: "1930 – 1931",
+        place: "New York (Nu York), ABD",
+        title: "Gökyüzüne 13 Ayda Çıkan Bina",
+        teaser: "Dünya, çöküşün eşiğindeyken bir grup işçi tarihin en hızlı gökdelenini dikti.",
+        cover: WM("Empire_state_building_USA.jpg"),
+        beats: [
+          { text: "1929'un sonbaharında Wall Street (Vol Strit) çöktüğünde, New York'un gökyüzünde hâlâ bitmemiş bir yarış vardı: dünyanın en yüksek binası kim olacaktı? Chrysler Building mi, yoksa henüz kâğıt üzerinde bile olmayan bir proje mi? Şehir, ekonominin çöktüğü bir anda gökyüzüne bakmaya karar verdi." },
+          { text: "17 Mart 1930'da 34. Cadde'de kazma vuruldu. Plan delilikti: 102 kat, 410 metre, ve bunu bir buçuk yıldan kısa sürede bitirmek. Mimarlar William F. Lamb'in ekibi, çizimleri neredeyse günlük olarak inşaat sahasına yetiştiriyordu — bina, tasarlanırken aynı anda yükseliyordu.",
+            image: WM("Zeppelin_bij_Empire_State_Building_in_aanbouw_-_Zeppelin_near_the_Empire_State_Building_under_construction_(6943970242).jpg"),
+            caption: "İnşaat halindeki bina üzerinde bir zeplin, Ekim 1930 — Nationaal Archief" },
+          { text: "İşçiler arasında en dikkat çekenler, Kanada'daki Kahnawake yerleşiminden gelen Mohawk demirci ustalarıydı. Yerden yüzlerce metre yükseklikte, çelik kirişler üzerinde güvenlik ipi bile takmadan yürüyor, öğle yemeklerini gökyüzünde yiyorlardı. Basın onlara 'gökyüzü çocukları' adını taktı." },
+          { text: "İnşaat hızı o kadar olağanüstüydü ki bazı haftalarda dört buçuk kat birden yükseliyordu — günde ortalama 3.400 tuğla döşeniyordu. 14 Ağustos 1930'da, tek bir günde 3.439 işçi aynı anda sahada çalıştı.",
+            image: WM("Old_timer_structural_worker2.jpg"),
+            caption: "Çelik iskelet üzerinde çalışan bir demirci ustası, 1930" },
+          { text: "11 Nisan 1931'de bina, planlanandan 12 gün önce tamamlandı. Büyük Buhran'ın en karanlık yılında, boş ofisler yüzünden yıllarca 'Empty State Building' diye alay konusu oldu — ama zamanla dünyanın en tanınan silüetlerinden biri hâline geldi. Bugün hâlâ, umutsuzluğun ortasında cesaretle yükselen bir hikâye olarak anlatılıyor." }
+        ],
+        today: { image: WM('NYC_Empire_State_Building.jpg'), caption: "Empire State Building, günümüzde" }
+      }
+    ]
+  },
+  "1930lar-koprum": null
+};
+
+/* Golden Gate ve Snow White'ı aynı kategoriye ekleyelim */
+DATA["1930lar"].stories.push({
+  id: "golden-gate",
+  year: "1933 – 1937",
+  place: "San Francisco (San Fransisko), ABD",
+  title: "\"Yapılamaz\" Denen Köprü",
+  teaser: "Mühendisler imkânsız dediği için değil, herkes imkânsız dediği için inşa ettiler.",
+  cover: WM("Golden_gate_bridge.jpg"),
+  beats: [
+    { text: "1930'ların başında San Francisco Körfezi'ni geçmenin tek yolu feribotlardı. Askeri yetkililer ve mühendisler yıllarca aynı şeyi söyledi: burada bir köprü inşa etmek imkânsız — akıntı çok güçlü, sisler çok yoğun, deniz tabanı çok derin. Yüzlerce dava açıldı, çevreciler ve feribot şirketleri projeyi durdurmaya çalıştı." },
+    { text: "Mühendis Joseph Strauss, herkesin 'hayır' dediği yerde ısrar etti. 5 Ocak 1933'te, Büyük Buhran'ın tam ortasında kazma vuruldu. Proje, o dönemde işsiz kalan binlerce kişiye iş demekti — bir topluluk için umut, bir mühendislik ekibi için bilinmeyene atılan bir adımdı.",
+      image: WM("View_of_early_Golden_Gate_Bridge_construction_around_Fort_Point,_1933.jpg"),
+      caption: "Fort Point çevresinde erken inşaat çalışmaları, 1933" },
+    { text: "Deniz tabanına inen ayaklar, o güne kadar denenmemiş yöntemlerle döküldü; işçiler devasa kulelerin tepesinde, körfezin soğuk rüzgârına karşı çelik halatlar gerdiler. Strauss, döneminin standartlarının çok ötesinde bir önlem aldı: işçilerin altına dev bir güvenlik ağı gerdirdi. Bu ağ, düşen 19 işçinin hayatını kurtardı — onlar sonradan 'Yarı Yolda Kulübü' diye anılan bir gruba katıldı.",
+      image: WM("The_Golden_Gate_Bridge_under_construction.jpg"),
+      caption: "Kule ve ana kablo çalışmaları sırasında köprü, inşaat döneminden" },
+    { text: "27 Mayıs 1937'de köprü trafiğe açılmadan önce, bir gün boyunca sadece yayalara ayrıldı. 200.000'den fazla insan, yürüyerek, koşarak, hatta paten kayarak 2,7 kilometrelik köprüyü geçti. Ertesi gün araç trafiğine açıldığında, dünyanın o güne kadar gördüğü en uzun asma köprü tamamlanmıştı — bütçesinin altında ve planlanandan erken.",
+      image: WM("Golden_Gate_Bridge_Rivet_1937.jpg"),
+      caption: "Köprünün karakteristik 'International Orange' rengi ve perçinleri, 1937" },
+    { text: "Bugün Golden Gate (Goldın Geyt) Köprüsü sadece bir ulaşım hattı değil, imkânsızın nasıl 'henüz denenmemiş' olduğunu hatırlatan bir simge. Herkesin durduğu yerde bir mühendisin ısrarı, bir şehrin silüetini sonsuza dek değiştirdi." }
+  ],
+  today: { image: WM('GoldenGateBridge.jpg'), caption: "Golden Gate Köprüsü, günümüzde" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "snow-white",
+  year: "1937",
+  place: "Hollywood (Holivud), ABD",
+  title: "Disney'in Çılgınlığı",
+  teaser: "Herkes ona 'batacaksın' dedi. O, sinema tarihini yeniden yazdı.",
+  cover: WM("Snow_white_1937_trailer_screenshot_(1).jpg"),
+  beats: [
+    { text: "1934'te Walt Disney, stüdyosundaki herkese aynı şeyi söylediğinde ekibi sessizce birbirine baktı: uzun metrajlı, tam renkli bir çizgi film yapacaklardı. O güne kadar animasyon sadece birkaç dakikalık kısa filmlerden ibaretti. Hollywood bu fikre 'Disney'in Çılgınlığı' adını taktı." },
+    { text: "Proje, dönemin parası için akıl almaz bir bütçeye, 1,5 milyon dolara ulaştı — Disney bunun için evini bile ipotek ettirdi. Yüzlerce animatör, her kareyi elle çizdi; sadece filmin kendisi 250.000'den fazla ayrı resimden oluşuyordu. Banka yetkilileri projeyi finanse ederken hâlâ şüpheliydi." },
+    { text: "21 Aralık 1937'de, Los Angeles'taki Carthay Circle Theatre (Kartey Sörkıl Tiyatır)'da film galasını yaptığında, salondaki hiç kimse - hatta Disney'in kendisi bile - ne olacağından emin değildi. Işıklar söndü, ilk renkli uzun metrajlı animasyon film perdeye yansıdı.",
+      image: WM("Snow_white_1937_trailer_screenshot_(1).jpg"),
+      caption: "Filmin orijinal fragmanından bir kare, 1937" },
+    { text: "Salon, filmin sonunda ayakta alkışladı. Film, 1,5 milyon dolarlık maliyetine karşılık dünya çapında 8 milyon dolardan fazla hasılat yaptı — 1938'in en çok kazanan filmi oldu. Disney, sinemanın tamamen yeni bir türünü, tek başına ve herkesin 'imkânsız' dediği bir bahisle yaratmıştı." },
+    { text: "Bugün her uzun metrajlı animasyon filminin kökeninde, o gece Carthay Circle'da ışıklar söndüğünde başlayan cesaret var. Disney'in çılgınlığı, sinemanın en kalıcı miraslarından birine dönüştü." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "hoover-dam",
+  year: "1931 – 1936",
+  place: "Black Canyon (Blek Kenyın), Nevada-Arizona (Nıveydı-Arizona) sınırı, ABD",
+  title: "Çölün Ortasında Bir Dev",
+  teaser: "İşsizliğin en yüksek olduğu yılda, 21.000 kişi imkânsız bir yapıyı 2 yıl erken bitirdi.",
+  cover: WM('Hoover_Dam_1934_(12664127905).jpg'),
+  beats: [
+    { text: "1931'de Amerika'nın dörtte biri işsizdi. Colorado Nehri her yıl taştığında aşağı vadideki çiftlikleri sular altında bırakıyor, güneybatının çölleri ise susuzluktan kavruluyordu. Mühendisler yıllardır bir çözüm öneriyordu: nehri Black Canyon'da devasa bir barajla durdurmak. Ama bu, o güne kadar inşa edilmiş en yüksek barajdan da yüksek olacaktı." },
+    { text: "Mart 1931'de 'Six Companies' adlı altı inşaat şirketinin oluşturduğu ortaklık, işi üstlendi. İnşaat sahası o kadar uzak ve çorak bir çöldü ki işçiler için sıfırdan bir şehir kurmaları gerekti — Boulder City. Yaz sıcağında kanyonun dibi 50 dereceyi buluyordu; bazı işçiler sıcak çarpmasından hayatını kaybetti." },
+    { text: "Kanyonun taş duvarlarını temizlemek için 'high-scaler' denen bir işçi grubu görevlendirildi: koltuk değneği gibi halatlara asılıp yüzlerce metre boşlukta sallanarak gevşek kayaları dinamitle patlatıyorlardı. Bu iş, dağcılık becerisi ve sinir gücü isteyen, inşaatın en tehlikeli görevlerinden biriydi.",
+      image: WM('High_scalers_cleaning_canyon_wall_above_Nevada_power_plant_site_-_NARA_-_293863.jpg'),
+      caption: "Kanyon duvarını temizleyen 'high-scaler' işçiler — ABD Ulusal Arşivi" },
+    { text: "Nehrin kendisi barajın önündeki en büyük engeldi. Colorado'yu geçici olarak dört devasa tünelden geçirip yatağını kurutmaları, sonra da temeli kayaya kadar inip beton dökmeye başlamaları gerekiyordu. Beton o kadar kalın dökülüyordu ki normal yöntemle soğuması 125 yıl sürerdi — mühendisler içine soğutucu boru ağları döşeyerek bu süreyi aylara indirdiler.",
+      image: WM('High-scalers_working_on_Arizona_abutment_-_NARA_-_293766.jpg'),
+      caption: "Kanyon duvarında çalışan işçiler, Arizona kıyısı" },
+    { text: "İnşaat boyunca resmi kayıtlara göre 96 kişi hayatını kaybetti. Buna rağmen proje, ölümcül tehlikelere rağmen bir iş, bir maaş, bir gelecek anlamına geliyordu — Büyük Buhran'ın ortasında binlerce aile için hayatta kalma şansıydı." },
+    { text: "30 Eylül 1935'te, planlanandan iki yıl önce, Başkan Franklin Roosevelt barajı hizmete açtı. 221 metre yükseklikte, o güne kadar dünyanın en yüksek yapısıydı; ardında biriken Lake Mead, insan eliyle yaratılmış en büyük rezervuarlardan biri oldu. Bugün hâlâ milyonlarca eve elektrik veriyor — çaresizliğin ortasında, azimle örülmüş bir beton dev olarak." }
+  ],
+  today: { image: WM('Hoover_Dam-USA.jpg'), caption: "Hoover Barajı, günümüzde" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "rockefeller-center",
+  year: "1931 – 1939",
+  place: "Manhattan (Menhetın), New York (Nu York), ABD",
+  title: "Kimsenin İnanmadığı Şehir İçinde Şehir",
+  teaser: "Kirası ödenmesin diye başlayan bir proje, Büyük Buhran'ın en cesur inşaatına dönüştü.",
+  cover: WM('Rockefeller_Center_in_1933.jpg'),
+  beats: [
+    { text: "1929'da John D. Rockefeller Jr., Manhattan'ın göbeğinde bir arsayı uzun vadeli kiraladığında plan bambaşkaydı: burada yeni bir opera binası yükselecekti. Ama birkaç hafta sonra borsa çöktü, opera ortakları projeden çekildi. Rockefeller'ın önünde iki seçenek vardı — kirayı üstlenip devasa bir zarara razı olmak, ya da arsayı başka bir şeye dönüştürmek." },
+    { text: "Rockefeller, dönemin en akıl almaz kararlarından birini verdi: krizin ortasında, kimsenin ofis kiralamayacağı bir dönemde, koca bir 'şehir içinde şehir' inşa etmeye karar verdi. 14 binadan oluşacak kompleks, o zamana kadar özel sermayeyle yapılan en büyük şehir içi inşaat projesi olacaktı." },
+    { text: "22 Temmuz 1931'de kazma vuruldu. Proje, işsizliğin zirvede olduğu bir dönemde 40 ila 60 bin kişiye iş verdi — taş ustaları, demirciler, ressamlar, heykeltıraşlar. 1,25 milyon ton moloz kazıldı, 39 milyon tuğla örüldü. New York'un çöken ekonomisinde, Rockefeller Center (Rakîfelır Sentır) âdeta tek başına bir iş kolu gibiydi." },
+    { text: "Merkezindeki RCA Building (bugünkü 30 Rockefeller Plaza), 1933'te tamamlandığında 259 metreyle şehrin yeni bir simgesi oldu; hemen yanında dünyanın en büyük iç mekân tiyatrosu Radio City Music Hall (Reydyo Siti Müzik Hol) açıldı.",
+      image: WM('Rockefeller_Center,_December_1933.jpg'),
+      caption: "Rockefeller Center, Aralık 1933" },
+    { text: "1939'a gelindiğinde kompleks tamamlanmıştı — Büyük Buhran'ın tam ortasında başlayıp bitmiş, hem bir mimari başyapıt hem de 'karamsarlığın ortasında inatla inşa etmenin' sembolü olmuştu. Bugün hâlâ New York'un kalbinde, bir zamanlar kimsenin inanmadığı bir cesaretin anıtı olarak duruyor." }
+  ],
+  today: { image: WM('Rockefeller_Center_(2006).JPG'), caption: "Rockefeller Center, günümüzde" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "amelia-earhart",
+  year: "1932",
+  place: "Newfoundland'dan (Nyufınlınd) Kuzey İrlanda'ya, Atlantik Okyanusu üzerinden",
+  title: "Fırtınanın İçinden Tek Başına Geçen Kadın",
+  teaser: "Herkes onu '1928'in yolcusu' olarak hatırlıyordu. O, tarihe kendi kanatlarıyla geçmek istedi.",
+  cover: WM('Earhart.jpg'),
+  beats: [
+    { text: "1928'de Amelia Earhart, Atlantik'i uçarak geçen ilk kadın olarak manşetlere çıkmıştı — ama sadece yolcuydu, uçağı o kullanmamıştı. Kendi deyimiyle 'bir çuval patatesten' farksızdı. Aldığı övgüyü hak etmediğini düşünüyor, bunu kendine kanıtlamak istiyordu." },
+    { text: "20 Mayıs 1932'de, Lindbergh'in aynı okyanusu tek başına geçtiği günün tam beşinci yıl dönümünde, Newfoundland'dan kalktı. Uçağı, parlak kırmızı tek motorlu bir Lockheed Vega'ydı — yanında sadece bir termos kahve, biraz peksimet ve bir harita vardı." },
+    { text: "Uçuş plandan çok daha zor geçti. Yükseklik ölçer bozuldu, motor alev püskürtmeye başladı, kanatlar buzlanmaya başladı. Fırtınalar onu saatlerce savurdu; bazı anlarda okyanus yüzeyine tehlikeli derecede yaklaştı.",
+      image: WM('Amelia_Earhart_and_group.jpg'),
+      caption: "Earhart, dönemin basınıyla ve destek ekibiyle birlikte" },
+    { text: "15 saat süren mücadelenin ardından, Fransa'ya varma hedefinden saparak Kuzey İrlanda'daki bir çiftlik arazisine indi. Bir çiftçi ona 'uzaktan mı geldiniz?' diye sorduğunda, cevabı kısaydı: 'Amerika'dan.'" },
+    { text: "Bu uçuşla Earhart, Atlantik'i tek başına geçen ilk kadın ve Lindbergh'ten sonra bunu başaran ilk ikinci kişi oldu. Beyaz Saray'da kendisine madalya verildiğinde şunları söyledi: 'Küçük başarımın, kadınların da uçtuğu gerçeğine dikkat çekmiş olmasından mutluluk duyarım.' Cesareti, bir neslin hayal gücünü değiştirdi." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "sydney-harbour-bridge",
+  year: "1923 – 1932",
+  place: "Sydney (Sidni), Avustralya",
+  title: "Askıya Alınan Şehir",
+  teaser: "Sekiz yıl, altı milyon perçin ve bir milletin gökyüzüne bakışını değiştiren bir kemer.",
+  cover: WM('Tram_tracks_on_the_Sydney_Harbour_Bridge,_1931-1932_(7560232492).jpg'),
+  beats: [
+    { text: "1920'lerin başında Sydney'de körfezin iki yakası arasında ulaşım hâlâ feribotlara bağlıydı. Mühendis John Bradfield, yıllardır savunduğu bir fikri sonunda hayata geçirme fırsatı buldu: dünyanın en geniş çelik kemer köprüsünü inşa etmek. 1923'te İngiliz firması Dorman Long ile sözleşme imzalandı." },
+    { text: "İnşaat sekiz yıl sürdü. İki yakadan başlayan devasa çelik kollar, aylarca havada birbirine doğru uzatıldı — aralarında hâlâ metrelerce boşluk varken, işçiler bu yarım kemerlerin üzerinde çalışmaya devam etti. Tek bir hesap hatası, bütün projeyi felakete çevirebilirdi." },
+    { text: "Yaklaşık 1.400 işçi, günün büyük bölümünü yerden 130 metre yükseklikte geçirdi. Altı milyon perçin elle çakıldı; 52.800 ton çelik kullanıldı. Büyük Buhran'ın en şiddetli yıllarında bu proje, Sydney için nadir bir istihdam kaynağıydı.",
+      image: WM('The_roadway_and_pylons_of_the_Harbour_Bridge,_1932_(8282692485).jpg'),
+      caption: "Köprünün yol kaplaması ve kuleleri, 1932" },
+    { text: "1930'da iki kemer kolu nihayet ortada birleştiğinde, mühendisler bir milimetrelik dahi sapma olmadığını gördüler — dönemin mühendislik camiasında hâlâ anlatılan bir hassasiyet başarısıydı." },
+    { text: "19 Mart 1932'de köprü resmî olarak açıldığında, binlerce Sydney'li yürüyerek geçmek için sıraya girdi. Yerel halk köprüye kısa sürede bir takma ad taktı: 'The Coathanger' — Askı. Bugün hâlâ şehrin en tanınan simgesi, sekiz yıllık inatçı bir mühendislik hikâyesinin somut hâli.",
+      image: WM('Two_women_and_a_child_on_the_walkway_of_the_Sydney_Harbour_Bridge,_1932_(8283753516).jpg'),
+      caption: "Açılış günlerinde köprünün yürüyüş yolunda bir aile, 1932" }
+  ],
+  today: { image: WM('Sydney_harbour_bridge_new_south_wales.jpg'), caption: "Sydney Harbour Bridge, günümüzde" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "jesse-owens",
+  year: "1936",
+  place: "Berlin, Almanya",
+  title: "Stadyumu Susturan Dört Altın",
+  teaser: "Bir rejim üstünlüğünü kanıtlamak istedi. Bir sporcu, tarihe bambaşka bir ders yazdı.",
+  cover: WM('Jesse_Owens_1936.jpg'),
+  beats: [
+    { text: "1936 yazında Berlin, Nazi Almanyası'nın gövde gösterisi için hazırlanmıştı. Adolf Hitler ve rejimi, olimpiyatları 'Aryan ırkının üstünlüğünü' dünyaya ispatlamak için bir sahne olarak görüyordu. Stadyumun locasında, kendi sporcularının zaferini izlemeye hazırlanıyordu." },
+    { text: "Ohio'lu bir işçi ailesinin oğlu olan Jesse Owens, o yaz oyunlara farklı bir hikâyeyle geldi. Daha üniversite yıllarında, tek bir öğleden sonrada üç dünya rekoru kırıp bir de dünya rekoruna eşitlenmişti — atletizm tarihinin en olağanüstü günlerinden biri olarak anılır." },
+    { text: "Berlin'de dört gün içinde dört altın madalya kazandı: 100 metre, 200 metre, uzun atlama ve 4x100 bayrak. Her yarışta stadyumu dolduran 100 binden fazla seyirci, ırkçı propagandanın iddia ettiğinin tam tersini gözleriyle gördü.",
+      image: WM('Bundesarchiv_Bild_183-R96374,_Berlin,_Olympiade,_Jesse_Owens_beim_Weitsprung.jpg'),
+      caption: "Owens, uzun atlama finalinde — Bundesarchiv, Ağustos 1936" },
+    { text: "Uzun atlama finalinde en unutulmaz an rakibiyle yaşandı: Alman atlet Luz Long, Owens'ın diskalifiye olma riskini fark edip ona teknik bir tavsiye verdi — bu tavsiye, Owens'ın altın madalyaya uzanmasına yardımcı oldu. İkili, yarışma bittikten sonra kol kola stadyumu terk etti; bu görüntü, dönemin propagandasına karşı sessiz bir cevap oldu.",
+      image: WM('Luz_Long_and_Jesse_Owens.png'),
+      caption: "Jesse Owens, rakibi Luz Long ile birlikte stadyumdan ayrılırken" },
+    { text: "Owens, Amerika'ya döndüğünde bile kendi ülkesinde ayrımcılıkla karşılaştı — Beyaz Saray'a davet edilmedi, otellerde ön kapıdan giremedi. Yine de Berlin'deki dört altın, on yıllar boyunca 'yeteneğin hiçbir ideolojiye boyun eğmediğinin' en güçlü kanıtlarından biri olarak hatırlandı." }
+  ],
+  today: { image: WM('Olympiastadion_Berlin_2015.jpg'), caption: "Berlin Olimpiyat Stadyumu, günümüzde" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "queen-mary",
+  year: "1930 – 1936",
+  place: "Clydebank (Klaydbenk), İskoçya — Southampton (Sauthempton), İngiltere",
+  title: "Buhranın Ortasında Yüzen Bir İmparatorluk",
+  teaser: "İnşaatı durduran bir kriz, sonunda dönemin en görkemli gemisini denize indirdi.",
+  cover: WM('RMS_Queen_Mary_(1936)_(51022313917).jpg'),
+  beats: [
+    { text: "1930'da İskoçya'nın Clydebank tersanesinde, Cunard şirketi tarihin en büyük ve en hızlı yolcu gemisini inşa etmeye başladı. Ama bir yıl sonra Büyük Buhran'ın etkisi tersaneye ulaştı: finansman durdu, iskelet hâlindeki gemi aylarca terk edilmiş şekilde bekledi. 3.000'den fazla işçi işsiz kaldı." },
+    { text: "İngiliz hükümeti sonunda devreye girdi: Cunard'a kredi sağlayacaktı, ama tek şartla — rakip şirket White Star Line ile birleşeceklerdi. Anlaşma imzalandı, inşaat 1934'te yeniden başladı. Tersanenin etrafındaki kasaba için bu, yeniden hayata dönüş demekti." },
+    { text: "26 Eylül 1934'te gemi suya indirildiğinde, Kraliçe Mary'nin kendisi şişeyi kırdı ve gemiye kendi adını verdi. 310 metre uzunluğunda, 80 binin üzerinde tonajıyla, o güne kadar inşa edilmiş en büyük hareketli yapıydı.",
+      image: WM('RMS_%22Queen_Mary%22_Maiden_Voyage_cover_-_May,_1936.jpg'),
+      caption: "Queen Mary (Kuin Meri)'nin ilk seferini anan bir zarf, Mayıs 1936" },
+    { text: "27 Mayıs 1936'da Southampton'dan New York'a ilk seferine çıktı. Güvertesinde iki yüzme havuzu, bir tiyatro salonu, kütüphaneler, hatta yolcuların köpekleri için özel bir kulübe vardı. Rakibi Fransız Normandie'nin hız rekorunu kırmak için gemi tam güçle sürüldü; sis nedeniyle rekoru kaçırsa da, birkaç ay sonra Atlantik'i geçme rekorunu ele geçirdi." },
+    { text: "Queen Mary, sonraki yıllarda döneminin 'Atlantik'i geçmenin tek medeni yolu' olarak anıldı — krallar, film yıldızları ve devlet adamları onunla seyahat etti. Bir krizin ortasında yarım kalan bir hayalin, inatla tamamlanınca nasıl bir ihtişama dönüşebileceğinin hikâyesiydi." }
+  ],
+  today: { image: WM('Queen_Mary_hotel.jpg'), caption: "RMS Queen Mary, bugün Long Beach'te bir otel gemisi olarak" }
+});
+
+DATA["1930lar"].stories.push({
+  id: "byrd-antarctica",
+  year: "1928 – 1930",
+  place: "Ross Buz Rafı, Antarktika",
+  title: "Buzun Öte Yanındaki Kutup",
+  teaser: "Kimsenin uçmayı denemediği bir kıtanın üzerinde, bir ekip tarihe adını yazdı.",
+  cover: WM('Rear_Admiral_Richard_Byrd_in_Antarctica.JPG'),
+  beats: [
+    { text: "1928'de deniz kuvvetleri komutanı Richard Byrd, o güne kadar denenmemiş bir hedefe yöneldi: Güney Kutbu'nun üzerinden uçmak. New York limanından yola çıkan sefer, 600 tondan fazla malzeme, üç uçak ve neredeyse 100 kızak köpeği taşıyordu — o zamana kadarki en büyük ve en pahalı Antarktika seferiydi." },
+    { text: "Ekip, Ross Buz Rafı'nın kıyısında 'Little America' adını verdikleri bir üs kurdu. Kutup gecesinin aylarca süren karanlığında, fırtınalar çadırları ve uçakları defalarca tehdit etti; bir keşif ekibinin uçağı bir tipide yerinden sökülüp bir kilometre öteye savruldu." },
+    { text: "28-29 Kasım 1929'da Byrd, pilot Bernt Balchen ve iki mürettebatla birlikte bir Ford Tri-Motor uçağıyla havalandı. Transantarktik Dağları aşarken uçak yeterince yükselemedi; Byrd, riskli bir kararla 115 kilogramlık acil durum erzakını dışarı attırdı — uçak ancak böyle tepelerin üzerinden geçebildi." },
+    { text: "Güney Kutbu'nun üzerinden uçup üsse döndüklerinde, Byrd'e ABD Kongresi tarafından tuğamiral rütbesi verildi. Sefer sadece bir 'ilk'i değil, o güne kadar bilinmeyen 450.000 mil karelik bir alanın haritalanmasını da beraberinde getirdi — bilinmeyene karşı sabrın ve cesaretin bir kanıtıydı." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "worlds-fair-1939",
+  year: "1939",
+  place: "Flushing Meadows (Flaşing Medovz), New York (Nu York), ABD",
+  title: "Yarının Dünyası",
+  teaser: "Buhran biterken bir şehir, geleceğe dair devasa bir hayal kurdu.",
+  cover: WM("Joseph_Binder_New_York_World's_Fair_1939_The_World_of_Tomorrow.jpg"),
+  beats: [
+    { text: "On yılın sonuna gelindiğinde Amerika, Büyük Buhran'ın en kötü yıllarını geride bırakıyordu. New York, bu yeni umudu kutlamak için akıl almaz bir proje planladı: bir çöplük arazisini, 'Yarının Dünyası' temalı devasa bir fuar alanına dönüştürmek." },
+    { text: "Fuarın simgesi, mimarlar Wallace Harrison ve Andre Fouilhoux'nun tasarladığı iki yapıydı: 55 metre çapında beyaz bir küre (Perisphere) ve 186 metre yüksekliğinde sivri bir kule (Trylon). O döneme kadar yapılmış en uzun yürüyen merdivenle birbirine bağlanıyorlardı.",
+      image: WM('New_York_-_Flushing_-_NARA_-_68145471_(assembly_of_Trylon_and_Perisphere).jpg'),
+      caption: "Trylon (Traylın) ve Perisphere (Perisfir)'in montajı sırasında, inşaat aşaması" },
+    { text: "Kürenin içinde, 'Democracity (Dimakrasiti)' adlı bir diorama, ziyaretçilere yirmi yıl sonrasının hayali bir şehrini gösteriyordu — otoyollar, gökdelenler, yeşil banliyöler. Fuarda ayrıca dönemin en yeni icatları sergilendi: ilk ticari televizyon yayınları, naylon çorap, klima, ve konuşan robotlar." },
+    { text: "45 milyondan fazla insan fuarı ziyaret etti. Bir yıl sonra İkinci Dünya Savaşı patlak verdiğinde, o 'iyimser gelecek' hayali aniden kesintiye uğradı — Trylon ve Perisphere savaş için hurdaya çevrildi. Ama fuarın kısa ömrü, bir milletin krizden çıkarken kurduğu en büyük kolektif hayal olarak hafızalarda kaldı." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "nylon",
+  year: "1935 – 1939",
+  place: "Wilmington (Vilmington), Delaware (Delaviyır), ABD",
+  title: "Bir Laboratuvarda Doğan Kumaş",
+  teaser: "Örümcek ağından ilham alan bir kimyager, giyim endüstrisini sonsuza dek değiştirdi.",
+  cover: WM('Wallace_Carothers,_in_the_lab.jpg'),
+  beats: [
+    { text: "1930'ların başında DuPont şirketinde çalışan kimyager Wallace Carothers, doğadaki en dayanıklı ipliklerden biri olan ipek böceği ipeğinin sırrını laboratuvarda taklit etmeye çalışıyordu. Ekibi, uzun moleküler zincirler (polimerler) üretme yöntemleri üzerinde yıllarca deney yaptı." },
+    { text: "27 Şubat 1935'te ekip, 'polimer 6-6' adını verdikleri yeni bir malzemeyi sentezledi — bugün naylon olarak bildiğimiz maddenin ilk hâli. Malzeme, ipek kadar ince ama çok daha dayanıklıydı; ayrıca petrolden ve kömürden üretilebiliyordu, yani ipek böceğine bağımlı değildi." },
+    { text: "DuPont, bu yeni malzemeyi 1939 New York Dünya Fuarı'nda tanıttı — 'kömürden, sudan ve havadan yapılan, çelik kadar güçlü kumaş' sloganıyla. Kalabalıklar, fuar standında sergilenen naylon çorapları görmek için sıraya girdi." },
+    { text: "15 Mayıs 1940'ta naylon çoraplar mağazalarda satışa çıktığında, sadece birkaç saat içinde milyonlarca çift tükendi — Amerikan tarihinin en hızlı satılan tüketim ürünlerinden biri oldu. Carothers bu zaferi görecek kadar yaşamadı; ama laboratuvardaki sabırlı denemeleri, tekstil endüstrisini kökten değiştiren bir devrimin başlangıcı oldu." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "monopoly",
+  year: "1935",
+  place: "Philadelphia (Filadelfia) / Salem (Seylım), ABD",
+  title: "İşsiz Bir Adamın Kağıt Üzerindeki İmparatorluğu",
+  teaser: "Büyük Buhran'da işini kaybeden bir satıcı, mutfak masasında bir oyun icat etti.",
+  cover: WM('Monopoly-board.jpg'),
+  beats: [
+    { text: "1930'ların başında Charles Darrow, Büyük Buhran'ın vurduğu milyonlarca Amerikalıdan biriydi — işini kaybetmiş, ailesiyle geçinmekte zorlanıyordu. Boş zamanlarında, mutfak masasında ailesiyle birlikte oynadıkları bir emlak oyununu kendi eliyle yeniden çizdi: sokak isimlerini Atlantic City'den alıyordu." },
+    { text: "Darrow, oyunu 1934'te Parker Brothers şirketine sundu ama ilk teklifi reddedildi — şirket, oyunu '52 tasarım hatası' bulduğunu söyledi: çok uzun sürüyor, kuralları karmaşıktı." },
+    { text: "Darrow pes etmedi. Oyunu kendi parasıyla küçük partiler hâlinde bastırıp Philadelphia'daki mağazalara sattı. Talep o kadar hızlı büyüdü ki Parker Brothers fikrini değiştirdi ve 1935'te oyunu resmi olarak piyasaya sürdü." },
+    { text: "Monopoly, piyasaya çıktığı ilk yıl içinde ülkenin en çok satan kutu oyunu oldu. Darrow, kısa süre önce işsiz kalmış bir satıcıyken, oyunun telif haklarından milyoner oldu — Büyük Buhran'ın ortasında, bir mutfak masası fikrinin nasıl bir imparatorluğa dönüşebileceğinin nadir örneklerinden biri." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "bluebird",
+  year: "1935",
+  place: "Bonneville (Bonvil) Tuz Gölü, Utah (Yuta), ABD",
+  title: "Tuzun Üzerinde 300 Mil",
+  teaser: "Bir İngiliz, bir tuz gölünün üzerinde, dönemin akıl almaz bir hızına ulaştı.",
+  cover: WM('Bluebird_land_speed_record_car_1935_rc10413.jpg'),
+  beats: [
+    { text: "1930'larda kara hız rekoru, dönemin en gözde mühendislik yarışlarından biriydi. İngiliz sürücü Sir Malcolm Campbell, yıllardır kendi tasarladığı 'Bluebird' adlı özel araçlarla bu rekoru defalarca kırmıştı. Ama gözü hep bir sonraki eşiktedeydi: saatte 300 mil." },
+    { text: "Bu hıza ulaşmak için düz, pürüzsüz ve kilometrelerce uzanan bir zemin gerekiyordu. Campbell, Utah'daki devasa Bonneville Tuz Gölü'nü seçti — güneşin kuruttuğu, ayna gibi düz bir tuz yüzeyi." },
+    { text: "3 Eylül 1935'te, Rolls-Royce uçak motoruyla güçlendirilmiş Bluebird'ü sürerek 301 mil (484 km) hıza ulaştı — saatte 300 mili aşan ilk insan oldu. Rekor, dönemin gazetelerinde 'insanın hıza karşı kazandığı yeni bir zafer' olarak duyuruldu." },
+    { text: "Campbell'ın azmi, sadece bir hız rekoru değildi — mühendislik, cesaret ve doğru zemini bulma sabrının birleşimiydi. Bluebird'ün adı, sonraki yıllarda hem kara hem su hızı rekorları için bir efsaneye dönüştü." }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "chocolate-chip-cookie",
+  year: "1938",
+  place: "Whitman (Vitmın), Massachusetts (Măsaçusets) (Măsaçusets), ABD",
+  title: "Bir Hanın Mutfağında Doğan Rastlantı",
+  teaser: "Elindeki çikolata bitince, bir otel sahibesi dünyanın en sevilen kurabiyesini icat etti.",
+  cover: WM('Chocolate_Chip_Cookies_-_kimberlykv.jpg'),
+  beats: [
+    { text: "1930'da Ruth Wakefield ve eşi Kenneth, Massachusetts'te eski bir kır evini satın alıp 'Toll House Inn (Tol Haus İn)' adında bir han işletmeye başladılar. Ruth mutfağın kalbiydi — misafirler için yaptığı tatlılarla kısa sürede bölgede ün kazandı." },
+    { text: "1938'de her zamanki çikolatalı kurabiye tarifini hazırlarken elindeki eritilmiş pastacılık çikolatası bitti. Elinde sadece Nestlé'nin sert bir çikolata kalıbı vardı; onu buz kırma aletiyle küçük parçalara ayırıp hamura kattı — çikolatanın hamur içinde eriyip karışacağını düşünüyordu." },
+    { text: "Fırından çıkan kurabiyelerde beklenmedik bir şey oldu: çikolata parçaları erimeden, küçük yumuşak damlacıklar hâlinde kaldı. Bugün dünyada milyarlarca kez tekrarlanan 'chocolate chip cookie' formülü, aslında planlanmamış bir mutfak tesadüfüydü." },
+    { text: "Kurabiye hanın misafirleri arasında hızla ün saldı; tarif yerel gazetelere, ardından bir radyo programına taşındı. Nestlé, tarifi çikolata paketlerinin üzerine basmak için Ruth'la anlaştı — karşılığında ona ömür boyu bedava çikolata sözü verdi." },
+    { text: "İkinci Dünya Savaşı sırasında Massachusetts'li askerler, evden gönderilen bu kurabiyeleri diğer eyaletlerden gelen arkadaşlarıyla paylaştı; kısa sürede dünyanın dört bir yanından asker mektupları Ruth'a tarifi soruyordu. Bir hanın mutfağındaki küçük bir doğaçlama, böylece küresel bir klasiğe dönüştü." }
+  ]
+});
+
+DATA["1900ler"] = {
+  title: "1900'ler",
+  subtitle: "Yeni yüzyılın şafağında, dünyayı değiştiren ilk adımlar",
+  stories: [
+    {
+      id: "wright-brothers",
+      year: "1903",
+      place: "Kitty Hawk (Kiti Hok), Kuzey Karolina, ABD",
+      title: "12 Saniyede Değişen Dünya",
+      teaser: "Bisiklet tamircisi iki kardeş, insanlığın en eski hayallerinden birini gerçeğe dönüştürdü.",
+      cover: WM('Wrightflyer.jpg'),
+      beats: [
+        { text: "1900'lerin başında Wilbur ve Orville Wright, Ohio'da küçük bir bisiklet dükkânı işletiyordu. Uçmak, yüzyıllardır insanlığın peşinden koştuğu ama bir türlü yakalayamadığı bir hayaldi; çoğu bilim insanı bunun imkânsız olduğunu düşünüyordu. Kardeşler, resmi bir mühendislik eğitimleri olmamasına rağmen, konuyu sistematik olarak incelemeye karar verdiler." },
+        { text: "Yıllarca kendi rüzgâr tünellerini inşa edip yüzlerce kanat modeli test ettiler. Kuzey Karolina'daki rüzgârlı Kitty Hawk kumsalını, deneyler için ideal bulup her yaz oraya gitmeye başladılar — kum, sert inişlerde yumuşak bir zemin sağlıyordu." },
+        { text: "17 Aralık 1903 sabahı, soğuk ve rüzgârlı bir günde, kendi yaptıkları motorlu 'Flyer' uçağını rayların üzerine yerleştirdiler. Orville kumandaya geçti, Wilbur yanında koşarak dengeyi tuttu. Uçak yerden kalktı: 12 saniye havada kaldı, 36 metre uçtu." },
+        { text: "O gün dört kısa uçuş yapıldı; sonuncusu 59 saniye sürdü ve 260 metreye ulaştı. Görgü tanığı sadece beş kişiydi — bir cankurtaran istasyonunun görevlileri. Kardeşler öğle yemeğini sakin sakin yiyip babalarına bir telgraf çektiler." },
+        { text: "O gün orada olanlar, insanlık tarihinin akışını değiştiren bir anı fark etmemişti bile. On yıl içinde uçaklar savaşlarda, yolcu taşımacılığında ve keşiflerde kullanılmaya başlandı. İki bisiklet tamircisinin sabırlı denemeleri, gökyüzünü insanlığa açan kapı oldu." }
+      ]
+    },
+    {
+      id: "ford-motor",
+      year: "1903 – 1908",
+      place: "Detroit (Ditroyt), Michigan (Mişığın), ABD",
+      title: "Herkesin Alabileceği Araba",
+      teaser: "Otomobil sadece zenginlerin oyuncağıyken, bir adam bunu değiştirmeye karar verdi.",
+      cover: WM('Ford_Model_T_fra_1908.jpg'),
+      beats: [
+        { text: "1900'lerin başında otomobil, sadece zenginlerin sahip olabildiği pahalı bir lükstü — el işçiliğiyle, tek tek üretiliyordu. Henry Ford'un fikri farklıydı: sıradan bir çiftçinin bile alabileceği kadar ucuz, ama dayanıklı bir araba yapmak." },
+        { text: "16 Haziran 1903'te Ford, birkaç ortağıyla birlikte Ford Motor Company'yi kurdu — sermayesi oldukça mütevazıydı, üstelik şirketin ilk birkaç modeli beklenen ilgiyi görmedi. Ford, ucuz ve basit bir araba fikrinde ısrar etti." },
+        { text: "1908'de Model T (Model Ti) piyasaya çıktığında, 850 dolarlık fiyatıyla dönemin diğer otomobillerinden çok daha erişilebilirdi. Ama asıl devrim birkaç yıl sonra geldi: Ford, arabaları hareketli bir bant üzerinde parça parça birleştiren 'montaj hattı' yöntemini uygulamaya başladı.",
+          image: WM("Assembly_line_at_the_Ford_Motor_Company's_Highland_Park_plant_LCCN2011661021.jpg"),
+          caption: "Ford'un Highland Park (Haylınd Park) fabrikasında montaj hattı" },
+        { text: "Bu yöntem sayesinde bir arabanın üretim süresi 12 saatten 93 dakikaya indi. Maliyetler düştükçe fiyat da düştü: 1908'de 850 dolar olan Model T, 1920'lerin ortasında 260 dolara kadar geriledi." },
+        { text: "1927'ye gelindiğinde 15 milyondan fazla Model T satılmıştı. Henry Ford, otomobili bir lüksten sıradan bir ailenin ulaşabileceği bir araca dönüştürerek, sadece bir şirket değil, tüm bir yüzyılın ulaşım anlayışını yeniden şekillendirdi." }
+      ]
+    },
+    {
+      id: "sf-earthquake",
+      year: "1906 – 1915",
+      place: "San Francisco (San Fransisko), Kaliforniya, ABD",
+      title: "Küllerinden Doğan Şehir",
+      teaser: "Bir şehir üç günde neredeyse yok oldu. On yıl içinde daha güçlü şekilde geri döndü.",
+      cover: WM('San_Francisco_1906_earthquake_Panoramic_View.jpg'),
+      beats: [
+        { text: "18 Nisan 1906 sabahı saat 05:12'de, San Francisco'yu şiddetli bir deprem sarstı. Sarsıntının kendisi kısa sürdü, ama asıl felaket ardından geldi: kırılan gaz hatları ve devrilen sobalar, şehri kasıp kavuran bir yangın zincirini başlattı." },
+        { text: "Yangın üç gün boyunca söndürülemedi — su borularının çoğu depremde kırılmıştı. İtfaiyeciler, yangının yayılmasını durdurmak için bazı bölgeleri dinamitle yıkmak zorunda kaldı. Şehrin yaklaşık dörtte üçü küle döndü, yüz binden fazla kişi evsiz kaldı.",
+          image: WM('Aftermath_of_San_Francisco_earthquake,_1906.jpg'),
+          caption: "Depremin ardından yıkılan bir bölge, 1906" },
+        { text: "Enkazın dumanı hâlâ tüterken, şehir sakinleri sokaklarda geçici çadır kentler kurdu; yıkılan City Hall'ın önünde bile hayat hızla yeniden örgütlenmeye başladı." },
+        { text: "Yeniden inşa süreci hızlıydı ve iddialıydı: şehir sadece eskisini onarmakla kalmadı, daha modern bina yönetmelikleriyle, daha geniş caddelerle yeniden şekillendirildi. On yıl içinde nüfus depremden önceki seviyesini geçti." },
+        { text: "1915'te San Francisco, yeniden doğuşunu kutlamak için Panama-Pasifik Uluslararası Fuarı'na ev sahipliği yaptı — yıkımın üzerinden sadece dokuz yıl geçmişti. Şehrin küllerinden bu kadar hızlı doğuşu, hâlâ afet sonrası dayanıklılığın en çarpıcı örneklerinden biri olarak anlatılıyor." }
+      ]
+    }
+  ]
+};
+
+DATA["1900ler"].stories.push({
+  id: "marie-curie",
+  year: "1903",
+  place: "Paris (Pari), Fransa",
+  title: "Erkeklerin Dünyasında Bir İlk",
+  teaser: "Kapıları kapalı bir bilim dünyasında, ışıldayan bir elementin peşinde tarihe geçti.",
+  cover: WM('Marie_Curie_1903.jpg'),
+  beats: [
+    { text: "1891'de Polonyalı genç bir kadın olan Maria Skłodowska, kendi ülkesinde kadınların üniversiteye kabul edilmemesi yüzünden Paris'e taşındı. Sorbonne'da fizik ve matematik okudu, sınırlı imkânlarla, soğuk bir çatı katında yaşayarak." },
+    { text: "Fizikçi Pierre Curie ile evlendikten sonra, ikisi birlikte ilkel bir laboratuvar barakasında çalışmaya başladı — ısıtması zor, rüzgâr geçiren bir mekândı. Burada, uranyum cevherinden çok daha radyoaktif iki yeni element keşfettiler: polonyum ve radyum." },
+    { text: "Bu keşif için tonlarca pitchblende cevherini elle işleyip kaynatarak, yıllarca süren yorucu bir laboratuvar çalışması yürüttüler. Radyumu saf hâlde elde etmek tek başına dört yıllarını aldı." },
+    { text: "1903'te İsveç Kraliyet Bilimler Akademisi, radyoaktivite üzerine yaptıkları çalışma için Nobel Fizik Ödülü'nü Pierre Curie ve Henri Becquerel'e vermeyi planladı — Marie'nin adı ilk listede yoktu. Pierre, eşinin katkısı olmadan ödülü kabul etmeyeceğini bildirdi; akademi bunun üzerine Marie'yi de ödüle dahil etti." },
+    { text: "Marie Curie böylece bir Nobel Ödülü kazanan ilk kadın oldu. 1911'de kimya alanında ikinci bir Nobel daha kazanarak, hâlâ iki farklı bilim dalında Nobel Ödülü kazanan tek kişi unvanını taşıyor — bilim dünyasının kapılarını, sabırla ve ısrarla aralayan bir öncüydü." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "marconi-radio",
+  year: "1901",
+  place: "Poldhu (Poldu), İngiltere — St. John's (Sent Cons), Kanada",
+  title: "Okyanusun Üzerinden Görünmez Bir Sinyal",
+  teaser: "Herkes radyo dalgalarının dünyanın eğriliğini aşamayacağını söyledi. O, denemeden inanmadı.",
+  cover: WM('Guglielmo_Marconi_1901_wireless_signal.jpg'),
+  beats: [
+    { text: "1900'ların başında telsiz telgraf teknolojisi hâlâ emekleme aşamasındaydı ve çoğu bilim insanı, radyo dalgalarının dünyanın kavisli yüzeyini takip edemeyeceğini, yalnızca düz bir çizgide ilerleyip uzaya kaçacağını düşünüyordu. Bu görüşe göre, Atlantik'i aşan bir telsiz sinyali imkânsızdı." },
+    { text: "İtalyan mucit Guglielmo Marconi bu görüşe katılmıyordu. İngiltere'nin Cornwall kıyısındaki Poldhu'da güçlü bir verici istasyonu kurdu; karşı kıyıda, Kanada'nın Newfoundland adasındaki St. John's kentinde ise alıcı ekipmanını kurmak için yola çıktı." },
+    { text: "12 Aralık 1901'de, fırtınalı bir günde, bir uçurtmayla havaya kaldırdığı anten teliyle sinyali yakalamaya çalıştı. Önceki denemelerde uçurtmalar ve balonlar rüzgârda kopup gitmişti. O gün, kulaklığına Mors alfabesinde 'S' harfinin üç kısa vuruşunu duyduğunu iddia etti — Poldhu'dan, 3.500 kilometre öteden gönderilmiş bir sinyaldi." },
+    { text: "Bu iddia dönemin bilim çevrelerinde tartışma yarattı; bazı uzmanlar duyduğunun sinyal değil, atmosferik parazit olabileceğini öne sürdü. Ama Marconi ısrar etti ve kısa süre sonra daha güçlü kanıtlarla iddiasını doğruladı." },
+    { text: "Bu deneme, radyonun sadece görüş hattı içinde değil, okyanusları aşarak çalışabileceğini gösteren ilk işaretti. On yıl içinde telsiz telgraf, gemilerin denizde hayat kurtarmasından savaş haberleşmesine kadar dünyayı değiştiren bir teknolojiye dönüştü — hepsi, fırtınalı bir günde bir uçurtmanın ucundaki telden başladı." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "nyc-subway",
+  year: "1900 – 1904",
+  place: "New York (Nu York), ABD",
+  title: "Şehrin Altında Yeni Bir Dünya",
+  teaser: "'City Hall'dan Harlem'e 15 dakika' vaadiyle, bir şehir yer altına indi.",
+  cover: WM('City_Hall_Subway_station.jpg'),
+  beats: [
+    { text: "1900'lerin başında New York'un sokakları at arabaları, tramvaylar ve yayalarla o kadar tıkanmıştı ki şehir, ulaşımı yer altına taşımaktan başka çare bulamadı. 24 Mart 1900'de, City Hall Park'ın altında ilk kazma vuruldu." },
+    { text: "İnşaat, 'aç-kapa' yöntemiyle yapıldı: caddeler kazılıp tünel inşa edildikten sonra üzeri tekrar kapatılıyordu — şehir, inşaat boyunca kaosun içinde yaşamaya devam etti. Binlerce işçi, dört yıl boyunca yer altında çalıştı." },
+    { text: "Hattın güney ucundaki City Hall istasyonu, projenin vitrini olarak tasarlandı: kavisli platformu, renkli cam tavan pencereleri ve pirinç avizeleriyle bir saray gibiydi — Londra ve Paris'in metrolarına karşı New York'un gururunu simgeliyordu." },
+    { text: "27 Ekim 1904'te hat açıldığında, Belediye Başkanı George McClellan ilk treni bizzat kullanmak istedi. Kontrolü teslim etmesi gerektiğinde 'Hayır efendim, bu treni ben kullanıyorum!' diyerek 103. Cadde'ye kadar makinistlik yaptı." },
+    { text: "O akşam saat 19:00'da hat halka açıldığında, sadece birkaç saat içinde 100 binden fazla kişi beş sente ilk yer altı yolculuğunu yaptı. 'City Hall'dan Harlem'e 15 dakika' sloganı gerçek olmuştu — o gün başlayan sistem, bugün dünyanın en büyük metro ağlarından birine dönüştü." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "trans-siberian",
+  year: "1891 – 1904",
+  place: "Moskova'dan Vladivostok'a, Rusya",
+  title: "Dünyanın En Uzun Rayı",
+  teaser: "9.000 kilometrelik bir hat, bir imparatorluğun iki ucunu birbirine bağladı.",
+  cover: WM('Construction_of_the_Transsiberian_Railway.jpg'),
+  beats: [
+    { text: "1890'ların başında Rus İmparatorluğu'nun Sibirya'daki toprakları, başkentten neredeyse ulaşılamaz durumdaydı — bir mektup bile aylar sürebiliyordu. Çar III. Aleksandr, Moskova'yı Pasifik kıyısındaki Vladivostok'a bağlayacak, dünyanın en uzun demiryolunu inşa etmeye karar verdi." },
+    { text: "İnşaat 1891'de başladı; hat aynı anda yedi farklı bölümde, 60.000'den fazla işçiyle ilerletildi. Dondurucu Sibirya kışları, bataklık zeminler ve Baykal Gölü'nün devasa genişliği, mühendisler için sürekli yeni engeller çıkardı." },
+    { text: "Baykal Gölü'nün etrafından geçecek hat henüz tamamlanmadığı dönemlerde, trenler gölü buz üzerinden ya da özel feribotlarla aşmak zorunda kaldı — kışın donmuş gölün üzerine geçici raylar bile döşendi.",
+      image: WM('Engine_for_the_trans-siberian_railway_(1904).jpg'),
+      caption: "Trans-Sibirya demiryolu için üretilen bir lokomotif, 1904" },
+    { text: "1904'e gelindiğinde hattın büyük bölümü tamamlanmıştı — yaklaşık 9.000 kilometre, dünyanın o güne kadar gördüğü en uzun tek demiryolu hattı. Rusya'nın Avrupa yakasıyla Pasifik kıyısı arasındaki yolculuk, aylardan haftalara indi." },
+    { text: "Bugün Trans-Sibirya Demiryolu hâlâ dünyanın en uzun demiryolu hattı unvanını taşıyor. Bir imparatorluğun uçsuz bucaksız topraklarını birbirine bağlama hayali, on yılı aşan bir inşaat sabrıyla gerçeğe dönüştü." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "louisiana-purchase-expo",
+  year: "1904",
+  place: "St. Louis (Sent Luis), Missouri (Mizuri), ABD",
+  title: "Bir Kentin Dünyayı Ağırladığı Yaz",
+  teaser: "Louisiana bölgesinin satın alınışının 100. yılında, bir şehir dünyayı kendi bahçesine davet etti.",
+  cover: WM('Louisiana_Purchase_Exposition_St._Louis_1904.jpg'),
+  beats: [
+    { text: "1803'te ABD, Fransa'dan devasa bir toprak parçasını (bugünkü ülkenin yaklaşık dörtte birini) satın almıştı — 'Louisiana Satın Alımı'. Yüzüncü yıl dönümünü kutlamak için St. Louis şehri, 1904'te 1.200 dönümlük bir alanda muhteşem bir dünya fuarı düzenlemeye karar verdi." },
+    { text: "İnşaat için devasa saraylar inşa edildi — çoğu geçici olmasına rağmen mermer taklidi alçı ve boyayla o kadar görkemli görünüyordu ki ziyaretçiler gerçek sanmıştı. Elektrik Sarayı, dönemin en yeni icadı olan elektrik ışığıyla geceleri adeta parıldıyordu." },
+    { text: "62 ülkeden ve ABD'nin 43 eyaletinden katılımcıların yer aldığı fuar, 30 Nisan - 1 Aralık 1904 arasında yaklaşık 20 milyon ziyaretçi ağırladı. Fuarda dünyanın en büyük org'u sergilendi, ilk kez dondurma külahı ve buzlu çay geniş kitlelere tanıtıldı." },
+    { text: "Fuar aynı zamanda o yılki Yaz Olimpiyatları'na da ev sahipliği yaptı — Olimpiyatların Avrupa dışında düzenlendiği ilk seferdi. Ziyaretçiler bir günde hem bilimin, hem sanatın hem de sporun en yeni örnekleriyle karşılaşıyordu." },
+    { text: "Fuar kapandığında çoğu bina yıkıldı, ama St. Louis'in Forest Park'ı ve şehrin sanat müzesi bugün hâlâ o yazın mirasını taşıyor. Kısacık bir yaz boyunca, bir Amerikan şehri dünyanın dört bir yanından gelen ziyaretçilere kendi hayalindeki geleceği gösterdi." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "teddy-bear",
+  year: "1902",
+  place: "Mississippi (Misisipi) ve Brooklyn (Bruklin), ABD",
+  title: "Vurmayı Reddeden Bir Başkan, Doğan Bir Oyuncak",
+  teaser: "Bir avın sonunda alınan vicdani bir karar, dünyanın en sevilen oyuncağını doğurdu.",
+  cover: WM('TheodoreRooseveltTeddyBear.jpg'),
+  beats: [
+    { text: "Kasım 1902'de Başkan Theodore Roosevelt, Mississippi'de bir ayı avına çıktı. Ev sahipleri, başkanın avsız dönmesinden endişelenip bir ayıyı kovalayıp yorarak bir ağaca bağladılar ve Roosevelt'i çağırdılar." },
+    { text: "Roosevelt, bağlı ve çaresiz bir hayvanı vurmayı sportmenliğe aykırı bularak reddetti. Bu karar, dönemin gazetelerinde büyük yankı buldu ve karikatürist Clifford Berryman, olayı Washington Post'ta bir karikatürle ölümsüzleştirdi." },
+    { text: "Brooklyn'de küçük bir şekerci dükkânı işleten Morris ve Rose Michtom çifti, bu karikatürden ilham aldı. Eşi Rose'un diktiği yumuşak, peluş bir ayı yavrusunu vitrinlerine koyup 'Teddy'nin Ayısı' adını verdiler." },
+    { text: "Michtom, ayının adını kullanabilmek için başkana kibarca bir mektup yazıp izin istedi. Roosevelt kabul etti; kısa süre sonra talep o kadar arttı ki çift, oyuncağı seri üretime geçirmek zorunda kaldı — bu girişim sonradan Ideal Toy Company'ye dönüştü." },
+    { text: "Aynı yıllarda Almanya'da, oyuncakçı Richard Steiff de bağımsız olarak benzer bir peluş ayı tasarlamıştı. İki kıtada aynı anda doğan bu fikir, birleşerek dünya çapında milyonlarca çocuğun yastık arkadaşı olan 'teddy bear'a dönüştü — küçük bir vicdani kararın, hiç beklenmedik bir mirası." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "einstein-1905",
+  year: "1905",
+  place: "Bern, İsviçre",
+  title: "Bir Memurun Mucizevi Yılı",
+  teaser: "Üniversitede iş bulamayan genç bir memur, boş vaktinde fiziği yeniden yazdı.",
+  cover: WM('Einstein_patentoffice.jpg'),
+  beats: [
+    { text: "1902'de Albert Einstein, fizik doktorasına rağmen akademik bir pozisyon bulamamıştı. Geçimini sağlamak için Bern'deki İsviçre Patent Ofisi'nde, gelen buluş başvurularını inceleyen sıradan bir memur olarak işe girdi." },
+    { text: "Patent ofisindeki iş, aslında ona düşünmek için sessiz bir alan sağlıyordu. Gündüzleri başvuruları incelerken, zihninde yıllardır biriktirdiği fizik sorularını derinlemesine düşünme fırsatı buluyordu." },
+    { text: "1905 yılı içinde, hiçbir üniversiteye bağlı olmayan bu genç memur, fiziğin akışını değiştirecek dört ayrı makale yayımladı: ışığın kuantum doğası üzerine, Brown hareketi üzerine, özel görelilik kuramı üzerine, ve E=mc² formülünü içeren kütle-enerji eşdeğerliği üzerine." },
+    { text: "Bu makaleler, dönemin köklü fizikçileri arasında bile yavaş yavaş fark edildi — çünkü yazarları hiçbir üniversitenin tanıdığı bir isim değildi, sıradan bir patent memuruydu. Zamanla bu dört makale, fizik tarihinde 'Mucizevi Yıl' (Annus Mirabilis) olarak anılmaya başladı." },
+    { text: "Einstein, bu makaleler sayesinde birkaç yıl içinde akademik dünyaya adım attı ve 1921'de Nobel Fizik Ödülü'nü kazandı. Bir patent ofisinde geçirdiği sıradan görünen yıllar, aslında modern fiziğin temellerinin atıldığı sessiz bir laboratuvara dönüşmüştü." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "bleriot-channel",
+  year: "1909",
+  place: "Calais (Kale), Fransa — Dover (Dovır), İngiltere",
+  title: "Pusulasız Geçilen Bir Deniz",
+  teaser: "Yönünü kaybeden bir uçak, bir ülkeyi adasından ayıran denizi ilk kez havadan geçti.",
+  cover: WM('3b17979r.jpg'),
+  beats: [
+    { text: "1909'da bir İngiliz gazetesi, İngiliz Kanalı'nı uçarak geçecek ilk kişiye 1.000 sterlin ödül koydu. Fransız mucit Louis Blériot, kendi tasarladığı narin bir tek kanatlı uçakla bu yarışa katıldı — rakipleri arasında Wright Kardeşler'den ders almış deneyimli pilotlar da vardı." },
+    { text: "25 Temmuz 1909 sabahı, saat 04:41'de, Blériot ahşap ve kumaştan yapılma Type XI uçağıyla Fransa kıyısından havalandı. Uçağında pusula yoktu; sadece rüzgârı ve deniz üzerindeki geminin dumanını rehber alıyordu." },
+    { text: "Denizin ortasında bir ara yönünü tamamen kaybetti — etrafında sadece su vardı, kara görünmüyordu. Birkaç dakika sonra rüzgârın yönü değişti ve serin bir yağmur, onu biraz ferahlattı; az sonra ufukta Dover'ın beyaz kayalıklarını fark etti." },
+    { text: "37 dakika süren uçuşun ardından, rüzgârlı koşullar yüzünden sert bir inişle Dover Kalesi yakınına indi. Onu karşılayan tek kişi, elinde Fransız bayrağıyla bekleyen bir hemşehrisiydi." },
+    { text: "Bu uçuş, sadece bir ödülü kazanmakla kalmadı — İngiltere'nin, denizin kendisini artık tam bir kalkan olarak koruyamayacağını gösterdi. Blériot bir gecede dünya çapında ün kazandı ve havacılık sanayisinin doğuşunu hızlandıran bir kilometre taşı bıraktı." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "birth-of-cinema-going",
+  year: "1905",
+  place: "Pittsburgh (Pitsburg), Pennsylvania (Pensilvanya), ABD",
+  title: "Beş Sente Bir Dünya",
+  teaser: "Eski bir dükkân, beş sentlik bir bilet karşılığında insanlığa yeni bir eğlence biçimi sundu.",
+  cover: WM('City_Hall_Subway_station.jpg'),
+  beats: [
+    { text: "1900'lerin başında hareketli görüntüler hâlâ bir merak konusuydu — çoğunlukla panayırlarda ya da vodvil gösterilerinin arasında birkaç dakikalık kısa filmler olarak izleniyordu. Sabit, sadece filme ayrılmış bir salon fikri henüz yaygın değildi." },
+    { text: "1905'te Pittsburgh'da John Harris ve Harry Davis adlı iki girişimci, boş bir dükkânı basit sıralar ve beyaz bir perdeyle donatarak sadece film göstermeye adanmış küçük bir salon açtı. Giriş ücreti beş sentti — dönemin parasıyla neredeyse herkesin karşılayabileceği bir tutar." },
+    { text: "Salona 'Nickelodeon (Nikılodiın)' adını verdiler — 'nickel' (beş sent) ile Yunanca 'odeion' (kapalı gösteri salonu) kelimelerinin birleşimiydi. Fikir hızla tuttu; kısa sürede şehirdeki işçi sınıfı aileleri için ucuz ve erişilebilir bir akşam eğlencesine dönüştü." },
+    { text: "Başarı görülünce benzer salonlar ülke geneline hızla yayıldı — birkaç yıl içinde Amerika'da binlerce nickelodeon açıldı. Bu küçük, ucuz salonlar, sinemayı seçkin bir merak konusu olmaktan çıkarıp sıradan insanların haftalık rutinine soktu." },
+    { text: "Nickelodeon'ların patlaması, film yapımcılarını daha uzun ve daha iddialı hikâyeler üretmeye teşvik etti; on yıl içinde sinema, kısa meraklardan tam teşekküllü bir eğlence endüstrisine dönüştü. Bugünün dev sinema salonlarının kökeninde, beş sentlik bir bilet ve boş bir dükkân vardı." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "boy-scouts",
+  year: "1907",
+  place: "Brownsea (Braunsi) Adası, İngiltere",
+  title: "Bir Adadaki Deneysel Kamp",
+  teaser: "Farklı sınıflardan yirmi çocuk, bir adaya çıkarıldı. Dönüşlerinde dünya çapında bir hareket doğdu.",
+  cover: WM('Sir_R._Baden_-_Powell_LCCN2014719329cr.jpg'),
+  beats: [
+    { text: "Güney Afrika'daki Boer Savaşı'nda kuşatma altındaki bir kaleyi başarıyla savunarak ulusal bir kahramana dönüşen İngiliz subay Robert Baden-Powell, savaş dönüşü askeri gözlem ve hayatta kalma becerileri üzerine yazdığı bir kitabın gençler için de ilgi çektiğini fark etti." },
+    { text: "Baden-Powell, bu becerileri gençlere öğretecek yeni bir program tasarladı; ama önce fikrinin işe yarayıp yaramayacağını görmek istedi. 1907'de, İngiltere'nin güney kıyısındaki Brownsea Adası'nda deneysel bir kamp düzenledi." },
+    { text: "Kampa bilinçli bir şekilde farklı toplumsal kesimlerden yirmi çocuk davet etti — hem seçkin okulların öğrencileri hem de yerel işçi ailelerinin çocukları. Dönemin sınıf ayrımlarının katı olduğu bir İngiltere'de bu, başlı başına cesur bir fikirdi." },
+    { text: "Çocuklar bir hafta boyunca kamp kurmayı, iz sürmeyi, doğa gözlemini ve takım çalışmasını öğrendiler; dört devriyeye (Kurtlar, Boğalar, Kervalar, Kuzgunlar) ayrıldılar — bu yapı, bugünkü izcilik teşkilatlarının hâlâ kullandığı devriye sisteminin temelini attı." },
+    { text: "Kampın başarısı, Baden-Powell'ı fikrini bir kitaba dönüştürmeye teşvik etti: 'Scouting for Boys'. Kitap kısa sürede dünya çapında yayıldı; bugün 170'ten fazla ülkede on milyonlarca üyesi olan İzcilik hareketinin tohumu, o küçük adadaki bir haftalık deneysel kampta atıldı." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "great-white-fleet",
+  year: "1907 – 1909",
+  place: "Dünya turu, ABD Donanması",
+  title: "Beyaza Boyanmış Bir Mesaj",
+  teaser: "On altı savaş gemisi, dünyayı dolaşarak bir ulusun gücünü sessizce ama etkileyici biçimde gösterdi.",
+  cover: WM('Great_White_Fleet_in_Amoy.png'),
+  beats: [
+    { text: "1900'lerin ortasında ABD, hızla büyüyen bir deniz gücü hâline gelmişti, ama bunu dünyaya kanıtlamış değildi. Başkan Theodore Roosevelt, hem diplomatik bir mesaj vermek hem de donanmanın gerçek kapasitesini test etmek için akıl almaz bir fikir öne sürdü: on altı zırhlıyı dünya turuna çıkarmak." },
+    { text: "16 Aralık 1907'de, gövdeleri parlak beyaza boyanmış on altı savaş gemisi Virginia'dan yola çıktı. Beyaz renk, barışçıl bir niyeti simgeliyordu — filo kısa sürede 'Büyük Beyaz Filo' adıyla anılmaya başladı." },
+    { text: "14 ay süren yolculukta filo, Güney Amerika'dan Avustralya'ya, Japonya'dan Akdeniz'e kadar altı kıtada yirmi limana uğradı. Her durakta binlerce meraklı yerel halk, gemileri görmek için kıyılara akın etti.",
+      image: WM('Great_White_Fleet_in_Amoy.png'),
+      caption: "Filo, Çin'in Amoy limanında demirlemiş hâlde" },
+    { text: "Yolculuğun en hassas duraklarından biri Japonya'ydı — dönemin gerilimli ABD-Japonya ilişkileri düşünüldüğünde, filo hem bir güç gösterisi hem de bir dostluk jestiydi. Japon halkı filoyu coşkuyla karşıladı, gerginlik bir nebze yumuşadı." },
+    { text: "22 Şubat 1909'da filo, 45.000 milden fazla yol kat ederek evine döndü. Tek bir kurşun sıkılmadan gerçekleştirilen bu yolculuk, bir ulusun gücünü savaşla değil, sabırla ve görünürlükle nasıl gösterebileceğinin çarpıcı bir örneği olarak tarihe geçti." }
+  ]
+});
+
+DATA["1900ler"].stories.push({
+  id: "kelloggs-corn-flakes",
+  year: "1894 – 1906",
+  place: "Battle Creek (Bätıl Krik), Michigan (Mişığın), ABD",
+  title: "Unutulan Bir Hamurdan Doğan Kahvaltı",
+  teaser: "Bir gece unutulan hamur tepsisi, dünyanın kahvaltı alışkanlığını değiştirdi.",
+  cover: WM("Kellogg's_Corn_Flakes_(3093633412).jpg"),
+  beats: [
+    { text: "1890'ların ortasında Dr. John Harvey Kellogg, Michigan'daki Battle Creek Sanatoryumu'nu yönetiyordu — hastalarına sıkı bir vejetaryen diyet uygulayan, döneminin en tanınmış sağlık kurumlarından biriydi. Kardeşi Will Keith Kellogg da orada işletme müdürü olarak çalışıyordu." },
+    { text: "Kardeşler, hastalar için daha lezzetli tahıl bazlı yiyecekler arayışındaydı. Efsaneye göre bir gece, hazırladıkları buğday hamurunu tesadüfen uzun süre bekletip unuttular; ertesi gün hamuru atmak yerine merakla silindirden geçirdiler ve ince, çıtır pullar elde ettiler." },
+    { text: "Bu 'kaza', hastalar arasında beklenmedik bir ilgi gördü. Kellogg kardeşler tarifi mısıra uyarlayıp deneylerine devam etti; 1896'da işlem için bir patent bile aldılar." },
+    { text: "Konservatif ağabey John, bu ürünün sanatoryum dışına satılmasına uzun süre karşı çıktı — asıl amacının ticaret değil, sağlıklı beslenmeyi yaymak olduğunu düşünüyordu. Will ise bunun büyük bir iş fırsatı olduğuna inanıyordu; iki kardeş arasındaki bu görüş ayrılığı yıllarca süren bir anlaşmazlığa dönüştü." },
+    { text: "19 Şubat 1906'da Will Keith Kellogg, kendi şirketini kurarak mısır gevreğini geniş kitlelere pazarlamaya başladı. Cesur reklam kampanyaları ('bakkalınıza göz kırpın, bedava bir kutu kazanın') sayesinde şirket hızla büyüdü — unutulan bir tepsi hamur, bugün dünya çapında milyarlarca kahvaltı sofrasına ulaşan bir endüstrinin başlangıcı oldu." }
+  ]
+});
+
+DATA["1950ler"] = {
+  title: "1950'ler",
+  subtitle: "Savaşın ardından, imkânsızın yeniden tanımlandığı yıllar",
+  stories: [
+    {
+      id: "everest-1953",
+      year: "1953",
+      place: "Everest Dağı, Nepal-Tibet sınırı",
+      title: "Dünyanın Çatısına Çıkan İki Adam",
+      teaser: "Onlarca yıl kimse başaramamıştı. Bir arıcı ile bir dağ rehberi, dünyanın en yüksek noktasına adım attı.",
+      cover: WM('Edmund_Hillary,_c._1953,_autograph_removed.jpg'),
+      beats: [
+        { text: "1900'lerin ortasına gelindiğinde Everest, dünyanın en yüksek zirvesi olarak onlarca yıldır dağcıları kendine çekiyor ama hiçbirine zirveyi vermiyordu. 1920'lerden beri düzenlenen İngiliz seferlerinin çoğu, zirveye varamadan geri dönmüş, bazı tırmanıcılar hayatını kaybetmişti." },
+        { text: "1953'teki dokuzuncu İngiliz seferine, Yeni Zelandalı bir arıcı olan Edmund Hillary ve Nepal'li deneyimli dağ rehberi Tenzing Norgay katıldı. İkili, ekip içinde zirveye en yakın konumdaki tırmanış çiftiydi." },
+        { text: "28 Mayıs'ta, South Col'un üzerindeki yüksek bir kamptan yola çıktılar. Karla kaplı sırtlarda, iki yanında binlerce metrelik uçurumlarla ilerlediler; oksijen tüplerinin dondurucu soğukta çalışıp çalışmayacağından bile emin değillerdi." },
+        { text: "29 Mayıs 1953 sabahı saat 11:30'da, dünyanın en yüksek noktasına ilk kez insan ayağı bastı. Hillary daha sonra o anı şöyle anlattı: 'Biraz şaşkın, biraz da minnettardık.' Tenzing, zirvede Nepal, İngiltere, Birleşmiş Milletler ve Hindistan bayraklarını dalgalandırdı." },
+        { text: "Haber, Kraliçe II. Elizabeth'in taç giyme törenine denk gelen günlerde İngiltere'ye ulaştı ve büyük bir coşkuyla karşılandı. Hillary ve Tenzing, onlarca yıllık başarısız denemelerin ardından, insanlığın 'dünyanın çatısına' ulaşabileceğini kanıtladılar." }
+      ]
+    },
+    {
+      id: "disneyland-1955",
+      year: "1955",
+      place: "Anaheim (Enehaym), Kaliforniya, ABD",
+      title: "Bir Portakal Bahçesinde Kurulan Hayal",
+      teaser: "Herkes 'çocukça' dedi. Walt Disney, portakal bahçelerinin ortasında bir hayal ülkesi kurdu.",
+      cover: WM('Opening_Day_at_Disneyland.jpg'),
+      beats: [
+        { text: "1950'lerin başında Walt Disney, kızlarını gezdirdiği lunaparklardan hiç memnun değildi — kirli, bakımsız ve sadece çocuklara hitap eden yerlerdi. Aklında bambaşka bir fikir vardı: hem çocukların hem yetişkinlerin birlikte eğlenebileceği, tertemiz ve özenle kurgulanmış bir 'tema parkı'." },
+        { text: "Yatırımcıların çoğu bu fikri riskli buldu; Disney, projeyi finanse etmek için kendi hayat sigortasını bile ipotek ettirdi. Kaliforniya'da bir zamanlar portakal bahçesi olan 73 dönümlük bir arazi seçildi." },
+        { text: "İnşaat sadece bir yılda tamamlandı — ekipler günde neredeyse 24 saat çalıştı. Açılışa sadece birkaç saat kala boyalar hâlâ kuruyor, bazı çekim alanları henüz bitmemişti." },
+        { text: "17 Temmuz 1955'te park açıldığında beklenenin çok üzerinde, 28.000 kişi kapıya dayandı — çoğu sahte bilet ya da çitlerden atlayarak girmişti. Sıcaklık 38 dereceyi buluyordu, su tesisatı grev yüzünden yetersizdi; bazı kadınların topuklu ayakkabıları, henüz kurumamış asfalta saplandı." },
+        { text: "Gün, medyada 'Kara Pazar' olarak anıldı — ama felaket görünen bu açılış, kısa sürede dünyanın en çok ziyaret edilen eğlence parklarından birine dönüştü. Bir gazeteci Disney'e parkın ne zaman tamamlanacağını sorduğunda aldığı cevap ünlü oldu: 'Disneyland, dünyada hayal gücü kaldığı sürece asla tamamlanmayacak.'" }
+      ]
+    },
+    {
+      id: "sputnik-1957",
+      year: "1957",
+      place: "Baykonur Kozmodromu, Kazak SSC",
+      title: "Gökyüzündeki Küçük Bir Bip Sesi",
+      teaser: "Basketbol topu büyüklüğünde bir metal küre, dünyayı uzay çağına soktu.",
+      cover: WM('Sputnik_1.jpg'),
+      beats: [
+        { text: "1950'lerin ortasında ABD ve Sovyetler Birliği, kim önce uzaya bir uydu gönderecek diye sessiz bir yarış içindeydi. Çoğu Batılı bilim insanı, bu yarışı ABD'nin kazanacağını düşünüyordu." },
+        { text: "4 Ekim 1957'de Sovyet mühendisler, Kazakistan'daki Baykonur Kozmodromu'ndan bir R-7 roketiyle, parlak metal bir küre fırlattı: Sputnik 1. Çapı sadece 58 santimetre, ağırlığı 84 kilogramdı — üzerinde bilimsel bir alet bile yoktu, sadece basit bir radyo vericisi taşıyordu." },
+        { text: "Uydu, dünya çevresinde saatte 29.000 kilometre hızla dönerken, düzenli aralıklarla 'bip... bip...' sesleri yayınlıyordu. Bu basit sinyal, dünyanın dört bir yanındaki amatör radyocular tarafından yakalanıp dinlenebiliyordu." },
+        { text: "Haber ABD'de büyük bir şoka yol açtı — halk, gece gökyüzünde küçük bir ışık noktası olarak Sputnik'i izlemeye başladı. Bu 'Sputnik şoku', Amerikan hükümetini uzay ve bilim eğitimine devasa yatırımlar yapmaya itti; birkaç ay içinde NASA'nın kuruluşu hızlandı." },
+        { text: "Üç ay sonra Sputnik'in yörüngesi bozuldu ve atmosferde yanarak yok oldu — ama bıraktığı etki kalıcıydı. Basit bir metal küre ve bir bip sesi, insanlığı uzay çağının eşiğine taşıyan yarışı başlattı." }
+      ]
+    }
+  ]
+};
+
+DATA["1950ler"].stories.push({
+  id: "roger-bannister",
+  year: "1954",
+  place: "Oxford (Oksford), İngiltere",
+  title: "İnsan Vücudunun Aşamadığı Sanılan Duvar",
+  teaser: "Doktorlar bunun fizyolojik olarak imkânsız olduğunu söylüyordu. Bir tıp öğrencisi, dört dakikayı kırdı.",
+  cover: WM('Roger_Bannister_1953.jpg'),
+  beats: [
+    { text: "1950'lerin başında bir mil (1.609 metre) koşusunu dört dakikanın altında tamamlamak, atletizmde aşılamaz kabul edilen bir sınırdı. Bazı fizyologlar bunun insan vücudu için fiziksel olarak imkânsız olduğunu iddia ediyordu." },
+    { text: "Roger Bannister, hem tıp fakültesinde okuyan hem de üst düzey bir atlet olan İngiliz bir koşucuydu. Antrenmanlarını hastanedeki çalışma saatleri arasına sıkıştırıyor, aralıklı koşu (interval training) gibi o dönem için yeni sayılan yöntemler deniyordu." },
+    { text: "6 Mayıs 1954'te, rüzgârlı ve soğuk bir günde, Oxford'daki Iffley Road pistinde koşuya çıktı. Yanında iki arkadaşı Chris Brasher ve Chris Chataway, tempo tutmak için ona eşlik etti." },
+    { text: "Bannister, mili 3 dakika 59,4 saniyede tamamladı — dört dakikalık duvar ilk kez yıkılmıştı. Spikerin süreyi anons etmeye 'three...' diye başlamasıyla birlikte, kalabalığın çığlıkları geri kalan rakamları bastırdı." },
+    { text: "Rekor sadece 46 gün sürdü; Avustralyalı John Landy kısa süre sonra rekoru kırdı. Ama asıl önemli olan zamandan çok, 'imkânsız'ın sadece zihinsel bir sınır olduğunun kanıtlanmasıydı — Bannister'ın rekoru kırmasından sonraki birkaç yıl içinde onlarca koşucu aynı eşiği geçti." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "salk-vaccine",
+  year: "1955",
+  place: "Pittsburgh (Pitsburg), Pennsylvania (Pensilvanya), ABD",
+  title: "Bir Ailenin Korkusuna Son Veren Haber",
+  teaser: "Her yaz binlerce çocuğu felç eden bir hastalığa karşı, bir doktor sessizce çalıştı.",
+  cover: WM('Salk_headlines.jpg'),
+  beats: [
+    { text: "1950'lerin Amerikası'nda her yaz aileleri saran bir korku vardı: çocuk felci (polio). Hastalık özellikle çocukları hedef alıyor, bazılarını kalıcı olarak felç bırakıyor, bazılarını hayatından ediyordu. 1952'de tek bir yılda 58 binden fazla vaka kaydedildi." },
+    { text: "Pittsburgh Üniversitesi'nde çalışan viroloji araştırmacısı Jonas Salk, yıllardır ölü virüs parçacıklarıyla çalışan bir aşı geliştirmeye çalışıyordu — canlı virüs kullanan yaklaşımlardan daha güvenli olacağını düşünüyordu." },
+    { text: "Aşıyı önce hayvanlar üzerinde, sonra kendi ailesi de dahil gönüllüler üzerinde test etti. 1954'te ABD tarihinin en büyük tıbbi denemelerinden biri başladı: 1,8 milyon çocuk, 'polio öncüleri' adıyla anılan bu deneye katıldı." },
+    { text: "12 Nisan 1955'te, deneme sonuçlarının aşının güvenli ve etkili olduğunu gösterdiği duyurulduğunda, ülke çapında kiliseler çanlarını çaldı, mağazalar kapandı, insanlar sokaklarda ağladı — bir gazete o günü 'insanlığın en büyük zaferlerinden biri' olarak nitelendirdi." },
+    { text: "Salk, aşının patentini almayı reddetti; bir röportajda 'Güneşi patentleyebilir misiniz?' diyerek bu kararını açıkladı. Aşı, bir yıl içinde polio vakalarını yarı yarıya azalttı — bugün hastalık dünyanın büyük bölümünde neredeyse tamamen ortadan kalkmış durumda." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "uss-nautilus",
+  year: "1954 – 1958",
+  place: "Kuzey Kutbu, Arktik Okyanusu altı",
+  title: "Buzun Altından Geçen İlk Gemi",
+  teaser: "Bir denizaltı, güneşi hiç görmeden, dünyanın en ulaşılmaz noktasının altından geçti.",
+  cover: WM('USS_Nautilus_(SSN-571)_underway_at_sea,_in_1958.jpg'),
+  beats: [
+    { text: "1954'te ABD Donanması, nükleer enerjiyle çalışan ilk denizaltıyı, USS Nautilus'u hizmete soktu. Geleneksel dizel denizaltıların aksine, Nautilus'un nükleer reaktörü, sürekli yüzeye çıkıp hava almaya gerek kalmadan haftalarca su altında kalmasını sağlıyordu." },
+    { text: "Bu yeni yetenek, mühendislere daha önce imkânsız görünen bir fikir verdi: Kuzey Kutbu'nun altından, buzların hiç erimediği donmuş okyanusun içinden geçmek. Temmuz 1958'de Nautilus, gizli bir görev olan 'Operation Sunshine' için Hawaii'den yola çıktı." },
+    { text: "Denizaltı, Alaska açıklarında sulara daldı ve kuzeye yöneldi. Kaptan William Anderson ve 116 kişilik mürettebat, üzerlerindeki buz katmanının kalınlığını sürekli ölçerek ilerliyordu — bazı yerlerde buz, denizaltının üzerinden sadece birkaç metre yukarıdaydı." },
+    { text: "3 Ağustos 1958'de, saat 23:15'te Nautilus, Kuzey Kutbu'nun tam altından geçti — bir geminin bu noktaya ulaştığı ilk seferdi. 96 saat boyunca su altında kalarak 2.945 kilometre yol kat etti ve Grönland ile Svalbard arasında yeniden yüzeye çıktı." },
+    { text: "Görev, sadece bir mühendislik zaferi değildi — Soğuk Savaş'ın gerginleştiği bir dönemde, Sovyetler'in Sputnik'i fırlatmasından kısa süre sonra, ABD'ye teknolojik bir prestij kazandırdı. Nautilus'un buzun altından sessizce geçişi, denizciliğin daha önce hayal bile edilmemiş bir sınırını aştı." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "boeing-707",
+  year: "1954 – 1958",
+  place: "Seattle (Sietıl), Washington (Vaşington), ABD",
+  title: "Gökyüzünü Küçülten Uçak",
+  teaser: "Bir prototip, kıtalar arası yolculuğu haftalardan saatlere indiren bir çağı başlattı.",
+  cover: WM('N710PA.jpg'),
+  beats: [
+    { text: "1950'lerin başında Atlantik'i uçarak geçmek hâlâ günler süren, pervaneli uçaklarla yapılan yorucu bir yolculuktu. Boeing, bu yolculuğu kökten değiştirecek bir fikirle çalışıyordu: yolcu taşımacılığına uygun, güvenilir bir jet uçağı." },
+    { text: "Şirket, 1954'te '367-80' adlı bir prototip geliştirdi — mühendisler ona sevgiyle 'Dash 80' diyordu. Bu prototip, hem askeri hem sivil pazara hitap edebilecek esnek bir tasarıma sahipti." },
+    { text: "Prototipten geliştirilen Boeing 707 (Bowing Yedi-Sıfır-Yedi)'nin ilk üretim uçağı, 20 Aralık 1957'de test pilotu Tex Johnston'ın kumandasında havalandı. Kötü hava koşulları yüzünden ilk uçuş sadece 7 dakika sürdü, ama aynı gün yapılan ikinci denemede uçak bir saatten fazla havada kaldı." },
+    { text: "26 Ekim 1958'de Pan American Havayolları, 707'yi New York-Paris hattında düzenli sefere soktu. Yolculuk süresi, pervaneli uçaklarla yaklaşık 12 saatten, jet motoruyla 8 saate indi." },
+    { text: "707, sadece bir uçak modeli değil, 'Jet Çağı'nın başlangıcı olarak anıldı. Kıtalar arası seyahat artık sıradan insanların da erişebileceği bir şeye dönüşmeye başladı — dünya, bu tek uçak tipiyle gözle görülür şekilde küçüldü." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "rosa-parks",
+  year: "1955 – 1956",
+  place: "Montgomery (Montgamıri), Alabama (Alabımı), ABD",
+  title: "Ayağa Kalkmayı Reddeden Kadın",
+  teaser: "Bir otobüste yerinden kalkmayı reddeden bir terzi, bir şehri 381 gün yürüttü.",
+  cover: WM('1956_face_detail,_Rosa_Parks_being_fingerprinted_by_Deputy_Sheriff_D.H._Lackey_after_being_arrested_on_February_22,_1956,_during_the_Montgomery_bus_boycott_(cropped).jpg'),
+  beats: [
+    { text: "1 Aralık 1955'te, Alabama'nın Montgomery kentinde, işten eve dönen 42 yaşındaki terzi Rosa Parks, bindiği otobüste oturuyordu. Şoför, o dönemin ayrımcı kurallarına göre, beyaz bir yolcuya yer açması için ondan kalkmasını istedi." },
+    { text: "Parks kalkmayı reddetti. Sessizce, ama kararlılıkla oturmaya devam etti. Kısa süre sonra tutuklandı — bu, dönemin ayrımcı otobüs kurallarına karşı planlanmamış ama simgesel bir andı." },
+    { text: "Montgomery'nin siyah topluluğu, tutuklamaya yanıt olarak şehrin otobüslerini tamamen boykot etmeye karar verdi. Boykot, genç bir vaiz olan Martin Luther King Jr.'ın liderliğinde organize edildi; binlerce kişi işe yürüyerek, araba paylaşarak ya da taksiyle gitti." },
+    { text: "Boykot 381 gün sürdü. Otobüs şirketleri, yolcularının büyük kısmını oluşturan siyah topluluğun katılımı olmadan ciddi mali kayıplar yaşadı. Boykot boyunca Parks ve diğer organizatörler tehditlere ve baskıya rağmen kararlılıklarını korudu." },
+    { text: "20 Aralık 1956'da, federal mahkemenin otobüslerdeki ırk ayrımını anayasaya aykırı bulmasının ardından boykot sona erdi. Rosa Parks'ın sessiz duruşu, ABD'deki sivil haklar hareketinin en belirleyici anlarından biri olarak tarihe geçti." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "univac-1952",
+  year: "1952",
+  place: "New York (Nu York), ABD",
+  title: "Bir Makinenin Seçimi Tahmin Ettiği Gece",
+  teaser: "Anket şirketleri bir sonuç öngörüyordu. Devasa bir hesap makinesi, çok farklı bir şey söyledi.",
+  cover: WM('UNIVAC_1_demo.jpg'),
+  beats: [
+    { text: "1952'de ABD başkanlık seçimi gecesi, CBS televizyonu sıradışı bir deney yapmaya karar verdi: seçim sonuçlarını tahmin etmek için UNIVAC I adlı devasa bir elektronik bilgisayarı kullanmak. O dönem halk, 'bilgisayar' kelimesini neredeyse hiç duymamıştı." },
+    { text: "Anket şirketlerinin çoğu, Adlai Stevenson ile Dwight Eisenhower arasında başa baş bir yarış öngörüyordu. Ama oyların sadece yüzde 5,5'i sayıldığında, UNIVAC'ın hesaplamaları çok net bir sonuca işaret ediyordu: Eisenhower'ın ezici bir farkla kazanacağı." },
+    { text: "CBS'teki yapımcılar, bu sonucun 'çok abartılı' olduğunu düşünüp yayınlamaktan çekindi — böyle net bir tahminin makinenin bir hatası olduğuna inanmışlardı. Saatler sonra gerçek oylar UNIVAC'ı doğrulayınca, ekip canlı yayında bunu itiraf etmek zorunda kaldı." },
+    { text: "Yayın sırasında sunucu Walter Cronkite, mühendis Presper Eckert'le birlikte kameraların önünde makinenin nasıl çalıştığını izleyicilere anlattı — bu, milyonlarca insanın bir bilgisayarı ilk kez görüp duyduğu andı." },
+    { text: "O gece, sadece bir seçim tahmini değil, bilgisayarların gündelik hayata, siyasete ve habercilik dünyasına girişinin de sembolik başlangıcıydı. UNIVAC'ın sessiz hesaplamaları, insanların makinelere olan bakışını kökten değiştirdi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "transistor-radio",
+  year: "1954",
+  place: "Indiana (İndiyana)polis (İndiyanapılis), Indiana (İndiyana), ABD",
+  title: "Cebe Sığan Bir Devrim",
+  teaser: "Büyük radyo şirketlerinin hiçbiri ilgilenmedi. Küçük bir firma, cebe sığan geleceği yarattı.",
+  cover: WM('Vintage_Regency_TR-1_Transistor_Radio,_Mahogany_Color,_4_Transistors,_Made_in_USA_(9804504753).jpg'),
+  beats: [
+    { text: "1950'lerin başında radyolar hâlâ hantal vakum tüpleriyle çalışıyordu — ağır, kırılgan ve çok fazla enerji tüketen parçalardı. 1947'de icat edilen transistör, çok daha küçük ve dayanıklı bir alternatif sunuyordu, ama maliyeti bir tüpün yirmi katıydı." },
+    { text: "1954'te Texas Instruments, transistörlerini kullanacak bir radyo üretmesi için büyük radyo şirketlerine gitti — RCA, Philco ve Emerson gibi devler teklife hiç ilgi göstermedi. Sonunda küçük bir Indianapolis firması olan Regency, riski üstlenmeyi kabul etti." },
+    { text: "Ekip, birkaç ay gibi kısa bir sürede cebe sığacak kadar küçük bir radyo tasarladı: Regency TR-1 (Ricınsi Ti-Ar-Van). Dört transistörle çalışan cihaz, 18 Ekim 1954'te tanıtıldı ve 1 Kasım'da New York ile Los Angeles'ta satışa çıktı." },
+    { text: "TR-1, 49,95 dolarlık fiyatına rağmen (dönemin ortalama haftalık maaşına yakın bir tutar) hızla tükendi — insanlar cebe sığan, pilli, anında çalışan bir radyoyu ilk kez deneyimliyordu. Yaklaşık 150.000 adet satıldı." },
+    { text: "TR-1'in başarısı, tüketici elektroniğinde transistör çağını başlattı. Birkaç yıl içinde Japon bir firma da benzer radyolar üretmeye başladı — kısa süre sonra adını değiştirip dünya çapında tanınan bir marka olacaktı: Sony. Küçük bir cesaretin, koca bir endüstriyi nasıl dönüştürebileceğinin örneğiydi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "barbie-1959",
+  year: "1959",
+  place: "New York (Nu York), ABD",
+  title: "Bir Annenin Kızına Verdiği Fikir",
+  teaser: "Kızının bebeklerle oynama şeklini izleyen bir kadın, oyuncak endüstrisini yeniden tasarladı.",
+  cover: WM('Early_Barbie_dolls.jpg'),
+  beats: [
+    { text: "1950'lerde oyuncak bebekler neredeyse istisnasız bebek ya da küçük çocuk şeklindeydi — kızların 'anne oynaması' bekleniyordu. Mattel'in kurucularından Ruth Handler, kızı Barbara'nın kâğıt bebeklerle yetişkin rolleri canlandırarak oynadığını fark etti." },
+    { text: "Handler, kızlar için yetişkin bir kadın vücuduna sahip, farklı kıyafetler ve mesleklerle 'hayal kurdurabilecek' bir bebek fikrini şirkete önerdi. Erkek yöneticilerin çoğu bu fikri tuhaf ve pazarlanamaz buldu." },
+    { text: "Handler, Avrupa gezisinde gördüğü Alman 'Bild Lilli' bebeğinden ilham alarak tasarımı geliştirmeye devam etti. Kızının adını vererek bebeğe 'Barbie' adını verdi." },
+    { text: "9 Mart 1959'da New York'taki bir oyuncak fuarında tanıtıldığında, oyuncak alıcıları ilk başta soğuk karşıladı — çoğu, bu 'yetişkin görünümlü' bebeğin anneler tarafından uygun bulunmayacağını düşünüyordu. Ama piyasaya çıktığında ilk yılda 350 binden fazla satıldı." },
+    { text: "Barbie, kısa sürede sadece bir oyuncak değil, kültürel bir simgeye dönüştü — zamanla astronot, doktor, pilot gibi yüzlerce meslek kıyafetiyle üretildi. Bir annenin kızını gözlemlemesiyle başlayan fikir, altmış yılı aşkın süredir dünya çapında milyarlarca kez satılan bir oyuncak imparatorluğuna dönüştü." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "antarctic-crossing",
+  year: "1955 – 1958",
+  place: "Antarktika",
+  title: "Buzul Kıtayı Baştan Sona Geçen İlk Sefer",
+  teaser: "Amundsen ve Scott'tan 46 yıl sonra, iki ekip Antarktika'yı ilk kez uçtan uca geçti.",
+  cover: WM('Sir_Edmund_Hillary_and_Sir_Vivian_Fuchs,_1958.jpg'),
+  beats: [
+    { text: "1911-1912'de Amundsen ve Scott'ın Güney Kutbu'na ulaşmasından sonra, kimse Antarktika kıtasını baştan sona geçmeyi başaramamıştı. 1955'te İngiliz jeolog Vivian Fuchs, bu 'imkânsız' hedefi gerçekleştirmek için bir sefer planladı." },
+    { text: "Plan iki ekip gerektiriyordu: Fuchs'un liderliğindeki ekip Weddell Denizi kıyısından başlayıp Güney Kutbu üzerinden geçecek, Yeni Zelandalı Edmund Hillary'nin (Everest'in fatihi) liderliğindeki ikinci ekip ise Ross Denizi tarafından yola çıkıp Kutup'a giden yolu işaretleyip erzak depoları kuracaktı." },
+    { text: "Fuchs'un ekibi, kar araçları ve traktörlerle, 240 kilometre karelik çatlaklarla dolu buz tabakalarını aşarak ilerledi. Bazı günler sadece birkaç kilometre kat edebiliyorlardı; motorlu araçlar sık sık buz çatlaklarına saplanıyordu.",
+      image: WM('Tractors_in_Antarctica_(1957).JPG'),
+      caption: "Sefer ekibinin kullandığı traktörler, Antarktika, 1957" },
+    { text: "Hillary'nin destek ekibi, planlanandan daha hızlı ilerleyip Güney Kutbu'na ulaştı — bu, Amundsen ve Scott'tan sonra kutba kara yoluyla ulaşan ilk kişiler oldular. Fuchs'un ana ekibi birkaç hafta sonra aynı noktaya vardı." },
+    { text: "2 Mart 1958'de, 99 gün ve yaklaşık 3.500 kilometrelik bir yolculuğun ardından, ekip kıtayı baştan sona geçerek Ross Denizi kıyısına ulaştı. Bu sefer, sadece bir coğrafi başarı değil, ekip çalışmasının ve sabırlı planlamanın, buzul bir kıtanın en zorlu koşullarını nasıl aşabileceğinin kanıtıydı." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "st-lawrence-seaway",
+  year: "1954 – 1959",
+  place: "Kanada – ABD sınırı",
+  title: "Okyanusu Kıtanın Kalbine Taşıyan Su Yolu",
+  teaser: "Denizden binlerce kilometre uzaktaki şehirler, bu kanal sayesinde birer liman kentine dönüştü.",
+  cover: WM('St._Lawrence_Seaway_construction_1959_(cropped).png'),
+  beats: [
+    { text: "1950'lerin başında Büyük Göller bölgesi, dünyanın en büyük tatlı su rezervlerinden birine sahipti, ama okyanus gemileri bu göllere ulaşamıyordu — aradaki nehirler ve çağlayanlar geçit vermiyordu. On yıllardır konuşulan bir fikir vardı: Saint Lawrence Nehri boyunca bir dizi kanal ve baraj inşa etmek." },
+    { text: "1954'te Kanada ve ABD, ortak bir projeyle inşaata başladı. İşçiler, gemilerin farklı su seviyeleri arasında geçebilmesi için devasa kilit (lock) sistemleri inşa etti; bazı bölgelerde nehir yatağı tamamen yeniden şekillendirildi." },
+    { text: "Proje sırasında birkaç köy, yükselen su seviyeleri altında kalacağı için tamamen taşındı — evler ve hatta mezarlıklar yeni yerlere nakledildi. Bu, projenin en tartışmalı ve duygusal yönlerinden biriydi." },
+    { text: "26 Haziran 1959'da su yolu resmi olarak açıldı; Kraliçe II. Elizabeth ve ABD Başkanı Dwight Eisenhower törene birlikte katıldı. Artık okyanus gemileri, Atlantik'ten kalkıp Büyük Göller'in en iç noktalarına, denizden 3.700 kilometre uzaktaki limanlara kadar ulaşabiliyordu." },
+    { text: "Saint Lawrence Su Yolu, Chicago, Detroit ve Toronto gibi 'iç kesim' şehirlerini birer uluslararası liman kentine dönüştürdü. İki ülkenin yıllarca süren ortak emeği, kıtanın ekonomik haritasını kalıcı olarak yeniden çizdi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "velcro",
+  year: "1941 – 1955",
+  place: "İsviçre",
+  title: "Bir Köpek Yürüyüşünden Doğan Fikir",
+  teaser: "Pantolonuna yapışan dikenli tohumları merakla inceleyen bir mühendis, on yıl sonra bir devrim yarattı.",
+  cover: WM('Velcro.jpg'),
+  beats: [
+    { text: "1941'de İsviçreli mühendis George de Mestral, köpeğiyle Alp dağlarında bir yürüyüşe çıktı. Eve döndüklerinde hem kendi pantolonunda hem köpeğinin tüylerinde onlarca dikenli tohum (pıtrak) yapışmış olduğunu fark etti." },
+    { text: "Çoğu insan bu tohumları sinirlenerek çıkarıp atardı. De Mestral, meraklı bir mühendis olarak tohumları mikroskop altına aldı — küçük kanca şeklinde uzantıların, kumaşın ilmeklerine nasıl kusursuzca tutunduğunu keşfetti." },
+    { text: "Bu doğal mekanizmayı yapay olarak yeniden üretme fikri aklına takıldı: biri kancalarla, diğeri ilmeklerle kaplı iki kumaş şeridi birbirine geçici ama sağlam biçimde tutunabilirdi. Ama fikri hayata geçirmek, yıllarca süren zorlu bir deneme sürecine dönüştü." },
+    { text: "İlk denemelerde kancalar ya çok küçük ya çok büyük çıkıyordu; pamuklu kumaş yeterince dayanıklı değildi. Fransa'daki bir dokumacıyla birlikte çalışarak, naylon ipliği kızılötesi ışıkla sertleştirip dayanıklı kancalar üretmeyi başardı." },
+    { text: "1955'te patentini aldığı bu malzemeye, Fransızca 'velours' (kadife) ve 'crochet' (kanca) kelimelerini birleştirerek 'Velcro' adını verdi. Başlarda alaycı tepkiler alsa da, sonraki yıllarda NASA'nın uzay giysilerinden çocuk ayakkabılarına kadar her yerde kullanılan bu icat, meraklı bir köpek yürüyüşünün nasıl kalıcı bir mirasa dönüşebileceğinin kanıtı oldu." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "diners-club",
+  year: "1949 – 1950",
+  place: "New York (Nu York), ABD",
+  title: "Cüzdanını Unutan Adamın Fikri",
+  teaser: "Bir akşam yemeği faturasını ödeyemeyen bir işadamı, nakitsiz bir dünyanın kapısını araladı.",
+  cover: WM('20160810_114242_Diners_Club.jpg'),
+  beats: [
+    { text: "1949'da New York'ta iş adamı Frank McNamara, müşterileriyle bir restoranda yemek yerken hesabı ödemek için cüzdanına uzandığında, cüzdanını başka bir ceketinde unuttuğunu fark etti. Utanç verici anı, eşinin gelip hesabı ödemesiyle atlattı." },
+    { text: "McNamara bu deneyimi bir daha yaşamak istemedi. Avukatı Ralph Schneider ile birlikte, insanların nakit taşımadan yemek yiyip sonra tek bir fatura ile ödeme yapabileceği bir sistem tasarlamaya başladı." },
+    { text: "8 Şubat 1950'de McNamara ve Schneider, fikri ilk kez test etmek için aynı restorana, Major's Cabin Grill'e geri döndüler. Hesabı, küçük kartondan yapılma yeni bir kartla ödediler — bu an, sonradan 'İlk Akşam Yemeği' (The First Supper) olarak anılacaktı." },
+    { text: "Kart, ilk yılında New York'un iş dünyasından 10.000 üyeye ve 28 restorana ulaştı. Diners Club (Daynırs Klab) üyeleri aylık faturalarını tek seferde ödüyor, restoranlar ise küçük bir komisyon karşılığında ödemeyi garantiye alıyordu." },
+    { text: "Diners Club, dünyanın ilk genel amaçlı ödeme kartı olarak kabul edilir. Bir akşam yemeğinde yaşanan küçük bir utanç anı, on yıllar içinde American Express ve Visa gibi devlerin de dahil olduğu, nakitsiz ödemenin standart hâline geldiği bir sektörün kapısını araladı." }
+  ]
+});
+
+DATA["1920ler"] = {
+  title: "1920'ler",
+  subtitle: "Caz çağının coşkusu ve cesur ilklerin onyılı",
+  stories: [
+    {
+      id: "lindbergh-1927",
+      year: "1927",
+      place: "New York (Nu York), ABD — Paris (Pari), Fransa",
+      title: "Tek Başına, Tek Motorla, Bir Okyanusun Üzerinden",
+      teaser: "33 saat boyunca uykusuz, tek başına, sadece pusulasıyla bir okyanusu geçti.",
+      cover: WM('Charles_Lindbergh_arrived_at_Croydon_Field,_Surrey,_England,_May_29,_1927.jpg'),
+      beats: [
+        { text: "1927'de bir New York gazetesi, Atlantik'i New York'tan Paris'e kesintisiz uçarak geçecek ilk pilota 25.000 dolar ödül koymuştu. Birkaç deneyimli pilot bu girişimde hayatını kaybetmiş, çoğu uzman bunun tek motorlu bir uçakla imkânsız olduğunu düşünüyordu." },
+        { text: "25 yaşındaki posta pilotu Charles Lindbergh, bu göreve gönüllü oldu — üstelik yalnız uçmak istiyordu, çoğu rakibinin tercih ettiği çok motorlu, çok kişilik uçakların aksine. Küçük bir şirkete kendi özel tasarımlı uçağını, 'Spirit of St. Louis (Spirit ov Sent Luis)'i yaptırdı." },
+        { text: "20 Mayıs 1927 sabahı, çamurlu bir pistten kalkışı zar zor başardı — uçak, fazla yakıt yükü yüzünden pistin sonuna kadar yerden kesilemedi. Önünde 5.800 kilometrelik, sadece bir pusula ve haritayla geçilecek bir okyanus vardı." },
+        { text: "33,5 saat süren uçuş boyunca Lindbergh hiç uyumadı; bazı anlarda uykuya dalmamak için gözlerini açık tutmakta zorlandı, buzlanan kanatlarla ve yön kaybıyla mücadele etti. Sadece bir sandviç ve birkaç litre suyla yolculuğunu tamamladı." },
+        { text: "21 Mayıs akşamı Paris'teki Le Bourget (Lö Burje) Havaalanı'na indiğinde, 150.000'den fazla kişi onu karşılamak için alana akın etmişti. Lindbergh bir gecede dünya çapında bir kahramana dönüştü; uçuşu, ticari havacılığa olan güveni kalıcı olarak değiştirdi." }
+      ]
+    },
+    {
+      id: "king-tut-tomb",
+      year: "1922",
+      place: "Krallar Vadisi, Mısır",
+      title: "Altın Parıltısının Görüldüğü An",
+      teaser: "Yıllarca süren başarısız kazıların ardından, bir mumun ışığında tarih yeniden yazıldı.",
+      cover: WM('Tuts_Tomb_Opened.JPG'),
+      beats: [
+        { text: "1900'lerin başından beri Mısır'ın Krallar Vadisi'nde kazı yapan arkeolog Howard Carter, yıllarca hiçbir önemli buluntuya rastlamamıştı. Finansörü Lord Carnarvon, artan maliyetler yüzünden desteğini kesmeyi düşünüyordu; Carter'a son bir sezon daha süre tanıdı." },
+        { text: "İşçiler, daha önce hiç incelenmemiş küçük bir alanda kazı yaparken taş bir basamağa rastladı. Basamakları takip ettikçe mühürlü bir kapıya ulaştılar — mühürler, binlerce yıldır kimsenin buraya girmediğini gösteriyordu." },
+        { text: "26 Kasım 1922'de Carter, kapıda küçük bir delik açıp içeriye bir mum tuttu. Carnarvon 'Bir şey görüyor musun?' diye sorduğunda Carter'ın verdiği yanıt tarihe geçti: 'Evet, harika şeyler.'" },
+        { text: "Mumun ışığında görülenler, o güne kadar bulunmuş en sağlam kalmış firavun mezarıydı: altın kaplamalı mobilyalar, heykeller, arabalar ve nihayetinde genç firavun Tutankhamun'un mumyası. Neredeyse tüm diğer kraliyet mezarları binlerce yıl önce yağmalanmışken, bu mezar neredeyse el değmemiş durumdaydı." },
+        { text: "Keşif, dünya çapında bir 'Mısır çılgınlığı' başlattı — moda, mimari ve sanattan etkilendi. Yıllarca süren sabırlı ve büyük ölçüde başarısız bir arayışın ardından gelen bu keşif, arkeoloji tarihinin en unutulmaz anlarından biri olarak kaldı." }
+      ]
+    },
+    {
+      id: "winter-olympics-1924",
+      year: "1924",
+      place: "Chamonix (Şamoni), Fransa",
+      title: "Buzun ve Karın İlk Olimpiyatı",
+      teaser: "Kimse buna 'olimpiyat' demeye cesaret edemiyordu. Küçük bir dağ kasabası, yeni bir geleneğin ilkini yarattı.",
+      cover: WM('Toronto_Granites_1924_Winter_Olympics_champions.jpg'),
+      beats: [
+        { text: "1920'lerin başında Yaz Olimpiyatları köklü bir gelenekti, ama kayak, patinaj gibi kış sporları hiçbir zaman resmi bir olimpiyat çatısı altında toplanmamıştı. Uluslararası Olimpiyat Komitesi içinde bu fikre karşı çıkanlar vardı — bazı üyeler kış sporlarının 'gerçek' olimpiyat ruhuna uymadığını düşünüyordu." },
+        { text: "Fransa'nın Alp eteklerindeki küçük Chamonix kasabası, 1924'te 'Uluslararası Kış Sporları Haftası' adlı bir etkinliğe ev sahipliği yapmayı teklif etti — resmi olarak olimpiyat unvanı almadan, bir deneme niteliğinde." },
+        { text: "16 ülkeden yaklaşık 250 sporcu katıldı; buz pateni, kayak, kızak ve hokey gibi dallarda yarıştılar. Kasabanın mütevazı imkânları düşünüldüğünde, organizasyon beklenmedik bir ilgi gördü." },
+        { text: "Etkinlik o kadar başarılı geçti ki, bir yıl sonra Uluslararası Olimpiyat Komitesi bu haftayı geriye dönük olarak resmi 'I. Kış Olimpiyat Oyunları' ilan etti. Chamonix, planlamadan bir gelenek başlatmıştı." },
+        { text: "O günden beri Kış Olimpiyatları, dünyanın en büyük spor etkinliklerinden biri olarak dört yılda bir düzenleniyor. Küçük bir dağ kasabasının deneme niteliğindeki haftası, bugün milyarlarca izleyicinin takip ettiği küresel bir geleneğin ilk adımı oldu." }
+      ]
+    }
+  ]
+};
+
+DATA["1920ler"].stories.push({
+  id: "insulin-discovery",
+  year: "1921 – 1923",
+  place: "Toronto (Toranto), Kanada",
+  title: "Ölüm Cezasını Kaldıran Keşif",
+  teaser: "Genç bir cerrah ve öğrencisi, bir yaz boyunca çalışarak şeker hastalığının ölümcül hükmünü kaldırdı.",
+  cover: WM('Banting_and_Best.jpg'),
+  beats: [
+    { text: "1921'e kadar tip 1 diyabet teşhisi neredeyse kesin bir ölüm cezasıydı — özellikle çocuklarda hastalık hızla ilerliyor, hastalar birkaç ay ya da yıl içinde hayatını kaybediyordu. Tek 'tedavi', hastaları açlığa yakın diyetlerle birkaç ay yaşatmaktan ibaretti." },
+    { text: "Toronto'da genç bir cerrah olan Frederick Banting, pankreasın kan şekerini düzenleyen bir madde ürettiğine dair bir teorisi vardı. Üniversiteden küçük bir laboratuvar ve öğrenci asistanı Charles Best'i ödünç aldı; ikili, 1921 yazını köpekler üzerinde deneyler yaparak geçirdi." },
+    { text: "Aylar süren başarısız denemelerin ardından, pankreastan elde ettikleri özütü şeker hastalığı olan bir köpeğe enjekte ettiklerinde kan şekerinin düştüğünü gördüler. Biyokimyacı James Collip'in de katılımıyla özütü insanlar için güvenli hale getirmeye çalıştılar." },
+    { text: "Ocak 1922'de, ölmek üzere olan 14 yaşındaki Leonard Thompson, bu yeni maddenin ilk insan denemesine katıldı. İlk enjeksiyon yeterince saflaştırılmamıştı, ama birkaç gün sonraki ikinci doz kan şekerini normale döndürdü — çocuk gözle görülür şekilde iyileşti." },
+    { text: "Keşif, 'insülin' adıyla hızla dünyaya yayıldı. Banting ve ekibi, buluşlarının patentini sadece bir dolara üniversiteye devretti — amaçlarının kâr değil, mümkün olan en çok insana ulaşmak olduğunu söylediler. Bir yaz boyunca süren yorucu bir araştırma, milyonlarca insan için ölüm cezasını kronik ama yaşanabilir bir duruma çevirdi." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "ederle-channel",
+  year: "1926",
+  place: "İngiliz Kanalı, Fransa – İngiltere",
+  title: "Erkeklerin Rekorunu İki Saat Geride Bırakan Kadın",
+  teaser: "Herkes onun yüzemeyeceğini söyledi. O, kanalı geçen tüm erkeklerden daha hızlı yüzdü.",
+  cover: WM('G._Ederle_LCCN2014718380.jpg'),
+  beats: [
+    { text: "1920'lerde İngiliz Kanalı'nı yüzerek geçmek, dünyanın en zorlu dayanıklılık sınavlarından biri olarak kabul ediliyordu — o güne kadar sadece beş kişi başarmıştı, hepsi erkekti. Çoğu uzman, bir kadının bu kadar uzun ve soğuk bir mesafeyi yüzerek geçemeyeceğini düşünüyordu." },
+    { text: "Amerikalı yüzücü Gertrude Ederle, 1925'teki ilk denemesinde antrenörünün müdahalesiyle sudan çıkarılmıştı — aslında hâlâ güçlüydü, ama antrenörü onun boğulmak üzere olduğunu sanmıştı. Ederle bu karara kızgındı ve bir yıl sonra yeni bir antrenörle tekrar denemeye karar verdi." },
+    { text: "6 Ağustos 1926'da Fransa kıyısından denize girdi. Soğuğa karşı vücuduna kalın bir yağ tabakası sürmüş, kendi tasarladığı, dönemin standartlarına göre 'skandal' sayılan iki parçalı bir mayo giymişti." },
+    { text: "14 saat 31 dakika süren yüzüşü boyunca fırtınalı dalgalarla, soğuk suyla ve yorgunlukla mücadele etti. Teknede yanında giden babası, onu motive etmek için vaat ettiği yeni arabayı hatırlatıp durdu." },
+    { text: "İngiltere kıyısına ulaştığında, kanalı geçen tüm erkeklerin rekorunu neredeyse iki saat farkla kırmıştı. New York'a döndüğünde onu karşılamak için düzenlenen konfeti yağmurlu geçit töreni, o zamana kadar bir sporcuya yapılmış en büyük kutlamalardan biriydi — 'kadınlar dayanıklılık gerektiren sporlarda yer alamaz' önyargısını kalıcı olarak sarstı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "penicillin",
+  year: "1928",
+  place: "Londra, İngiltere",
+  title: "Unutulan Bir Petri Kabından Doğan Devrim",
+  teaser: "Tatilden dönen bir bakteriyolog, laboratuvarındaki bir 'kaza'nın tıbbı sonsuza dek değiştireceğini fark etti.",
+  cover: WM('Sir_Alexander_Fleming_1881-1955_Discoverer_of_penicillin_lived_here.jpg'),
+  beats: [
+    { text: "1928'de Londra'daki St Mary's Hastanesi'nde çalışan İskoç bakteriyolog Alexander Fleming, stafilokok bakterisi üzerine araştırmalar yapıyordu. Tatile çıkmadan önce, üzerinde bakteri kültürleri bulunan bazı petri kaplarını laboratuvar tezgâhında unuttu." },
+    { text: "Eylül 1928'de tatilden döndüğünde, kaplardan birinde beklenmedik bir şey gördü: kabın içine bir küf mantarı bulaşmıştı ve küfün etrafındaki bakteriler tuhaf bir şekilde ölmüştü — sanki küf, bakterileri kendiliğinden yok ediyordu." },
+    { text: "Çoğu bilim insanı böyle bir 'kirlenmiş' deneyi çöpe atıp geçerdi. Fleming'in merakı buna izin vermedi; küfü inceledi ve onun Penicillium cinsine ait olduğunu belirledi. Küfün salgıladığı maddeye 'penisilin' adını verdi." },
+    { text: "Fleming, penisilinin bakterileri öldürme gücünü fark etmesine rağmen, onu saf ve stabil bir ilaca dönüştürmenin yolunu bulamadı; bulgusunu 1929'da yayımladı ama bilim dünyası bu makaleye o dönem pek ilgi göstermedi." },
+    { text: "Penisilinin gerçek tıbbi devrimi, on yıldan fazla bir süre sonra, başka bilim insanlarının (Howard Florey ve Ernst Chain) onu üretilebilir bir ilaca dönüştürmesiyle gerçekleşti. Ama başlangıç noktası hep aynı kaldı: Fleming'in unuttuğu, sonra dikkatle incelediği bir petri kabı — dünyanın ilk antibiyotiğinin doğduğu an." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "goddard-rocket",
+  year: "1926",
+  place: "Auburn (Obırn), Massachusetts (Măsaçusets), ABD",
+  title: "Bir Teyzenin Çiftliğinden Uzaya Uzanan İlk Adım",
+  teaser: "10 metreye bile ulaşamayan küçük bir roket, uzay çağının ilk kıvılcımını çaktı.",
+  cover: WM('Robert_Goddard%27s_Rocket_After_Flight_-_GPN-2002-000129.jpg'),
+  beats: [
+    { text: "1920'lerde roket fikri çoğunlukla bilim kurgu romanlarına ait, ciddiye alınmayan bir konuydu. Fizik profesörü Robert Goddard, katı yakıtlı roketlerin sınırlı olduğuna inanıyor, çok daha güçlü bir alternatif üzerinde çalışıyordu: sıvı yakıtlı roket." },
+    { text: "Goddard'ın teorik makaleleri, dönemin basınında alay konusu olmuştu — bir gazete onun roketle Ay'a ulaşma fikrini 'lise düzeyinde bile bilinen fizik yasalarını anlamamak' diye eleştirmişti. Buna rağmen Goddard, çalışmalarına sessizce devam etti." },
+    { text: "16 Mart 1926'da, Massachusetts'teki teyzesinin çiftlik arazisinde, benzin ve sıvı oksijenle çalışan küçük bir roketi fırlattı. Roket sadece 2,5 saniye havada kaldı, 12,5 metre yükseldi ve 56 metre öteye düştü." },
+    { text: "Mesafe ve süre gülünç derecede kısa görünse de, bu fırlatma dünya tarihinin ilk sıvı yakıtlı roket uçuşuydu — bugün kullanılan tüm modern roket ve uzay araçlarının teknik atası sayılır. Goddard, o günü sade bir dille günlüğüne not etti: 'roket kendi ağırlığını kaldırdı.'" },
+    { text: "Goddard, hayattayken pek tanınmadan 1945'te öldü. Ama yıllar sonra Apollo programıyla insanlığı Ay'a taşıyan roket teknolojisinin temelleri, o küçük çiftlik arazisinde, alay konusu olmuş bir profesörün inatla sürdürdüğü sessiz denemelerle atılmıştı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "kdka-radio",
+  year: "1920",
+  place: "Pittsburgh (Pitsburg), Pennsylvania (Pensilvanya), ABD",
+  title: "Bir Çatı Katından Milyonlara Ulaşan Ses",
+  teaser: "Bir mühendisin garajdaki meraklı denemeleri, evlere sesin girdiği bir çağı başlattı.",
+  cover: WM('KDKA_-_Early_studio_-_circa_1921.jpg'),
+  beats: [
+    { text: "1920'lerin başında radyo, çoğunlukla amatör operatörlerin birbirine Mors alfabesiyle mesaj gönderdiği teknik bir meraktı. Pittsburgh'da Westinghouse şirketinde mühendis olan Frank Conrad, garajından düzenli olarak plak çalıp yayın yapıyordu — kısa sürede küçük bir dinleyici kitlesi edindi." },
+    { text: "Bu ilgiyi fark eden Westinghouse yöneticileri, radyoyu sadece bir meraklı hobisi olmaktan çıkarıp düzenli, kamuya açık bir yayın hizmetine dönüştürmeye karar verdi. Fabrikanın çatısına küçük bir kulübe kurup KDKA çağrı işaretiyle yayına hazırlandılar." },
+    { text: "2 Kasım 1920 akşamı, KDKA ilk resmi yayınını yaptı: o günkü ABD başkanlık seçiminin sonuçlarını canlı olarak duyurdu. Yayın, telefonla gelen sonuçları bir spikerin mikrofona okumasıyla, aralarda gramofon müziğiyle sürdürüldü." },
+    { text: "O gece, evinde radyo alıcısı olan az sayıda kişi, seçim sonuçlarını gazetenin ertesi gün basılmasını beklemeden, aynı akşam öğrenebildi. Bu, dünyada düzenli bir program takvimiyle yayın yapan ilk ticari radyo istasyonunun doğuşuydu." },
+    { text: "KDKA'nın başarısı hızla yayıldı; birkaç yıl içinde ülke genelinde yüzlerce radyo istasyonu kuruldu. Bir mühendisin garajındaki meraklı denemeleri, on yıl içinde milyonlarca evi aynı anda haberlere, müziğe ve spora bağlayan kitlesel bir iletişim aracına dönüştü." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "norge-north-pole",
+  year: "1926",
+  place: "Svalbard'dan (Svalbar) Alaska'ya, Kuzey Kutbu üzerinden",
+  title: "Bir Hava Gemisiyle Kutbun Üzerinden",
+  teaser: "Uçakla ulaşılamayan bir hedefe, devasa bir gaz balonuyla üç ayrı milletten bir ekip ulaştı.",
+  cover: WM('Airship_Norge_Ny-%C3%85lesund.jpg'),
+  beats: [
+    { text: "Norveçli kutup kaşifi Roald Amundsen, kariyerinin büyük bölümünü Güney Kutbu'na ulaşarak geçirmişti (1911), ama Kuzey Kutbu'na kara ya da hava yoluyla güvenilir bir şekilde ulaşmak hâlâ başarılamamıştı. 1925'teki uçakla yapılan bir deneme, yakıt sorunları yüzünden yarım kalmıştı." },
+    { text: "Amundsen, bu kez farklı bir strateji izledi: İtalyan mühendis Umberto Nobile'nin tasarladığı 'Norge' adlı yarı sert hava gemisini kullanmaya karar verdi — bir uçağın aksine, motor arızası durumunda havada onarılabilecek, daha güvenilir bir araçtı." },
+    { text: "Ekip, Norveçli, İtalyan ve Amerikalı üyelerden (finansör Lincoln Ellsworth dahil) oluşuyordu. 11 Mayıs 1926'da Svalbard'dan havalanan Norge, buzlanma ve sisle mücadele ederek Kuzey Kutbu'nun üzerinden geçti." },
+    { text: "Kutbun üzerinden geçerken ekip, Norveç, İtalya ve ABD bayraklarını aşağıya, buzun üzerine bıraktı. Bu, Kuzey Kutbu'na ulaştığı doğrulanabilen ilk seferdi — önceki bazı iddialar (Peary'nin 1909'daki karadan ulaşma iddiası dahil) tartışmalı kalmıştı." },
+    { text: "72 saat süren yolculuğun ardından Norge, Alaska'nın Teller kasabasına indi — Avrupa ile Amerika arasında kutup buz tabakasının üzerinden geçen ilk uçuştu. Üç farklı milletin ortak emeği, onlarca yıllık kutup arayışını nihayet sonuca ulaştırmıştı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "farnsworth-tv",
+  year: "1927",
+  place: "San Francisco (San Fransisko), Kaliforniya, ABD",
+  title: "Bir Traktör Sürerken Doğan Fikir",
+  teaser: "14 yaşında bir çiftlik çocuğunun aklına gelen fikir, birkaç yıl sonra televizyonu icat etti.",
+  cover: WM('Philo_T_Farnsworth.jpg'),
+  beats: [
+    { text: "1920'lerin ortasında televizyon fikri üzerinde çalışan birkaç mühendis vardı, ama hepsi görüntüyü dönen mekanik disklerle tarıyordu — yavaş ve düşük kaliteli bir yöntemdi. Idaho'da bir çiftlikte büyüyen 14 yaşındaki Philo Farnsworth'ün aklına, bir tarlayı sürerken tamamen farklı bir fikir gelmişti: görüntüyü satır satır, elektronik olarak taramak." },
+    { text: "Farnsworth, resmi bir mühendislik eğitimi almadan, lisedeki fizik öğretmenine bu fikri anlattığında öğretmeni onu ciddiye aldı ve fikri kağıda çizmesine yardım etti — yıllar sonra bu çizim, patent davalarında kritik bir kanıt olacaktı." },
+    { text: "1926'da San Francisco'da küçük bir laboratuvar kuran Farnsworth, 'görüntü ayrıştırıcı' (image dissector) adını verdiği bir tüp geliştirdi — ışığı elektron akışına çeviren, tamamen elektronik bir kamera sistemiydi." },
+    { text: "7 Eylül 1927'de, henüz 21 yaşındayken, ekibiyle birlikte basit bir çizgi görüntüsünü bu sistemle ilk kez ileten cihazdan alıcı ekrana aktarmayı başardı. Görüntü net bir şekilde belirdiğinde heyecanla bağırdı: 'İşte bu! Başardık, elektronik televizyon bu!'" },
+    { text: "Farnsworth'ün buluşu, sonraki yıllarda büyük şirketlerle uzun patent davalarına konu oldu, ama tarihsel gerçek değişmedi: modern televizyonun temelini atan elektronik tarama fikri, bir çiftlik çocuğunun tarlada sürdüğü traktörün üzerinde doğmuştu." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "womens-suffrage",
+  year: "1848 – 1920",
+  place: "ABD",
+  title: "Yetmiş İki Yıllık Bir Bekleyişin Sonu",
+  teaser: "İlk toplantıyı düzenleyen kadınların hiçbiri, kanunun kabul edildiği günü görecek kadar yaşamadı.",
+  cover: WM('WOMAN_SUFFRAGE_CAMERON_HOUSE,_HEADQUARTERS_LCCN2016865285.jpg'),
+  beats: [
+    { text: "1848'de New York'un Seneca Falls kasabasında bir araya gelen bir grup kadın ve erkek, kadınların oy hakkını talep eden bir bildirge yayımladı. O dönem bu fikir, çoğu kişiye gülünç ya da tehlikeli geliyordu — kadınların oy kullanma hakkı, o güne kadar hiçbir ülkede kabul edilmemişti." },
+    { text: "Sonraki yetmiş yılda kuşaklar boyu kadın hakları savunucusu bu mücadeleyi sürdürdü — mitingler düzenlediler, dilekçeler topladılar, Beyaz Saray'ın önünde nöbet tuttular, bazıları tutuklanıp hapiste açlık grevine girdi. Hareketi başlatan ilk isimlerin neredeyse hiçbiri, mücadelenin sonucunu görecek kadar yaşamadı." },
+    { text: "I. Dünya Savaşı sırasında kadınların fabrikalarda, hastanelerde ve cephe gerisinde üstlendiği roller, kamuoyunun bakış açısını değiştirmeye başladı. Kongre, 1919'da 19. Anayasa Değişikliği'ni onayladı; şimdi değişikliğin yürürlüğe girmesi için eyaletlerin dörtte üçünün onayı gerekiyordu." },
+    { text: "18 Ağustos 1920'de Tennessee eyaleti, gereken 36. eyalet olarak değişikliği onayladı — oylamada belirleyici oy, annesinin son anda gönderdiği bir mektuptan etkilenip fikrini değiştiren genç bir milletvekiline aitti. Değişiklik, birkaç gün içinde resmen yürürlüğe girdi." },
+    { text: "26 Ağustos 1920'de 19. Anayasa Değişikliği ABD Anayasası'na eklendiğinde, milyonlarca kadın ilk kez oy kullanma hakkına kavuştu. Yetmiş iki yıl süren bu mücadele, bir hakkın verilmeyip kazanıldığının — sabırla, ısrarla ve nesiller boyu süren bir dayanışmayla kazanıldığının somut kanıtıydı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "duke-kahanamoku",
+  year: "1912 – 1924",
+  place: "Hawaii (Havai), ABD",
+  title: "Sudaki Kraliyet ve Dalganın Elçisi",
+  teaser: "Bir Hawaii'li yüzücü, hem havuzda rekorlar kırdı hem de dünyaya sörf yapmayı öğretti.",
+  cover: WM('Duke_Kahanamoku_1920c.jpg'),
+  beats: [
+    { text: "1900'lerin başında Hawaii'de doğan Duke Kahanamoku, çocukluğunu Waikiki kıyılarında yüzerek ve kadim bir Hawaii geleneği olan tahta üzerinde dalga sürmeyi (he'e nalu) öğrenerek geçirdi. O dönem sörf, dünyanın geri kalanında neredeyse hiç bilinmiyordu." },
+    { text: "1912 Stockholm Olimpiyatları'nda 100 metre serbest stilde altın madalya kazanarak dünya çapında tanınan bir yüzücü oldu. 1920 Antwerp Olimpiyatları'nda unvanını başarıyla savundu — bu, o dönem için ender bir başarıydı." },
+    { text: "Kahanamoku, olimpiyat başarısının verdiği üne, Hawaii'nin kadim sörf geleneğini dünyaya tanıtmak için bilinçli olarak kullandı. Avustralya ve Kaliforniya kıyılarında düzenlediği gösteri sörfleriyle, o güne kadar sadece Hawaii'ye özgü olan bu sporu ilk kez geniş kitlelere tanıttı." },
+    { text: "1925'te Kaliforniya kıyısında bir balıkçı teknesi devrildiğinde, Kahanamoku sörf tahtasını kullanarak sekiz kişiyi sudan kurtardı — bu olay, cankurtaranlık tarihinde sörf tahtasının bir kurtarma aracı olarak kullanıldığı ilk büyük vaka olarak kabul edilir." },
+    { text: "Kahanamoku, 1924 Paris Olimpiyatları'nda genç Johnny Weissmuller'a karşı gümüş madalya aldığında bile sportmenliğiyle övgü topladı. Bugün 'modern sörfün babası' olarak anılıyor — hem havuzda hem denizde, bir adanın kadim bir geleneğini dünyaya armağan eden bir elçi oldu." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "transcontinental-flight",
+  year: "1923",
+  place: "New York'tan (Nu York) San Diego'ya (San Diyego), ABD",
+  title: "Bir Kıtayı 27 Saatte Aşan İki Pilot",
+  teaser: "İki başarısız denemenin ardından, bir çift pilot Amerika'yı hiç inmeden baştan sona uçtu.",
+  cover: WM('Plane_that_had_non-stop_flight_in_1923_from_coast_to_coast_LCCN2016892496.jpg'),
+  beats: [
+    { text: "1920'lerin başında ABD'nin doğu ve batı kıyıları arasında uçmak, defalarca yakıt ikmali gerektiren, günler süren bir yolculuktu. Ordu pilotları Oakley Kelly ve John Macready, bu mesafeyi tek bir inişle, hiç durmadan aşmanın mümkün olduğuna inanıyordu." },
+    { text: "İkili, Hollanda yapımı Fokker T-2 (Fokır Ti-Tu) uçağını bu göreve göre özel olarak değiştirdi: yakıt kapasitesini artırdılar, kokpit ile kabin arasına bir geçiş kapısı ekleyip pilotların uçuş sırasında yer değiştirmesini sağladılar." },
+    { text: "İlk iki deneme (1922'de) başarısızlıkla sonuçlandı — motor arızaları ve kötü hava koşulları yüzünden yolculuğu yarıda kesmek zorunda kaldılar. Ama pes etmeyip uçağı yeniden düzenlediler." },
+    { text: "2 Mayıs 1923'te New York'tan havalanan ikili, bu kez yönü tersine çevirip doğudan batıya uçtu. 26 saat 50 dakika süren, kesintisiz bir uçuşun ardından, 3 Mayıs'ta Kaliforniya'daki San Diego'ya indiler — 4.000 kilometreden fazla bir mesafeyi tek bir duraksama olmadan geçmişlerdi." },
+    { text: "Bu uçuş, kıtaları aşan ticari havacılığın önünü açan kritik bir kanıt oldu: bir uçağın, doğru mühendislik ve azimle, bir kıtayı bir günden kısa sürede geçebileceğini gösterdi. Birkaç yıl sonra Lindbergh'in Atlantik'i geçişine ilham veren cesaretin aynısı, bu iki pilotun sabırlı denemelerinde de vardı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "hot-five",
+  year: "1925 – 1928",
+  place: "Chicago (Şikago), Illinois (İlinoy), ABD",
+  title: "Beş Kişilik Bir Stüdyo Kaydından Doğan Devrim",
+  teaser: "Bir trompetçi, kayıt stüdyosunda doğaçlamayı caz müziğinin merkezine yerleştirdi.",
+  cover: WM('Louis_Armstrong_restored.jpg'),
+  beats: [
+    { text: "1920'lerin ortasında caz müziği hâlâ çoğunlukla toplu, düzenlenmiş melodilerle çalınıyordu — solistlerin uzun doğaçlamalar yapması pek yaygın değildi. New Orleans'tan Chicago'ya taşınan genç trompetçi Louis Armstrong, bu anlayışı kökten değiştirecek bir vizyona sahipti." },
+    { text: "1925'te Armstrong, kendi adını taşıyan küçük bir kayıt grubu kurdu: 'Hot Five (Hat Fayv)'. Grup, o dönemin standart büyük orkestralarından çok daha küçüktü — sadece beş müzisyenden oluşuyordu, ama bu küçüklük onlara çok daha fazla özgürlük tanıyordu." },
+    { text: "Hot Five'ın kayıtlarında Armstrong, trompetiyle uzun, karmaşık doğaçlama pasajlar çaldı — bu, dönemin dinleyicileri için tamamen yeni bir deneyimdi. 'Heebie Jeebies' adlı kayıtta, sözlerini unuttuğunu iddia ederek anlamsız hecelerle doğaçlama yaptığı 'scat' tekniği, bu türün en ünlü örneklerinden biri oldu." },
+    { text: "Bu kayıtlar, caz müziğinde soloculuğun ve bireysel doğaçlamanın merkezi bir öğe hâline gelmesini sağladı — o güne kadar toplu çalınan bir tür, artık tek bir müzisyenin yaratıcılığını öne çıkaran bir sanata dönüşüyordu." },
+    { text: "Hot Five ve ardından gelen Hot Seven kayıtları, bugün caz tarihinin en etkili plaklarından sayılıyor. Bir grup küçük stüdyo kaydı, caz müziğinin sonraki yüz yılını şekillendiren bir dönüm noktası oldu — hepsi, beş müzisyenin bir arada özgürce doğaçlama yapma cesaretiyle başladı." }
+  ]
+});
+
+DATA["1920ler"].stories.push({
+  id: "vegemite-invention",
+  year: "1922",
+  place: "Melbourne (Melbırn), Avustralya",
+  title: "Bir İthalat Krizinden Doğan Ulusal Lezzet",
+  teaser: "Savaş sonrası bir ithalat sorunu, bir genç kimyageri mutfakta yepyeni bir tat aramaya itti.",
+  cover: WM('Vegemite_and_Marmite.jpg'),
+  beats: [
+    { text: "I. Dünya Savaşı'nın ardından Avustralya, İngiltere'den ithal edilen 'Marmite' adlı maya bazlı ezmenin tedarikinde sıkıntı yaşıyordu — savaş sırasında kesintiye uğrayan ithalat hatları henüz tam toparlanmamıştı. Melbourne'deki bir gıda şirketi, bu boşluğu kendi ürünüyle doldurmak istedi." },
+    { text: "Şirket, genç kimyager Cyril Callister'ı görevlendirdi: bira üretiminin bir yan ürünü olan maya artıklarından, besleyici ve lezzetli bir ezme geliştirmesini istediler. Callister, aylarca laboratuvarda farklı tarifler denedi." },
+    { text: "1922'de tarifini tamamladı: koyu kahverengi, tuzlu ve yoğun umami tadında bir ekmek ezmesi. Ürüne halktan öneriler toplanarak 'Vegemite' adı verildi — 'vegetable' (sebze) ve 'Marmite'in bir kombinasyonuydu." },
+    { text: "İlk yıllarda ürün beklenen ilgiyi görmedi; halk, yabancı bir tada alışmakta zorlandı. Şirket, ürünü doktorların ve beslenme uzmanlarının önerisiyle, B vitamini açısından zengin bir besin olarak tanıtmaya başladı — özellikle II. Dünya Savaşı sırasında askerlere dağıtılan rasyonlarda yer alması, ürünün ulusal bir sembole dönüşmesini hızlandırdı." },
+    { text: "Bugün Vegemite, Avustralya'nın en tanınan ulusal ürünlerinden biri — neredeyse her Avustralya mutfağında bir kavanozu bulunuyor. Bir savaş sonrası ithalat krizinin çözümü olarak başlayan bu tarif, bir ülkenin kimliğinin sembollerinden birine dönüştü." }
+  ]
+});
+
+DATA["1960lar"] = {
+  title: "1960'lar",
+  subtitle: "Uzayın ve iletişimin sınırlarının yeniden çizildiği yıllar",
+  stories: [
+    {
+      id: "apollo-11",
+      year: "1969",
+      place: "Sea of Tranquility (Serenite Denizi), Ay",
+      title: "İnsanlığın Attığı Küçük Adım",
+      teaser: "Sekiz yıl önce imkânsız görünen bir vaat, bir temmuz gecesi gerçeğe dönüştü.",
+      cover: WM('Apollo_11_first_step.jpg'),
+      beats: [
+        { text: "1961'de Başkan John F. Kennedy, on yıl içinde bir insanı Ay'a indirip güvenle geri getirmeyi vaat ettiğinde, ABD'nin bu teknolojiyi geliştirmesi için gereken çoğu araç henüz mevcut değildi. O dönem toplam uzayda geçirilen insan süresi bir saatten azdı." },
+        { text: "Sonraki sekiz yılda NASA, on binlerce mühendis ve bilim insanının çalıştığı devasa bir programa dönüştü. Mercury ve Gemini görevleri, insanın uzayda hayatta kalıp manevra yapabileceğini kanıtladı; Apollo programı ise doğrudan Ay'a odaklandı." },
+        { text: "16 Temmuz 1969'da Apollo 11, Neil Armstrong, Buzz Aldrin ve Michael Collins'i taşıyarak fırlatıldı. Dört gün sonra, Armstrong ve Aldrin'i taşıyan 'Eagle' iniş modülü, yakıtının neredeyse tükendiği gergin bir manevrayla Ay yüzeyine indi." },
+        { text: "20 Temmuz 1969'da, dünya saatiyle gece yarısına yakın bir saatte, Armstrong merdivenden inip Ay yüzeyine ilk insan ayak izini bıraktı: 'Bu insan için küçük bir adım, insanlık için dev bir sıçrayış.' Yaklaşık 600 milyon insan bu anı canlı yayında izledi — o güne kadarki en kalabalık televizyon izleyicisiydi." },
+        { text: "Armstrong ve Aldrin, yüzeyde iki buçuk saatten fazla vakit geçirip örnekler topladı, bir Amerikan bayrağı dikti. Sekiz yıl önce sadece cesur bir söz olan bir hedef, insanlığın o güne kadarki en büyük ortak mühendislik başarılarından biri olarak gerçeğe dönüşmüştü." }
+      ]
+    },
+    {
+      id: "telstar-1",
+      year: "1962",
+      place: "Andover, Maine, ABD — Pleumeur-Bodou, Fransa",
+      title: "Bir Plaj Topu Büyüklüğünde Bir Devrim",
+      teaser: "Okyanusun iki yakası, ilk kez aynı anda aynı görüntüyü izledi.",
+      cover: WM('Telstar_1_replica.jpg'),
+      beats: [
+        { text: "1960'ların başında Atlantik'in iki yakası arasında canlı televizyon yayını yapmak mümkün değildi — sinyaller okyanusu aşamıyordu, haberler ancak film bobinleriyle uçakla taşınıp saatler sonra yayınlanabiliyordu." },
+        { text: "Bell Laboratuvarları mühendisleri, bu sorunu çözmek için küçük, plaj topu büyüklüğünde bir uydu tasarladı: Telstar 1. Uydu, dünya çevresinde alçak bir yörüngede dönerken, geçtiği kısa pencerelerde sinyalleri yakalayıp yeniden gönderebilecekti." },
+        { text: "10 Temmuz 1962'de Telstar 1, Cape Canaveral'dan fırlatıldı — bu, özel bir şirket tarafından finanse edilen ilk uzay fırlatmasıydı. Uydu, sadece 77 kilogram ağırlığındaydı ama görevi devasaydı." },
+        { text: "23 Temmuz 1962'de Telstar, Maine'deki bir yer istasyonundan Fransa'daki bir başka istasyona ilk canlı transatlantik televizyon yayınını aktardı. Milyonlarca Avrupalı ve Amerikalı, ilk kez okyanusun karşı kıyısındaki insanları gerçek zamanlı olarak ekranlarında gördü." },
+        { text: "Telstar'ın yörüngesi, uydunun günde sadece 20 dakikalık bir pencerede kullanılabilmesine izin veriyordu — ama bu kısa pencere, iletişim tarihinde bir dönüm noktasıydı. Bugünün küresel canlı yayın ve internet altyapısının kökeninde, bu küçük, plaj topu büyüklüğündeki uydunun kısacık yörüngesi vardı." }
+      ]
+    }
+  ]
+};
+
+DATA["1960lar"].stories.push({
+  id: "mlk-dream",
+  year: "1963",
+  place: "Washington D.C., ABD",
+  title: "Bir Hayalin Yüz Binlerce Kişiye Ulaştığı An",
+  teaser: "Lincoln Anıtı'nın basamaklarında, bir vaiz, bir milletin vicdanına seslendi.",
+  cover: WM('Martin_Luther_King_-_March_on_Washington.jpg'),
+  beats: [
+    { text: "1963'ün yazında ABD'de ırk ayrımcılığına karşı sivil haklar hareketi yıllardır süren mücadelesini sürdürüyordu. Sendikalar, kiliseler ve sivil toplum örgütleri, Washington'da barışçıl, büyük bir yürüyüş düzenlemeye karar verdi: 'İş ve Özgürlük İçin Washington Yürüyüşü'." },
+    { text: "28 Ağustos 1963'te 250 binden fazla insan, farklı eyaletlerden otobüsler ve trenlerle Washington'a akın etti. Lincoln Anıtı'nın önündeki geniş alan, o güne kadar başkentte görülen en büyük sivil haklar gösterisine ev sahipliği yaptı." },
+    { text: "Günün sonunda konuşmacı olarak kürsüye çıkan vaiz Martin Luther King Jr., hazırladığı metni bir kenara bırakıp doğaçlama devam etti. 'Bir hayalim var' diye başlayan bu bölüm, konuşmanın en çok hatırlanan kısmı oldu — çocuklarının bir gün ten renklerine göre değil, karakterlerine göre değerlendirileceği bir ülke hayali." },
+    { text: "Konuşma, radyo ve televizyonla ülke geneline yayınlandı; milyonlarca insan bu sözleri ilk kez canlı olarak duydu. Etkisi o kadar büyüktü ki, ertesi yıl Kongre'den geçen 1964 Sivil Haklar Yasası'nın kabul edilmesinde önemli bir rol oynadığı kabul edilir.", 
+      image: WM('Civil_Rights_March_on_Washington,_D.C._(Dr._Martin_Luther_King,_Jr._and_Mathew_Ahmann_in_a_crowd.)_-_NARA_-_542015_-_Restoration.jpg'),
+      caption: "Yürüyüş kalabalığı içinde Martin Luther King Jr., 28 Ağustos 1963 — ABD Ulusal Arşivi" },
+    { text: "King, 1964'te Nobel Barış Ödülü'nü kazandı; konuşması bugün hâlâ dünya çapında eşitlik mücadelelerinde referans gösteriliyor. Bir öğleden sonra, bir vaizin doğaçlama sözleri, on yıllar boyunca yankılanacak bir hayali milyonlarla paylaştı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "ali-liston",
+  year: "1964",
+  place: "Miami Beach, Florida (Florida), ABD",
+  title: "Kimsenin İnanmadığı 'Kelebek'",
+  teaser: "Bahisçiler onu yedi kata bir favori değildi. Ringden çıktığında dünya boksu yeniden yazılmıştı.",
+  cover: WM('Muhammad_Ali_vs._Sonny_Liston_I_AP.jpg'),
+  beats: [
+    { text: "1964'te ağır sıklet dünya şampiyonu Sonny Liston, korkulan, neredeyse yenilmez bir boksördü — önceki iki maçını da ilk raundda nakavtla kazanmıştı. Karşısına çıkacak 22 yaşındaki meydan okuyucu Cassius Clay (sonradan Muhammad Ali), bahis oranlarında yedi kat yeniksin gösteriliyordu." },
+    { text: "Clay, maç öncesi basın toplantılarında kendine güvenini yüksek sesle dile getirmesiyle tanınıyordu — 'kelebek gibi uçar, arı gibi sokarım' sözü, onun hem çevik hem saldırgan stilini özetliyordu. Çoğu spor yazarı bu sözleri gösteriş olarak görüyordu." },
+    { text: "25 Şubat 1964'te Miami Beach'te başlayan maçta Clay, herkesin beklediği ağır vuruşlu bir mücadele yerine, hız ve çeviklikle Liston'ı yordu — sürekli hareket halinde kalıp usta bir şekilde yumruklardan kaçındı." },
+    { text: "Altıncı raundun sonunda Liston, omuz sakatlığını gerekçe göstererek köşesinde kalıp yedinci raunda çıkmadı — teknik nakavtla maç sona erdi. Clay, ringde kollarını havaya kaldırıp kameralara 'Dünyayı şaşırttım!' diye bağırdı." },
+    { text: "Bu zafer, Clay'i 22 yaşında dünya ağır sıklet şampiyonu yaptı. Kısa süre sonra adını Muhammad Ali olarak değiştirdi ve boks tarihinin en tanınan, en etkili sporcularından birine dönüştü — kimsenin inanmadığı bir 'kelebek', ringde tarihi yeniden yazmıştı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "barnard-heart",
+  year: "1967",
+  place: "Cape Town, Güney Afrika",
+  title: "Dokuz Saatte Değişen Bir Kalp",
+  teaser: "O güne kadar sadece hayvanlar üzerinde denenmişti. Bir cerrah, bunu ilk kez bir insanda denedi.",
+  cover: WM('Aankomst_Dr._Chris_Barnard_op_Schiphol._Hier_tijdens_persconferentie,_Bestanddeelnr_921-3308.jpg'),
+  beats: [
+    { text: "1960'ların ortasında kalp nakli, dünya çapında birçok cerrahın üzerinde çalıştığı ama henüz kimsenin bir insanda denemediği bir hedefti. Hayvanlar üzerinde onlarca deneme yapılmış, bağışıklık sisteminin yeni organı reddetme sorunu kısmen çözülmeye başlamıştı." },
+    { text: "Güney Afrikalı cerrah Christiaan Barnard, Cape Town'daki Groote Schuur Hastanesi'nde yıllardır köpekler üzerinde kalp nakli teknikleri geliştiriyordu. Ekibindeki 20'den fazla cerrah, bu bilgiyi bir insan hastasına uygulamaya hazırdı." },
+    { text: "3 Aralık 1967'de, kalp yetmezliği nedeniyle ölüme yakın olan 54 yaşındaki Louis Washkansky için bir donör bulundu: trafik kazasında hayatını kaybeden genç bir kadın. Barnard ve ekibi, dokuz saat süren bir ameliyatla kalbi nakletti." },
+    { text: "Ameliyat başarılı geçti; Washkansky birkaç saat içinde bilincini geri kazanıp eşiyle konuşabildi. Haber dünya çapında manşetlere taşındı — bu, o güne kadar tıbbın ulaştığı en cesur sınırlardan biriydi." },
+    { text: "Washkansky, bağışıklık baskılayıcı ilaçların yan etkisiyle gelişen zatürre nedeniyle 18 gün sonra hayatını kaybetti — ama operasyonun kendisi başarılıydı; kalp reddedilmemişti. Barnard'ın bu cesur ilk denemesi, sonraki yıllarda binlerce hayat kurtaracak kalp nakli tekniklerinin önünü açtı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "atm-enfield",
+  year: "1967",
+  place: "Enfield, Londra (Londra), İngiltere",
+  title: "Bir Perdenin Ardından Çıkan On Sterlin",
+  teaser: "Bankalar kapandığında para çekmek imkânsızdı. Bir mühendis, bunu değiştiren bir makine tasarladı.",
+  cover: WM('Barclays_Bank_Enfield_Town_Branch.jpg'),
+  beats: [
+    { text: "1960'ların ortasında banka şubeleri, hafta içi belirli saatlerde açık oluyordu — bu saatlerin dışında nakit paraya ulaşmanın hiçbir yolu yoktu. İskoç mühendis John Shepherd-Barron, bir gün bankasından para çekemediği için bu soruna bir çözüm aramaya başladı." },
+    { text: "Shepherd-Barron'ın fikri basitti: insanların günün her saati kendi kendilerine nakit çekebilecekleri bir makine. Barclays Bankası bu fikre ilgi gösterdi ve Enfield'daki bir şubesinde pilot bir makine kurmayı kabul etti." },
+    { text: "27 Haziran 1967'de, Londra'nın Enfield ilçesindeki şubede, perde açılış töreniyle dünyanın ilk bankamatiği hizmete girdi. Dönemin ünlü komedyeni Reg Varney, ilk parayı çeken kişi olarak makineyi açtı." },
+    { text: "Sistem bugünkünden farklıydı: müşteriler önceden aldıkları özel bir kağıt fiş ve dört haneli bir kod kullanıyor, makine karşılığında 10 sterlinlik bir banknot veriyordu. Basit ama devrimci bir fikirdi — bankacılığı ilk kez 'her zaman açık' bir hizmete dönüştürüyordu." },
+    { text: "Bugün dünya genelinde milyonlarca bankamatik var; bazıları Svalbard'ın karlı sokaklarında, bazıları Antarktika'daki araştırma istasyonlarında bile bulunuyor. Hepsinin kökeninde, bir Londra banliyösündeki küçük bir şube ve bir mühendisin sabırsızlığı var." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "arpanet",
+  year: "1969",
+  place: "Los Angeles (Los Ancıles), Kaliforniya, ABD",
+  title: "Çöken Bir Bilgisayarda Doğan İnternet",
+  teaser: "İlk mesaj tamamlanamadan sistem çöktü. Ama o iki harf, dünyayı değiştirecek bir ağın ilk nefesiydi.",
+  cover: WM('The_IMP_Log_The_Very_First_Message_Sent_on_the_Internet_(6293913865).jpg'),
+  beats: [
+    { text: "1960'ların sonunda ABD Savunma Bakanlığı'na bağlı bir araştırma kurumu, farklı üniversitelerdeki bilgisayarları birbirine bağlayacak deneysel bir ağ üzerinde çalışıyordu: ARPANET. Amaç, araştırmacıların uzaktaki bilgisayarlara bağlanıp kaynakları paylaşabilmesiydi." },
+    { text: "29 Ekim 1969'da, UCLA'da öğrenci programcı Charley Kline, profesörü Leonard Kleinrock'un gözetiminde, Stanford Araştırma Enstitüsü'ndeki bir bilgisayara bağlanmayı denedi. Amacı basitti: 'login' kelimesini yazıp sisteme giriş yapmak." },
+    { text: "Kline, 'l' ve 'o' harflerini başarıyla gönderdi — ama tam 'g' harfini yazacağı sırada sistem çöktü. Böylece internetin tarihe geçen ilk mesajı, kazara ve eksik bir şekilde iletildi: sadece 'lo'." },
+    { text: "Yaklaşık bir saat sonra sistem yeniden çalışır hale geldi ve tam bağlantı başarıyla kuruldu. Birkaç hafta içinde ağa iki üniversite daha eklendi; ARPANET, dört düğümlü küçük bir deneysel ağ olarak büyümeye başladı." },
+    { text: "O gece kimse bunun ne kadar büyük bir şeyin başlangıcı olduğunun farkında değildi. ARPANET'in protokolleri, yıllar içinde bugünün internetinin temelini oluşturdu — hepsi, yarıda kesilen bir 'giriş yap' komutuyla başlamıştı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "ford-gt40",
+  year: "1966",
+  place: "Le Mans (Lö Man), Fransa",
+  title: "Ferrari'yi Kendi Sahasında Yenen Amerikan",
+  teaser: "Bir satın alma teklifi reddedildi. Ford, bunun bedelini pistte, dünyanın en zorlu yarışında ödetti.",
+  cover: WM('1966_Ford_GT40_Mk_I.jpg'),
+  beats: [
+    { text: "1963'te Ford Motor Company, İtalyan spor otomobil üreticisi Ferrari'yi satın almak için görüşmelere başladı — anlaşma neredeyse tamamlanmıştı. Ama Ferrari'nin kurucusu Enzo Ferrari, son anda anlaşmadan vazgeçti; bu, Ford yönetimini derinden kızdırdı." },
+    { text: "Ford'un başkanı Henry Ford II, bu hakareti unutmadı: Ferrari'yi, İtalyan markanın yıllardır domine ettiği dünyanın en prestijli dayanıklılık yarışında, 24 Saat Le Mans'ta yenmek için bir proje başlattı. Mühendislere sınırsız bütçe verildi." },
+    { text: "İlk yıllarda (1964-1965) geliştirilen GT40 modeli hayal kırıklığı yarattı — motor arızaları ve teknik sorunlar yüzünden yarışları bitiremedi. Ford, projeyi tamamen yeniden gözden geçirdi; deneyimli yarış organizasyonu Shelby American'ı işe dahil etti." },
+    { text: "18-19 Haziran 1966'da Le Mans'ta, Ford'un GT40 Mark II modelleri yarışı domine etti. Yarışın sonunda üç Ford aracı, ilk üç sırayı paylaşarak bitiş çizgisini geçti — Ferrari'nin altı yıllık galibiyet serisine son verildi." },
+    { text: "Bu zafer, otomobil tarihinin en ünlü rekabetlerinden birini simgeliyordu: bir şirketin, reddedildiği bir teklifin ardından rakibini onun kendi sahasında, en zorlu koşullarda yenmesi. Ford, sonraki üç yıl daha Le Mans'ı kazanarak bu üstünlüğü pekiştirdi." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "boeing-747",
+  year: "1969",
+  place: "Everett, Washington (Vaşington), ABD",
+  title: "Gökyüzündeki Dev",
+  teaser: "Bir uçak o kadar büyüktü ki, onu inşa etmek için önce dünyanın en büyük binası yapıldı.",
+  cover: WM('Boeing_747_Prototype_-_N7470_(7701251930).jpg'),
+  beats: [
+    { text: "1960'ların ortasında hava yolculuğu hızla büyüyordu, ama uçaklar sınırlı sayıda yolcu taşıyabiliyordu. Pan American Havayolları, Boeing'e çok daha büyük, çok daha fazla yolcu taşıyabilecek bir uçak sipariş etti — dönemin en büyük ticari bahisi." },
+    { text: "Bu devasa uçağı üretmek için Boeing, Washington eyaletindeki Everett'te sıfırdan bir fabrika inşa etmek zorunda kaldı — hacim olarak dünyanın en büyük binası. Fabrika, uçağın kendisiyle neredeyse aynı anda inşa edildi." },
+    { text: "30 Eylül 1968'de ilk 747, henüz boyası bile tam kurumamış haldeyken fabrikadan çıkarıldı. Mühendisler, bu kadar büyük bir uçağın havada nasıl davranacağından hâlâ tam emin değildi." },
+    { text: "9 Şubat 1969'da uçak ilk test uçuşunu gerçekleştirdi. 70 metre uzunluğu ve geniş gövdesiyle 747, o güne kadar inşa edilmiş en büyük yolcu uçağıydı — kısa sürede 'Jumbo Jet' lakabını aldı." },
+    { text: "22 Ocak 1970'te Pan Am ile düzenli seferlere başlayan 747, hava yolculuğunu köklü şekilde demokratikleştirdi — daha fazla koltuk, daha düşük bilet fiyatları demekti. Yarım yüzyılı aşkın süredir gökyüzünde uçan bu dev, kıtalar arası seyahati sıradan insanların erişimine açtı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "woodstock",
+  year: "1969",
+  place: "Bethel, New York (Nu York), ABD",
+  title: "Bir Çiftlikte Toplanan Yarım Milyon Kişi",
+  teaser: "50.000 kişi bekleniyordu. Kapıya dayanan yarım milyon insan, festivali tarihe geçirdi.",
+  cover: WM('Woodstock_Music_and_Art_Fair.jpg'),
+  beats: [
+    { text: "1969'da bir grup genç girişimci, 'Barış ve Müzik'in Üç Günü' temasıyla bir müzik festivali düzenlemeye karar verdi. Organizatörler, New York kırsalındaki Bethel kasabasında bir süt çiftçisinden, Max Yasgur'dan, arazi kiraladı — yaklaşık 50.000 kişilik bir katılım bekliyorlardı." },
+    { text: "15-18 Ağustos 1969 arasında düzenlenen festivale beklenenin çok üzerinde bir kalabalık akın etti — yaklaşık 400.000 ila 500.000 kişi. Yollar tıkandı, biletli girişler pratik olarak imkânsız hale geldi; organizatörler festivali fiilen ücretsiz hale getirmek zorunda kaldı." },
+    { text: "Katılımcı sayısının altyapıyı fazlasıyla aşması yiyecek, su ve sağlık hizmetlerinde ciddi sıkıntılara yol açtı; üstüne şiddetli yağmur çamur denizine dönüşen bir alan yarattı. Buna rağmen kalabalık, döneme damgasını vuran bir barışçıl ve dayanışma ruhuyla üç günü tamamladı." },
+    { text: "Sahnede Jimi Hendrix, Janis Joplin, The Who ve Santana gibi dönemin önde gelen müzisyenleri sahne aldı; bazı performanslar, popüler müzik tarihinin en unutulmaz canlı anları arasında sayılır." },
+    { text: "Woodstock, sadece bir müzik festivali değil, bir neslin kimliğinin simgesi haline geldi — barış, özgürlük ve toplu deneyimin bir kutlaması olarak hafızalara kazındı. Organizatörlerin beklediği 50.000 kişinin on katından fazlası, plansız bir şekilde tarihe geçen bir anı birlikte yarattı." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "green-revolution",
+  year: "1944 – 1970",
+  place: "Meksika, sonrasında Hindistan ve Pakistan",
+  title: "Bir Tarım Bilimcinin Milyonları Doyurması",
+  teaser: "Kıtlık kaçınılmaz görünüyordu. Bir buğday çeşidi, o kehaneti boşa çıkardı.",
+  cover: WM('Norman_Borlaug.jpg'),
+  beats: [
+    { text: "1940'ların ortasında Meksika, buğday üretiminde kendine yetemiyor, her yıl büyük miktarda tahıl ithal etmek zorunda kalıyordu. Amerikalı tarım bilimci Norman Borlaug, bir vakıf projesi kapsamında Meksika'ya gönderildi — görevi, hastalıklara dayanıklı, daha verimli buğday çeşitleri geliştirmekti." },
+    { text: "Borlaug, yıllarca sabırla binlerce buğday çeşidini birbiriyle çaprazladı. Sonunda, normal buğdaydan çok daha kısa saplı, bu sayede rüzgârda yatıp yıkılmayan ve çok daha fazla tane taşıyabilen 'cüce' bir buğday çeşidi geliştirdi." },
+    { text: "1960'ların ortasında Hindistan ve Pakistan, ciddi bir kıtlık tehdidiyle karşı karşıyaydı — nüfus hızla artarken tarımsal üretim yetersiz kalıyordu. Uzmanlar, milyonlarca insanın açlıktan öleceğini öngörüyordu." },
+    { text: "Borlaug'un geliştirdiği buğday tohumları, tarım uzmanlarıyla birlikte bu ülkelere tanıtıldı. Sonuçlar çarpıcıydı: Pakistan'ın buğday üretimi birkaç yıl içinde ikiye katlandı, Hindistan da benzer bir sıçrama yaşadı — her iki ülke de kısa sürede tahılda kendine yeterli hale geldi." },
+    { text: "Bu tarımsal dönüşüm, tarihte 'Yeşil Devrim' olarak anılır ve Borlaug'un hayatı boyunca kurtardığı can sayısının bir milyardan fazla olduğu tahmin edilir. 1970'te Nobel Barış Ödülü'nü kazandığında, komite onu 'dünyanın ekmeğini artıran adam' olarak tanımladı — sabırlı bir laboratuvar çalışmasının, öngörülen bir kıtlığı nasıl tersine çevirebildiğinin en çarpıcı örneklerinden biri." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "tiros-1",
+  year: "1960",
+  place: "Cape Canaveral, Florida (Florida), ABD",
+  title: "Uzaydan Bakan İlk Göz",
+  teaser: "İnsanlık ilk kez, fırtınaların yukarıdan nasıl göründüğünü gördü.",
+  cover: WM('Television_Infrared_Observation_Satellite_TIROS_-_GPN-2003-00028.jpg'),
+  beats: [
+    { text: "1960'a kadar hava tahmini, yer istasyonlarından toplanan sınırlı verilere ve pilotların gözlemlerine dayanıyordu — bir fırtınanın büyüklüğünü ya da yönünü baştan sona görmek imkânsızdı. Bilim insanları, uzaydan çekilen görüntülerin bu sorunu çözebileceğini düşünüyordu ama bu henüz kanıtlanmamış bir fikirdi." },
+    { text: "NASA ve RCA şirketi, iki basit televizyon kamerası taşıyan küçük bir deneysel uydu geliştirdi: TIROS-1. Amaç, bulut örtüsünü uzaydan görüntüleyip bu görüntülerin gerçekten faydalı olup olmadığını test etmekti." },
+    { text: "1 Nisan 1960'ta Cape Canaveral'dan fırlatılan TIROS-1, birkaç saat içinde dünyaya ilk 'televizyon' görüntülerini gönderdi. Görüntüler biraz bulanıktı, ama bir fırtına sisteminin sarmal yapısını net bir şekilde gösteriyordu." },
+    { text: "Uydu sadece 78 gün çalıştı, ama bu kısa süre içinde dünya çapında yaklaşık 23.000 fotoğraf gönderdi. Meteorologlar ilk kez, bir fırtınanın tüm genişliğini tek bir görüntüde görebiliyordu." },
+    { text: "TIROS-1'in başarısı, uydu tabanlı hava gözleminin gerçekten işe yaradığını kanıtladı. Bugün dünya çapında onlarca hava durumu uydusu, TIROS'un attığı bu ilk adımın mirasını taşıyor — kasırga tahminlerinden günlük hava durumu uygulamalarına kadar her şeyin kökeninde, bu küçük deneysel uydunun ilk bulanık görüntüleri var." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "compact-cassette",
+  year: "1963",
+  place: "Eindhoven, Hollanda",
+  title: "Cebe Sığan Bir Müzik Kütüphanesi",
+  teaser: "Devasa makaralı teyplerin çağında, küçük bir mühendislik ekibi müziği cebe sığdırdı.",
+  cover: WM('Compactcassette.jpg'),
+  beats: [
+    { text: "1960'ların başında ses kayıtları, çoğunlukla hantal makaralı teyp cihazlarıyla yapılıyordu — bu cihazlar büyük, ağır ve kullanımı karmaşıktı; teybi doğru şekilde makaraya sarmak bile ustalık gerektiriyordu." },
+    { text: "Hollandalı elektronik şirketi Philips'te mühendis Lou Ottens ve ekibi, çok daha basit ve taşınabilir bir ses kayıt formatı arıyordu. Hedefleri netti: bir ceket cebine sığacak kadar küçük, kullanımı çocuk oyuncağı kadar kolay bir kaset." },
+    { text: "Ottens, ilk prototipin boyutunu belirlemek için basitçe cebinden çıkardığı bir ahşap blok kullandı — 'bu boyuttan büyük olmayacak' dedi. Ekip, iki küçük makarayı plastik bir kutunun içine yerleştiren 'kompakt kaset' tasarımını geliştirdi." },
+    { text: "Ağustos 1963'te Berlin Radyo Fuarı'nda tanıtılan bu yeni format, hızla ilgi gördü. Philips, stratejik bir karar alarak tasarımın patentini diğer üreticilere ücretsiz lisansladı — bu sayede kompakt kaset, rakip formatlar yerine dünya standardı haline geldi." },
+    { text: "Kompakt kaset, sonraki yirmi yıl boyunca müziği dinleme biçimini kökten değiştirdi — insanlar ilk kez kendi 'karışık kasetlerini' hazırlayabiliyor, müziği yürüyerek, arabada, her yerde taşıyabiliyordu. Bir mühendisin cebinden çıkardığı tahta blok, milyarlarca kasetin doğduğu bir standardın başlangıcı oldu." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "ibm-360",
+  year: "1964",
+  place: "Endicott, New York (Nu York), ABD",
+  title: "Şirketin Geleceğine Yatırılan Bahis",
+  teaser: "IBM, tüm şirketin bütçesinden daha büyük bir riske girdi. Karşılığında bilgisayar dünyasını yeniden şekillendirdi.",
+  cover: WM('IBM_System360_Model_30.jpg'),
+  beats: [
+    { text: "1960'ların başında bilgisayar dünyası dağınık bir haldeydi — her model kendi özel yazılımına, kendi çevre birimlerine ihtiyaç duyuyordu. Bir şirket küçük bir bilgisayardan daha büyüğüne geçmek istediğinde, neredeyse her şeyi baştan satın almak zorunda kalıyordu." },
+    { text: "IBM, bu sorunu kökten çözecek iddialı bir proje başlattı: System/360. Fikir, küçükten büyüğe farklı güçte birçok modelin, hepsinin aynı yazılımı ve çevre birimlerini kullanabileceği tek bir aile olarak tasarlanmasıydı." },
+    { text: "Proje, IBM'in o güne kadarki en büyük bahsiydi — geliştirme maliyeti, şirketin yıllık gelirinden bile fazlaydı. Bazı yöneticiler, riskin şirketi batırabileceğinden endişeleniyordu." },
+    { text: "7 Nisan 1964'te System/360 tanıtıldığında, aynı anda altı farklı model duyuruldu — hepsi birbiriyle uyumluydu. Müşteriler artık ihtiyaçları büyüdükçe daha güçlü bir modele geçebiliyor, eski yazılımlarını ve donanımlarını kaybetmiyordu." },
+    { text: "System/360, kısa sürede kurumsal bilgi işlemin standardı haline geldi; bankalar, havayolları ve devlet kurumları bu sistemi benimsedi. IBM'in cesur bahsi kazandı — ve 'uyumlu bilgisayar ailesi' fikri, bugün hâlâ bilgisayar mimarisinin temel prensiplerinden biri olarak yaşıyor." }
+  ]
+});
+
+DATA["1960lar"].stories.push({
+  id: "cuyahoga-fire",
+  year: "1969 – 1972",
+  place: "Cleveland, Ohio, ABD",
+  title: "Alev Alan Bir Nehrin Uyandırdığı Ülke",
+  teaser: "Bir nehir o kadar kirliydi ki tutuştu. Bu utanç verici an, bir çevre hareketini ateşledi.",
+  cover: WM('Cuyahoga_River_Towpath_View.JPG'),
+  beats: [
+    { text: "1960'ların sonunda Cleveland'daki Cuyahoga Nehri, on yıllardır fabrika atıklarının ve yağların doğrudan boşaltıldığı, neredeyse ölü bir su yoluna dönüşmüştü. Nehrin yüzeyinde yağ tabakaları o kadar kalındı ki, geçmişte defalarca küçük yangınlar çıkmıştı." },
+    { text: "22 Haziran 1969'da nehrin üzerinde biriken yağlı atıklar, bir kıvılcımla tutuştu. Yangının kendisi aslında görece küçük ve kısa sürdü — yaklaşık 30 dakikada söndürüldü — ama haberi ülke çapında büyük yankı uyandırdı." },
+    { text: "Time dergisi, olayı fotoğraflarla (aslında daha önceki bir yangından alınan bir görselle) kapak haberi yaptı; 'bir nehrin yanabileceği' fikri, Amerikan kamuoyunda çevre kirliliğinin ne boyuta ulaştığının çarpıcı bir simgesine dönüştü." },
+    { text: "Olay, zaten büyümekte olan çevre bilincini keskin bir şekilde hızlandırdı. Kamuoyu baskısı, 1970'te Çevre Koruma Ajansı'nın (EPA) kurulmasına ve 1972'de Temiz Su Yasası'nın kabul edilmesine önemli bir katkı sağladı." },
+    { text: "Bugün Cuyahoga Nehri, temizlenmiş suları ve kıyısındaki parklarıyla balıkçılık ve tekne turlarına ev sahipliği yapıyor. Utanç verici bir yangının küllerinden, modern çevre hareketinin en önemli dönüm noktalarından biri doğdu." }
+  ]
+});
+
+DATA["analiz"] = {
+  title: "Analiz",
+  subtitle: "Güncel konuları derinlemesine, doğrulanmış kaynaklarla anlama",
+  isAnalysis: true,
+  stories: [
+    {
+      id: "togg-yerlilik",
+      year: "2025",
+      place: "Gemlik, Bursa — Türkiye",
+      title: "Togg Gerçekten Yerli mi?",
+      teaser: "Basit cevap: kısmen. Ama bu 'kısmen'in içinde neler var, birlikte bakalım.",
+      cover: WM('Togg_T10X.jpg'),
+      beats: [
+        { text: "Önce en basit soruyla başlayalım: 'yerli araba' ne demek? Bir arabanın her vidasının Türkiye'de üretilmesi mi? Hayır — dünyada böyle bir araba neredeyse yok. 'Yerli' demek, arabanın parçalarının ve değerinin ne kadarının o ülkede üretildiği demek. Buna 'yerlilik oranı' deniyor ve yüzde olarak ölçülüyor." },
+        { text: "Bunu şöyle düşünebilirsin: bir pasta yapıyorsun. Unu, yumurtayı, şekeri kendi mutfağında hazırladın diyelim — ama vanilya özütünü marketten aldın, o da ithal bir ürün. Pastanın büyük kısmı 'senin emeğin' ama küçük bir parçası dışarıdan geldi. Arabalar da böyle: yüzlerce parçadan oluşuyor, bazıları yerli, bazıları ithal.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Yerlilik oranı, pastanın yüzde kaçının kendi mutfağında yapıldığını söylemek gibi — tamamı değil, büyük bir kısmı." },
+        { text: "Togg, 2018'de beş büyük Türk şirketinin (Anadolu Grubu, BMC, Kök Grup, Turkcell, Zorlu Holding) bir araya gelmesiyle kurulan bir konsorsiyum — yani şirketin sahipliği tamamen Türk. Devlet de projeye destek veriyor, TOBB (Türkiye Odalar ve Borsalar Birliği) da işin içinde. Bu kısım net: Togg, yabancı bir şirketin Türkiye'deki şubesi değil, gerçekten Türk sermayeli bir girişim." },
+        { text: "Fabrika da Bursa'nın Gemlik ilçesinde, gerçekten Türkiye'de — 2022'de açıldı. Yani bazı sosyal medya iddialarının aksine (ki bunlar bağımsız doğrulama kuruluşu Teyit.org tarafından yanlış bulundu), araba yurt dışında üretilip Türkiye'ye getirilmiyor; montaj gerçekten burada yapılıyor." },
+        { text: "İşin can alıcı noktası bataryada. Bir elektrikli arabanın maliyetinin neredeyse yarısı bataryadan geliyor — yani arabanın 'kalbi' diyebiliriz. Togg, bataryayı Çinli (ama ABD merkezli olarak tanımlanan) Farasis şirketiyle ortak kurduğu Siro adlı şirkette üretiyor. Ama lityum-iyon hücrelerin (bataryanın en kritik, en pahalı parçası) kendisi ilk aşamada Çin'de üretilip Türkiye'ye ithal ediliyor; Türkiye'de yapılan iş, bu hücreleri paketlemek ve modül haline getirmek.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Bir akıllı telefonun 'Türkiye'de monte edildi' yazması gibi — kutuyu, kasayı, montajı burada yaparsın ama telefonun beyni olan işlemci çipi hâlâ Tayvan'dan gelir. Togg'un bataryasında da benzer bir durum var: paketleme burada, ama hücrenin kendisi henüz değil." },
+        { text: "Buna rağmen resmi rakamlar şöyle: Togg, 2023'te satışa çıktığında yüzde 51 yerlilik oranıyla başladı. Bataryanın bir kısmının Türkiye'de paketlenmeye başlamasıyla bu oran, 2025 başında yüzde 72'ye yükseldiği açıklandı. Şirket, 2026'da Gemlik'teki tesiste lityum hücrelerin de tamamen Türkiye'de üretilmeye başlanmasını hedefliyor — bu gerçekleşirse yerlilik oranı daha da artacak." },
+        { text: "Arabanın tasarımında İtalyan tasarım firması Pininfarina'nın katkısı var; bazı mühendislik ve test süreçlerinde Almanya ve İngiltere merkezli firmalarla çalışılıyor. Bu, aslında dünya genelinde otomotiv sektöründe alışılmış bir durum — Mercedes'ten Toyota'ya kadar hemen hiçbir marka, arabasının her aşamasını tek bir ülkede yapmıyor. Modern bir araba, dünyanın dört bir yanından gelen parçaların bir araya toplanmasıyla ortaya çıkıyor." },
+        { text: "Peki bu 'yerlilik' iddiasını nasıl özetleyebiliriz? Togg'un sahipliği, tasarımı, montajı ve giderek artan oranda parça tedariki gerçekten Türkiye'de — bu doğrulanmış bir gerçek, sosyal medyadaki 'aslında hepsi ithal' iddiaları yanlış. Ama bataryanın en değerli parçası (hücreler) hâlâ büyük ölçüde ithal — bu da doğrulanmış bir gerçek. İkisi de aynı anda doğru: Togg, dünya standartlarına göre oldukça yüksek bir yerlilik oranına sahip, Türkiye'de üretilen diğer arabalardan (Renault Clio, Hyundai i10, Fiat Egea) daha yerli — ama 'yüzde yüz yerli' değil, çünkü böyle bir modern araba pratikte neredeyse imkânsız." },
+        { text: "Kısacası: 'Togg yerli mi?' sorusunun tek kelimelik bir cevabı yok. Sahiplik ve montaj açısından kesinlikle evet. Parça tedariki açısından büyük ölçüde ve giderek artan oranda evet. Ama bataryanın kalbi gibi en kritik parçalarda henüz tam bağımsız değil — tıpkı dünyadaki hemen her modern araba gibi.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Bir ev inşa ettiğini düşün — arsası senin, işçiler senin ekibin, tuğlaları kendi fabrikandan aldın. Ama çatı kiremitlerini henüz komşu ülkeden alıyorsun çünkü kendi kiremit fabrikan daha yeni kuruluyor. Ev yine de 'senin evin' — sadece her malzemesi henüz kendi topraklarından çıkmıyor." }
+      ],
+      sources: [
+        "Wikipedia (EN) — Togg: en.wikipedia.org/wiki/Togg",
+        "Teyit.org — 'Videonun Togg'un yurtdışında üretilerek Türkiye'ye getirildiğini gösterdiği iddiası' (doğrulama analizi)",
+        "Yeni Şafak — 'Togg'da yerliliği batarya artırdı' (Ocak 2025)",
+        "Cumhur Haber Ajansı — 'Togg'un Yerlilik Oranı %72'ye Yükseldi' (Ocak 2025)",
+        "Anadolu Ajansı — Sanayi ve Teknoloji Bakanlığı açıklamaları, Togg yerlilik oranı duyuruları"
+      ]
+    }
+  ]
+};
+
+DATA["1980ler"] = {
+  title: "1980'ler",
+  subtitle: "Kişisel bilgisayarın, cebe sığan iletişimin ve büyük değişimlerin onyılı",
+  stories: [
+    {
+      id: "macintosh-1984",
+      year: "1984",
+      place: "Cupertino, Kaliforniya, ABD",
+      title: "Bir Reklamla Duyurulan Devrim",
+      teaser: "60 saniyelik bir reklam, bilgisayarı korkulan bir makineden herkesin dostuna dönüştürdü.",
+      cover: WM('Macintosh_128k_computer,_January_1984,_by_Bernard_Gotfryd_-_(cropped_to_remove_individual).jpg'),
+      beats: [
+        { text: "1980'lerin başında bilgisayarlar hâlâ çoğunlukla mühendislerin ve şirketlerin dünyasına aitti — siyah ekranda yeşil komut satırları, karmaşık kodlar, sıradan insanı korkutan bir arayüz. Apple'daki bir ekip, bunu kökten değiştirecek bir fikir üzerinde çalışıyordu: fare ile tıklanan, simgelerle dolu bir ekran." },
+        { text: "Steve Jobs liderliğindeki Macintosh ekibi, Xerox'un araştırma laboratuvarında gördükleri grafik arayüz fikrini alıp bunu sıradan tüketiciler için uygun fiyatlı bir bilgisayara sığdırmaya çalıştı — bu, dönemin donanım sınırları düşünüldüğünde son derece zor bir mühendislik hedefiydi." },
+        { text: "22 Ocak 1984'te, Super Bowl finalinin yayınında, Apple gizemli ve sinematik bir reklam yayınladı — distopik bir dünyada bir kadının koşarak baskıcı bir ekranı kırmasını anlatan, sadece bir kez yayınlanan '1984' reklamı. Reklamda ürünün adı bile geçmiyordu, sadece son sahnede Macintosh'un geleceği duyuruluyordu." },
+        { text: "İki gün sonra, 24 Ocak 1984'te, Steve Jobs bir salon dolusu izleyicinin önünde çantasından Macintosh'u çıkarıp 'Merhaba' yazısını ekranda gösterdiğinde salon ayakta alkışladı — bilgisayar, ilk kez kendi kendine konuşuyormuş gibi hissettiriyordu." },
+        { text: "Macintosh, ilk yıllarında yüksek fiyatı ve sınırlı yazılım desteği yüzünden ticari olarak zorlandı, ama uzun vadede etkisi kalıcı oldu: fare, simgeler ve pencerelerle çalışan grafik arayüz, sonraki kırk yılın bütün kişisel bilgisayarlarının standart dili haline geldi." }
+      ]
+    },
+    {
+      id: "dynatac-mobile",
+      year: "1973 – 1983",
+      place: "Chicago (Şikago), Illinois (İlinoy), ABD",
+      title: "Sokakta Yürürken Yapılan İlk Telefon Görüşmesi",
+      teaser: "2,5 kiloluk bir 'tuğla', insanı kablodan kurtarıp cebine özgürlük verdi.",
+      cover: WM('DynaTAC8000X.jpg'),
+      beats: [
+        { text: "1973'te Motorola mühendisi Martin Cooper, New York sokaklarında yürürken elindeki devasa bir prototip telefonla rakip şirket AT&T'deki bir mühendisi arayıp 'Seni gerçek bir cep telefonundan arıyorum' dedi — bu, kablosuz, taşınabilir bir telefonla yapılan ilk halka açık görüşmeydi." },
+        { text: "Bu prototipten ticari bir ürüne geçmek on yıldan fazla sürdü. Motorola mühendisleri, devasa araç telefonlarını insanın elinde taşıyabileceği kadar küçültmeye çalışıyordu — pil teknolojisi, anten tasarımı ve şebeke altyapısının hepsi aynı anda çözülmesi gereken sorunlardı." },
+        { text: "1983'te DynaTAC 8000X, ABD Federal İletişim Komisyonu'ndan onay alarak satışa çıktı. Cihaz 800 gram ağırlığında, 25 santim uzunluğundaydı; şakayla 'tuğla' diye anılıyordu. Fiyatı 3.995 dolardı — dönemin bir otomobiline yakın bir bedel." },
+        { text: "Tek şarjla sadece 30 dakika konuşma süresi sunuyordu ve şarj olması 10 saat sürüyordu. Buna rağmen, insanların ilk kez bir telefon kablosuna veya sabit bir hatta bağlı olmadan, sokakta yürürken konuşabilmesi köklü bir özgürlük hissi yaratıyordu." },
+        { text: "DynaTAC, sonraki on yıllarda cep telefonlarının küçülüp ucuzlayarak dünyanın her köşesine ulaşmasının ilk adımıydı. Bugün cebimizdeki akıllı telefonların kökeninde, bir mühendisin New York sokağında yaptığı o ilk gösterişli aramanın cesareti var." }
+      ]
+    },
+    {
+      id: "post-it-notes",
+      year: "1968 – 1980",
+      place: "Saint Paul, Minnesota, ABD",
+      title: "Başarısız Bir Yapıştırıcının İkinci Şansı",
+      teaser: "Yapışmayan bir tutkal, bir kilisede ilahi kitabını işaretlerken tarihe geçti.",
+      cover: WM('PostItNotePad.JPG'),
+      beats: [
+        { text: "1968'de 3M şirketinde kimyager Spencer Silver, uçak sanayisi için son derece güçlü bir yapıştırıcı geliştirmeye çalışıyordu. Deneyleri sırasında beklenmedik bir şey buldu: tam tersi özellikte, çok zayıf, tekrar tekrar yapıştırılıp çıkarılabilen bir tutkal." },
+        { text: "3M yönetimi bu buluşu 'işe yaramaz' bularak reddetti — kimse zayıf bir yapıştırıcı istemiyordu. Silver, yılmadan yıllarca şirket içinde bu tutkala bir uygulama alanı bulmaya çalıştı, ama kimseyi ikna edemedi." },
+        { text: "1974'te, aynı şirkette çalışan bir başka mühendis olan Art Fry, kilisede koro provasına katılırken bir sorunla karşılaştı: ilahi kitabındaki kâğıt işaretler sürekli düşüyordu. Silver'ın 'başarısız' yapıştırıcısını hatırladı — bu, tam da düşmeden ama sayfayı da yırtmadan yapışacak bir işaretleyici için ideal bir maddeydi." },
+        { text: "Fry, bu fikirle küçük, yeniden yapıştırılabilir kâğıt notlar geliştirdi. Ürün, 1977'de dört şehirde test edildi ama satışlar hayal kırıklığı yarattı — insanlar ürünü hiç denemeden anlamıyordu." },
+        { text: "3M, stratejisini değiştirip 1980'de ücretsiz numuneleri doğrudan ofislere göndermeye başladı. İnsanlar bir kez denedikten sonra vazgeçemedi — 'Post-it Notes' aynı yıl ülke çapında satışa çıktı ve kısa sürede dünyanın en tanınan ofis ürünlerinden birine dönüştü. Reddedilen bir yapıştırıcı, sabırlı bir ikinci bakışla, günlük hayatın vazgeçilmez bir parçası oldu." }
+      ]
+    },
+    {
+      id: "rubiks-cube",
+      year: "1974 – 1982",
+      place: "Budapeşte, Macaristan",
+      title: "Kendi Bulmacasını Çözemeyen Mucit",
+      teaser: "Bir mimarlık öğretmeni, kendi icadını çözmesi bir ay süren bir bulmaca yarattı.",
+      cover: WM('Rubik\'s_Cube.jpg'),
+      beats: [
+        { text: "1974'te Budapeşte'de bir mimarlık ve tasarım öğretmeni olan Ernő Rubik, öğrencilerine üç boyutlu hareketi ve uzamsal ilişkileri öğretmek için küçük, renkli bir küp tasarladı. Küpün parçalarının birbirinden ayrılmadan dönebilmesi, o dönem için mühendislik açısından çözülmesi zor bir bulmacaydı." },
+        { text: "Küpü tamamlayıp renkleri karıştırdıktan sonra Rubik, kendi yarattığı bulmacayı çözmenin ne kadar zor olduğunu fark etti — kendi icadını yeniden düzene sokması yaklaşık bir ay sürdü. Bu an, ona elindeki şeyin sıradan bir öğretim aracından çok daha fazlası olduğunu gösterdi." },
+        { text: "'Macar Küpü' adıyla önce Macaristan'da satışa çıktı, ama komünist rejim altında dış pazarlara ulaşması zordu. 1979'da bir iş insanı, küpü Nürnberg Oyuncak Fuarı'na götürdü; burada uluslararası oyuncak şirketi Ideal Toys'un dikkatini çekti." },
+        { text: "1980'de dünya çapında 'Rubik's Cube' adıyla piyasaya sürüldü ve inanılmaz bir çılgınlığa dönüştü — sadece birkaç yıl içinde 200 milyondan fazla küp satıldı. Küpün olası kombinasyon sayısı 43 kentilyondan fazlaydı, ama tek bir doğru çözüme sahipti." },
+        { text: "Küp, sadece bir oyuncak değil, dünya çapında hız yarışmalarına, matematiksel araştırmalara ve popüler kültüre ilham veren bir fenomene dönüştü. Bir öğretmenin sınıf için tasarladığı küçük bir araç, kendi yaratıcısını bile bir ay boyunca çaresiz bırakan bir bulmaca olarak tarihe geçti." }
+      ]
+    },
+    {
+      id: "space-shuttle-columbia",
+      year: "1972 – 1981",
+      place: "Cape Canaveral, Florida (Florida), ABD",
+      title: "Yeniden Kullanılabilen İlk Uzay Aracı",
+      teaser: "O güne kadar her uzay aracı tek seferlik yakılıyordu. Bu kez, geri dönüp yeniden uçacaktı.",
+      cover: WM('Space_Shuttle_Columbia_launching.jpg'),
+      beats: [
+        { text: "Apollo programı Ay'a insan gönderdikten sonra, NASA yeni bir soruna odaklandı: uzaya gitmenin maliyeti akıl almaz derecede yüksekti, çünkü her roket sadece bir kez kullanılıp atılıyordu. 1972'de Başkan Nixon, yeniden kullanılabilir bir uzay aracı geliştirme programını onayladı." },
+        { text: "Bu hedef, mühendislik açısından o güne kadar denenmemiş bir zorluk demekti: bir araç hem roket gibi fırlatılacak hem uçak gibi iniş yapacak hem de tekrar tekrar uzaya gönderilebilecekti. Geliştirme süreci, planlanandan çok daha uzun sürdü." },
+        { text: "12 Nisan 1981'de, Columbia mekiği, astronotlar John Young ve Robert Crippen'i taşıyarak Cape Canaveral'dan fırlatıldı — bu, 1975'teki Apollo-Sovyuz görevinden bu yana ABD'nin ilk insanlı uzay uçuşuydu, ve tarihte ilk kez bir uzay aracı ilk denemesinde doğrudan mürettebatla uçuruluyordu." },
+        { text: "54 saat süren görev boyunca Columbia, dünya çevresinde 37 tur attı; mekiğin fırlatma ve iniş yeteneklerini test etti. 14 Nisan'da Kaliforniya'daki bir pistte, tıpkı bir uçak gibi süzülerek indi." },
+        { text: "Columbia'nın başarısı, uzay mekiği programının 30 yıl sürecek dönemini başlattı — bu araçlar Hubble Uzay Teleskobu'nu yörüngeye yerleştirdi, Uluslararası Uzay İstasyonu'nun inşasına katkıda bulundu ve yüzlerce astronotu uzaya taşıdı. 'Tek kullanımlık' bir çağdan, 'yeniden kullanılabilir' bir çağa geçişin ilk adımıydı." }
+      ]
+    },
+    {
+      id: "ibm-pc-5150",
+      year: "1980 – 1981",
+      place: "Boca Raton, Florida (Florida), ABD",
+      title: "Devanın Küçük Bir Ekiple Attığı Adım",
+      teaser: "IBM gibi bir dev, hıza yetişebilmek için kendi kurallarını çiğnemek zorunda kaldı.",
+      cover: WM('IBM_PC_5150.jpg'),
+      beats: [
+        { text: "1980'e gelindiğinde Apple ve diğer küçük şirketler, kişisel bilgisayar pazarında hızla büyüyordu. IBM gibi devasa, yavaş hareket eden bir kurum için bu pazar hâlâ küçük ve önemsiz görünüyordu — ama yönetim, trendin göz ardı edilemeyecek kadar büyüdüğünü fark etti." },
+        { text: "IBM, alışılmadık bir karar aldı: kendi devasa bürokrasisinden bağımsız, sadece 12 mühendisten oluşan küçük bir ekibe, bir yıldan kısa sürede bir kişisel bilgisayar geliştirme görevi verdi. Ekip, hıza yetişmek için IBM'in her şeyi kendi içinde üretme geleneğini bir kenara bıraktı." },
+        { text: "Ekip, işlemciyi Intel'den, işletim sistemini ise henüz küçük bir şirket olan Microsoft'tan satın almaya karar verdi — bu, dışarıdan hazır parça kullanma konusunda IBM için alışılmadık bir yaklaşımdı. Bu karar, farkında olmadan bilgisayar endüstrisinin gelecekteki yapısını da şekillendirdi." },
+        { text: "12 Ağustos 1981'de IBM Personal Computer (Model 5150) piyasaya sürüldü. IBM'in güvenilir marka adı, kurumsal müşterilerin kişisel bilgisayarlara olan güvenini bir gecede artırdı — daha önce 'oyuncak' olarak görülen bu makineler artık ciddi bir iş aracı sayılmaya başladı." },
+        { text: "IBM'in açık mimarisi, başka şirketlerin uyumlu ('PC uyumlu') bilgisayarlar üretmesine izin verdi — bu, kısa sürede standart bir ekosistem yarattı. Bir kurumsal devin, küçük ve çevik bir ekiple aldığı hızlı karar, kişisel bilgisayarı dünya çapında bir standart haline getirdi." }
+      ]
+    },
+    {
+      id: "nes-1985",
+      year: "1983 – 1985",
+      place: "Kyoto (Kiyoto), Japonya — New York (Nu York), ABD",
+      title: "Çöken Bir Sektörü Kurtaran Kırmızı-Beyaz Kutu",
+      teaser: "Video oyunları 1983'te 'öldü' sanılıyordu. Bir Japon şirketi, sektörü yeniden diriltti.",
+      cover: WM('Nintendo_Entertainment_System_NES_(1985)_1.jpg'),
+      beats: [
+        { text: "1983'te Amerikan video oyunu pazarı büyük bir çöküş yaşadı — düşük kaliteli oyunların piyasayı doldurması, tüketici güvenini tamamen sarstı. Mağazalar oyun konsollarını raflardan kaldırdı; sektör uzmanları video oyunlarının geçici bir merak olduğunu, çağının kapandığını düşünüyordu." },
+        { text: "Japonya'da bu çöküşten nispeten etkilenmeyen Nintendo, ülkesinde başarılı olan Family Computer (Famicom) konsolunu Amerika pazarına taşımayı planlıyordu. Ama Amerikalı satıcılar, 'video oyunu' kelimesini duyar duymaz ilgilenmeyi reddediyordu." },
+        { text: "Nintendo, akıllı bir pazarlama stratejisi izledi: konsolu bir 'oyuncak' olarak değil, gri renkli, VCR benzeri bir 'eğlence sistemi' olarak sundu; ismini bile 'Nintendo Entertainment System' (NES) koydu, 'video oyunu' ifadesinden bilinçli olarak kaçındı." },
+        { text: "1985'te NES, önce sınırlı bir test pazarı olarak New York'ta satışa sunuldu; ekibiyle birlikte gelen 'Super Mario Bros.' oyunu, hem teknik hem tasarım açısından o güne kadar görülmemiş bir kaliteydi." },
+        { text: "NES, kısa sürede tüm ülkeye yayıldı ve video oyunu sektörünü neredeyse tek başına yeniden canlandırdı. Süper Mario, Zelda gibi oyunlar sonraki nesillerin çocukluğunu şekillendirdi — 'ölü' ilan edilen bir sektör, kırmızı-beyaz bir kutu ve bıyıklı bir tesisatçı sayesinde yeniden doğdu." }
+      ]
+    },
+    {
+      id: "tetris-1984",
+      year: "1984 – 1989",
+      place: "Moskova, Sovyetler Birliği",
+      title: "Demir Perdenin Ardından Çıkan Bulmaca",
+      teaser: "Devlet dairesinde çalışan bir programcı, boş vaktinde dünyanın en bağımlılık yapan oyununu yazdı.",
+      cover: WM('Alexey_Pajitnov_-_2575833305_(crop).jpg'),
+      beats: [
+        { text: "1984'te Moskova'da, Sovyet Bilimler Akademisi'ne bağlı bir araştırma merkezinde çalışan bilgisayar mühendisi Aleksey Pajitnov, boş zamanlarında basit bulmaca oyunları yazmayı seviyordu. Elindeki bilgisayar oldukça ilkeldi — grafikleri sadece metin karakterleriyle oluşturabiliyordu." },
+        { text: "Pajitnov, çocukluğunda oynadığı bir masa oyunundan (pentomino) ilham alarak, farklı şekillerdeki dört bloklu parçaların ekrandan aşağı düştüğü, oyuncunun bu parçaları döndürüp yerleştirerek sıra tamamladığı bir oyun tasarladı. Oyuna Yunanca 'dört' anlamına gelen 'tetra' ile sevdiği tenis sporunu birleştirip 'Tetris' adını verdi." },
+        { text: "Oyun, Sovyet bilgisayar meraklıları arasında elden ele, disketten diskete yayıldı — resmi bir dağıtım kanalı bile yoktu. Demir Perde'nin ardından, hükümetin bilgisi dışında büyüyen bu 'yeraltı' popülerlik, sonunda batılı yazılım şirketlerinin dikkatini çekti." },
+        { text: "Tetris'in haklarını almak, dönemin Soğuk Savaş bürokrasisi yüzünden inanılmaz karmaşık müzakereler gerektirdi — birden fazla şirket aynı anda hakları aldığını iddia ediyordu. Sonunda haklar resmi Sovyet dış ticaret kurumu üzerinden netleşti." },
+        { text: "1989'da Nintendo, Tetris'i yeni taşınabilir konsolu Game Boy ile birlikte paketleyince oyun küresel bir fenomene dönüştü. Pajitnov, oyunun devasa küresel başarısından yıllarca doğrudan kazanç sağlayamadı — Sovyetler Birliği dağılana kadar telif hakları devlete aitti. Yine de basit bir bulmaca, dünyanın en çok oynanan video oyunlarından biri olarak tarihe geçti." }
+      ]
+    },
+    {
+      id: "titanic-wreck",
+      year: "1985",
+      place: "Newfoundland açıkları, Kuzey Atlantik",
+      title: "73 Yıllık Bir Sırrın Çözüldüğü Gece",
+      teaser: "Onlarca ekip aradı, bulamadı. Gizli bir askeri görev, sonunda efsanevi enkazı ortaya çıkardı.",
+      cover: WM('RMS_Titanic_3.jpg'),
+      beats: [
+        { text: "1912'de batan Titanic'in enkazı, yaklaşık 3.800 metre derinlikte, onlarca yıl boyunca bulunamadı. Teknoloji yetersizdi ve okyanusun o derinliği, neredeyse erişilemez kabul ediliyordu. Birçok kaşif denemiş, hiçbiri başaramamıştı." },
+        { text: "Oşinograf Robert Ballard, yıllardır enkazı arıyordu ama projesini finanse edecek kimseyi bulamıyordu. 1982'de ABD Donanması'na başvurdu; Donanma, tuhaf bir teklifle karşılık verdi — parayı verirlerdi, ama karşılığında Ballard'ın gizlice iki batık nükleer denizaltıyı (Thresher ve Scorpion) bulması gerekiyordu. Görev, dünyaya 'Titanic'i arıyorum' denilerek gizlenecekti." },
+        { text: "Ballard, denizaltıların enkaz alanlarını incelerken önemli bir şey fark etti: büyük gemi enkazları battıklarında uzun bir moloz izi bırakıyordu. Titanic'i doğrudan aramak yerine, bu moloz izini takip etmeye karar verdi — bu, arama stratejisini kökten değiştiren bir içgörüydü." },
+        { text: "1 Eylül 1985'te, gece yarısına yakın bir saatte, ekibin uzaktan kumandalı kamerası karanlık suların içinde metal bir yapı gördü: Titanic'in devasa kazanlarından biri. Kısa süre sonra geminin baş kısmı ortaya çıktı — 73 yıllık sır nihayet çözülmüştü." },
+        { text: "Keşif dünya çapında manşetlere taşındı; Titanic'in hikâyesi yeni bir kuşağa yeniden anlatıldı. Ballard'ın gizli askeri görevle başlayan sabırlı arayışı, hem denizaltı teknolojisinin hem de tarihe olan ilginin sınırlarını genişletti." }
+      ]
+    },
+    {
+      id: "berlin-wall-fall",
+      year: "1961 – 1989",
+      place: "Berlin, Almanya",
+      title: "Bir Gecede Yıkılan Beton Sınır",
+      teaser: "28 yıl boyunca bir şehri ikiye böldü. Bir basın açıklamasındaki yanlış anlaşılma, onu bir gecede düşürdü.",
+      cover: WM('Fall_of_the_Berlin_Wall_1989,_people_walking.jpg'),
+      beats: [
+        { text: "1961'de Doğu Almanya, Berlin'i ikiye bölen bir duvar inşa etti — amacı, Doğu Almanya'dan Batı'ya kaçışları durdurmaktı. Sonraki 28 yıl boyunca bu duvar, sadece bir şehri değil, aileleri, arkadaşlıkları ve bir milletin kaderini ikiye böldü. Duvarı aşmaya çalışırken yüzlerce kişi hayatını kaybetti." },
+        { text: "1989'un sonbaharında, Sovyetler Birliği'nde esen değişim rüzgârları ve Doğu Avrupa'da büyüyen halk hareketleri, Doğu Almanya hükümetini de baskı altına aldı. Macaristan sınırının açılmasıyla binlerce Doğu Almanyalı, dolaylı yollardan Batı'ya kaçmaya başlamıştı." },
+        { text: "9 Kasım 1989 akşamı, Doğu Alman yetkilisi Günter Schabowski, yeni bir seyahat düzenlemesini duyuran bir basın toplantısı yaptı. Bir gazetecinin 'ne zaman yürürlüğe girecek' sorusuna, notlarını tam okuyamadığı için kafası karışık bir şekilde 'hemen, gecikmeden' cevabını verdi — oysa bu, plansız bir hataydı." },
+        { text: "Bu açıklama televizyonda yayınlanır yayınlanmaz, binlerce Doğu Berlinli sınır kapılarına akın etti. Şaşkına dönen sınır muhafızları, üstlerinden net bir talimat alamayınca, kontrolü kaybedip kapıları açmak zorunda kaldı." },
+        { text: "O gece, iki yakadan gelen kalabalıklar duvarın üzerine tırmandı, kucaklaştı, ağladı; bazıları kazma ve çekiçlerle duvardan parçalar söktü. 28 yıl süren bölünme, resmi bir kararla değil, bir basın toplantısındaki küçük bir yanlış anlaşılmayla, bir gecede sona erdi — bu an, Soğuk Savaş'ın sembolik olarak bittiği tarih olarak kabul edilir." }
+      ]
+    },
+    {
+      id: "world-wide-web",
+      year: "1989 – 1991",
+      place: "CERN, Cenevre (Cenevre), İsviçre",
+      title: "Bir Öneri Yazısıyla Başlayan Ağ",
+      teaser: "Patronu bu fikri 'bulanık ama heyecan verici' bulmuştu. O bulanıklık, dünyayı birbirine bağladı.",
+      cover: WM('First_Web_Server.jpg'),
+      beats: [
+        { text: "1989'da CERN'de (Avrupa Nükleer Araştırma Merkezi) çalışan İngiliz bilgisayar bilimci Tim Berners-Lee, bir sorunla boğuşuyordu: dünyanın dört bir yanından gelen binlerce araştırmacı, farklı bilgisayar sistemlerinde tuttukları bilgileri birbirleriyle kolayca paylaşamıyordu." },
+        { text: "Mart 1989'da Berners-Lee, 'Bilgi Yönetimi: Bir Öneri' başlıklı bir belge yazdı — belgelerin birbirine 'bağlantı' (hyperlink) ile atıfta bulunabileceği, merkezi olmayan bir bilgi sistemi öneriyordu. Patronu Mike Sendall, öneriyi 'bulanık ama heyecan verici' diye tanımlayıp devam etmesi için onay verdi." },
+        { text: "Berners-Lee, tek başına üç temel teknolojiyi geliştirdi: web sayfalarını biçimlendiren HTML dili, sayfaları taşıyan HTTP protokolü, ve her sayfaya benzersiz bir adres veren URL sistemi. Aynı zamanda ilk web tarayıcısını ve ilk web sunucusunu da kendi NeXT bilgisayarında kurdu." },
+        { text: "1990'ın sonunda dünyanın ilk web sitesi yayına girdi — CERN içindeki araştırmacılar arasında, hâlâ küçük ve deneysel bir araçtı. Berners-Lee, bu teknolojiyi hiçbir patent almadan, tamamen ücretsiz ve açık bir şekilde herkesin kullanımına sundu." },
+        { text: "1991'de World Wide Web halka açıldığında, kimse bunun birkaç yıl içinde küresel bir iletişim, ticaret ve bilgi altyapısına dönüşeceğini tahmin edemezdi. Bir araştırmacının 'bulanık ama heyecan verici' bulunan önerisi, insanlık tarihinin en hızlı yayılan icatlarından birine dönüştü." }
+      ]
+    }
+  ]
+};
+
+DATA["1980ler"].stories.push({
+  id: "compact-disc",
+  year: "1979 – 1982",
+  place: "Eindhoven, Hollanda — Tokyo, Japonya",
+  title: "Bir Senfoniye Sığdırılan Yeni Bir Ses",
+  teaser: "İki rakip şirket, tek bir standartta anlaşınca müzik dinleme biçimi kökten değişti.",
+  cover: WM('CDP101a.jpg'),
+  beats: [
+    { text: "1970'lerin sonunda plak ve kaset teknolojisi, dönemin en gelişmiş ses kayıt yöntemleriydi ama ikisi de zamanla aşınıyor, hışırtı ve parazit biriktiriyordu. Hollandalı Philips ve Japon Sony şirketleri, sesi dijital olarak, ışıkla okunan bir diskte saklama fikri üzerinde ayrı ayrı çalışıyordu." },
+    { text: "1979'da iki rakip şirket, birbirine uyumsuz iki farklı format yerine ortak bir standart geliştirmek için güçlerini birleştirmeye karar verdi — bu, dönemin teknoloji sektöründe alışılmadık bir iş birliğiydi. Philips üretim sürecini, Sony ise hata düzeltme sistemini katkı olarak sundu." },
+    { text: "Diskin boyutu üzerine bile ilginç bir anlaşmazlık yaşandı; Sony'nin başkan yardımcısı Norio Ohga, diskin Beethoven'ın 9. Senfonisi'nin tamamını (yaklaşık 74 dakika) tek kesintisiz parça olarak barındırabilecek büyüklükte olması gerektiğinde ısrar etti — bugünkü standart CD boyutu, kısmen bu müzikal isteğe dayanıyor." },
+    { text: "1 Ekim 1982'de Sony, dünyanın ilk ticari CD çalarını (CDP-101) Japonya'da satışa çıkardı. Cihaz oldukça pahalıydı, ama sunduğu ses kalitesi — hışırtısız, aşınmayan, kristal netliğinde — dinleyicileri şaşırttı." },
+    { text: "CD, ilk yıllarda yüksek fiyatı yüzünden yavaş yayıldı, ama 1980'lerin ikinci yarısında hızla plak ve kaseti geride bıraktı. İki rakip şirketin bir arada çalışma kararı, sadece bir ürün değil, sonraki yirmi yılın müzik dinleme kültürünü baştan yazan bir standart yarattı." }
+  ]
+});
+
+DATA["1980ler"].stories.push({
+  id: "cnn-1980",
+  year: "1980",
+  place: "Atlanta, Georgia, ABD",
+  title: "Kimsenin İnanmadığı '7/24 Haber' Fikri",
+  teaser: "Rakipleri ona 'Tavuk Çorbası Ağı' diye alay etti. O, haberciliği sonsuza dek değiştirdi.",
+  cover: WM('Ted_Turner_LF.JPG'),
+  beats: [
+    { text: "1980'e kadar televizyon haberleri, günde sadece birkaç kez, belirli saatlerde yayınlanan yarım saatlik bültenlerden ibaretti. İşadamı Ted Turner'ın aklında farklı bir fikir vardı: haberleri günün 24 saati, kesintisiz yayınlayan bir kanal kurmak." },
+    { text: "Sektördeki neredeyse herkes bu fikri delilik olarak gördü — kim, ne zaman izlerse izlesin sürekli haber izlemek isterdi ki? Turner'ın yeni kanalı finansal çevrelerde alaycı bir lakap kazandı: 'Chicken Noodle Network' (Tavuk Çorbası Ağı), başarısız olacağı düşünülen bir girişime gönderme yaparak." },
+    { text: "1 Haziran 1980'de CNN (Cable News Network) yayına başladığında, sadece 1,7 milyon hanede izlenebiliyordu — kanalın giderlerini karşılamak için gereken asgari sayının bile altındaydı. Turner, ayda yaklaşık 2 milyon dolar zarar ediyordu." },
+    { text: "Turner, açılış konuşmasında kanalın reklam baskısına boyun eğmeyeceğini ve dünya sona erene kadar yayında kalacağını söyledi — bu iddialı sözü kanıtlamak için stüdyoda bir 'kıyamet günü' kaydı bile hazırlattı, sadece dünyanın sonu gelirse yayınlanmak üzere." },
+    { text: "Sonraki yıllarda kablolu televizyonun yaygınlaşmasıyla CNN'in izleyici sayısı milyonlara ulaştı; 1991 Körfez Savaşı gibi olayları canlı yayınlayarak dünya çapında bir haber gücüne dönüştü. Alay konusu olan bir fikir, haberciliğin artık 'olay olduğu anda' aktarılması gerektiği beklentisini yarattı — bugünün 7/24 haber kültürünün başlangıç noktası oldu." }
+  ]
+});
+
+DATA["1980ler"].stories.push({
+  id: "live-aid-1985",
+  year: "1985",
+  place: "Londra (Londra) — Philadelphia (Filadelfia)",
+  title: "Bir Şarkının Başlattığı Küresel Bağış Günü",
+  teaser: "Bir televizyon haberindeki açlık görüntüleri, bir şarkıcıyı dünyanın en büyük konserini düzenlemeye itti.",
+  cover: WM('Old_Wembley_Stadium_(external_view).jpg'),
+  beats: [
+    { text: "1984'te İrlandalı şarkıcı Bob Geldof, televizyonda Etiyopya'daki kıtlığı anlatan bir haber izledi — görüntüler o kadar sarsıcıydı ki hemen harekete geçmeye karar verdi. Müzisyen arkadaşlarını bir araya toplayıp 'Do They Know It's Christmas?' adlı bir yardım şarkısı kaydetti; şarkı beklenmedik bir hızla satış rekorları kırdı." },
+    { text: "Bu başarıdan cesaret alan Geldof, çok daha büyük bir hedefe yöneldi: aynı anda iki kıtada, canlı yayınla dünyanın izleyeceği devasa bir hayır konseri düzenlemek. Fikir, o güne kadar denenmemiş bir lojistik zorluk demekti." },
+    { text: "13 Temmuz 1985'te, Londra'daki Wembley Stadyumu ve Philadelphia'daki JFK Stadyumu'nda eşzamanlı olarak 'Live Aid' konseri düzenlendi. Queen, David Bowie, U2, Elton John gibi dönemin en büyük isimleri sahne aldı." },
+    { text: "Uydu bağlantısıyla dünya çapında yaklaşık 1,5-1,9 milyar kişiye ulaşan yayın, o güne kadarki en büyük televizyon etkinliklerinden biri oldu. Freddie Mercury liderliğindeki Queen'in Wembley'deki performansı, sonradan 'rock tarihinin en iyi canlı performansı' olarak anıldı." },
+    { text: "Konser, Etiyopya kıtlığı için yaklaşık 100-150 milyon dolar topladı ve hayır konseri kavramını kökten değiştirdi. Bir televizyon haberinin yarattığı vicdani rahatsızlık, müziğin küresel dayanışma için nasıl bir araç olabileceğinin en çarpıcı örneklerinden birine dönüştü." }
+  ]
+});
+
+DATA["1980ler"].stories.push({
+  id: "voyager-neptune",
+  year: "1977 – 1989",
+  place: "Neptün, Güneş Sistemi'nin dış sınırları",
+  title: "On İki Yıllık Bir Yolculuğun Son Durağı",
+  teaser: "Bir uzay aracı, güneş sisteminin en uzak devine ulaşmak için on iki yıl yol aldı.",
+  cover: WM('Neptune_Full.jpg'),
+  beats: [
+    { text: "1977'de NASA, iki ikiz uzay aracı fırlattı: Voyager 1 ve Voyager 2. Bu görevin arkasında nadir bir fırsat vardı — gezegenlerin o dönemde birbirine göre özel bir dizilimi, tek bir aracın art arda Jüpiter, Satürn, Uranüs ve Neptün'ü ziyaret etmesine izin veriyordu; bu dizilim 175 yılda bir gerçekleşiyordu." },
+    { text: "Voyager 2, sırasıyla Jüpiter (1979), Satürn (1981) ve Uranüs'ü (1986) ziyaret ederek yoluna devam etti. Her karşılaşma, o gezegenler hakkında bilinen her şeyi kökten değiştiren yeni keşifler getiriyordu." },
+    { text: "12 yıllık yolculuğun ardından, 25 Ağustos 1989'da Voyager 2, Neptün'e sadece 4.950 kilometre mesafeden geçti — bir insan yapımı aracın bu uzak gezegene bu kadar yaklaştığı ilk ve bugüne kadar tek sefer. Sinyalin Dünya'ya ulaşması yaklaşık dört saat sürüyordu." },
+    { text: "Voyager 2, Neptün'ün fırtınalı atmosferindeki devasa 'Büyük Karanlık Leke' fırtınasını, halkalarını ve en büyük uydusu Triton'un buzlu, volkanik yüzeyini ilk kez yakından görüntüledi. Bu görüntüler, gezegenin o güne kadarki tüm bilgisini birkaç gün içinde güncelledi." },
+    { text: "Neptün karşılaşmasıyla Voyager'ın 'Büyük Tur' görevi tamamlanmış oldu. Uzay aracı hâlâ, güneş sisteminin sınırlarının ötesinde, yıldızlararası uzayda yol almaya devam ediyor — on iki yıl önce başlayan bir yolculuğun mirası, bugün hâlâ evrenin derinliklerine doğru ilerliyor." }
+  ]
+});
+
+let currentDecade = null;
+let randomQueue = null;
+
+function shuffleArray(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function initRandomQueue(){
+  const all = [];
+  Object.keys(DATA).forEach(key=>{
+    const d = DATA[key];
+    if(!d) return;
+    d.stories.forEach(s=> all.push({decadeKey:key, id:s.id}));
+  });
+  randomQueue = shuffleArray(all);
+}
+
+function openRandomStory(){
+  if(!randomQueue || randomQueue.length === 0) initRandomQueue();
+  const next = randomQueue.shift();
+  randomQueue.push(next);
+  openStory(next.decadeKey, next.id);
+}
+
+function handleSearch(query){
+  const grid = document.getElementById('decadeGrid');
+  const randomBtn = document.getElementById('randomBtnHome');
+  const results = document.getElementById('searchResults');
+  const q = query.trim().toLocaleLowerCase('tr');
+
+  if(q.length === 0){
+    results.style.display = 'none';
+    results.innerHTML = '';
+    grid.style.display = '';
+    randomBtn.style.display = '';
+    return;
+  }
+
+  grid.style.display = 'none';
+  randomBtn.style.display = 'none';
+  results.style.display = 'block';
+
+  const matches = [];
+  Object.keys(DATA).forEach(key=>{
+    const d = DATA[key];
+    if(!d) return;
+    d.stories.forEach(s=>{
+      const haystack = [s.title, s.teaser, s.year, s.place, d.title].join(' ').toLocaleLowerCase('tr');
+      if(haystack.includes(q)){
+        matches.push({decadeKey:key, decade:d, story:s});
+      }
+    });
+  });
+
+  results.innerHTML = '';
+  const countEl = document.createElement('div');
+  countEl.className = 'search-result-count';
+  countEl.textContent = matches.length + ' sonuç bulundu';
+  results.appendChild(countEl);
+
+  if(matches.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'search-no-results';
+    empty.textContent = 'Eşleşen bir hikaye bulunamadı.';
+    results.appendChild(empty);
+    return;
+  }
+
+  matches.forEach((m,i)=>{
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    card.style.maxWidth = '520px';
+    card.style.margin = '0 auto 14px';
+    card.style.animationDelay = (i * 0.04) + 's';
+    card.onclick = ()=>openStory(m.decadeKey, m.story.id);
+    card.innerHTML = `<img src="${m.story.cover}" alt="">
+      <div class="story-card-body">
+        <div class="story-year">${m.decade.title} · ${m.story.year}</div>
+        <div class="story-title">${m.story.title}</div>
+        <div class="story-teaser">${m.story.teaser}</div>
+      </div>`;
+    results.appendChild(card);
+  });
+}
+
+function renderHome(){
+  const grid = document.getElementById('decadeGrid');
+  grid.innerHTML = '';
+  let i = 0;
+  Object.keys(DATA).forEach(key=>{
+    const d = DATA[key];
+    if(!d) return;
+    const card = document.createElement('div');
+    card.className = d.isAnalysis ? 'decade-card analysis-card' : 'decade-card';
+    card.style.animationDelay = (i * 0.08) + 's';
+    i++;
+    card.onclick=()=>showCategory(key);
+    const label = d.isAnalysis ? 'Güncel Analiz' : 'Dönem';
+    card.innerHTML = `<div class="decade-glow"></div>
+      <div class="decade-label">${label}</div>
+      <div class="decade-title">${d.title}</div>
+      <div class="decade-count">${d.stories.length} ${d.isAnalysis ? 'rapor' : 'hikâye'} — ${d.subtitle}</div>
+      <div class="decade-arrow">→</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function showHome(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  const si = document.getElementById('searchInput');
+  if(si) si.value = '';
+  handleSearch('');
+  window.scrollTo(0,0);
+}
+
+function showCategory(key){
+  currentDecade = key;
+  const d = DATA[key];
+  document.getElementById('catLabel').textContent = 'Dönem';
+  document.getElementById('catTitle').textContent = d.title;
+  const list = document.getElementById('storyList');
+  list.innerHTML = '';
+  d.stories.forEach((s,i)=>{
+    const card = document.createElement('div');
+    card.className='story-card';
+    card.style.animationDelay = (i * 0.06) + 's';
+    card.onclick=()=>openStory(key, s.id);
+    card.innerHTML = `<img src="${s.cover}" alt="">
+      <div class="story-card-body">
+        <div class="story-year">${s.year} · ${s.place}</div>
+        <div class="story-title">${s.title}</div>
+        <div class="story-teaser">${s.teaser}</div>
+      </div>`;
+    list.appendChild(card);
+  });
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('category').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function openStory(decadeKey, storyId){
+  currentDecade = decadeKey;
+  const d = DATA[decadeKey];
+  const s = d.stories.find(x=>x.id===storyId);
+  document.getElementById('readerHeroImg').src = s.cover;
+  document.getElementById('readerHeroImg').onclick = ()=>openLightbox(s.cover);
+  document.getElementById('readerDecade').textContent = `${d.title} · ${s.year}`;
+  document.getElementById('readerTitle').textContent = s.title;
+  document.getElementById('readerMeta').textContent = s.place;
+
+  const article = document.getElementById('readerArticle');
+  article.innerHTML='';
+  s.beats.forEach(b=>{
+    const p = document.createElement('p');
+    p.textContent = b.text;
+    article.appendChild(p);
+    if(b.image){
+      const wrap = document.createElement('div');
+      wrap.className='beat-image';
+      wrap.innerHTML = `<img src="${b.image}" alt="" onclick="openLightbox('${b.image}')"><div class="beat-caption">${b.caption||''}</div>`;
+      article.appendChild(wrap);
+    }
+    if(b.analogy){
+      const abox = document.createElement('div');
+      abox.className='analogy-box';
+      abox.innerHTML = `<div class="analogy-icon">💡</div><div class="analogy-text">${b.analogy}</div>`;
+      article.appendChild(abox);
+    }
+  });
+  const end = document.createElement('div');
+  end.className='end-mark';
+  end.innerHTML = `<div class="reel-divider"></div><span>SON</span>
+    <button class="random-btn end-random-btn" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>`;
+  article.appendChild(end);
+
+  if(s.today){
+    const todaySec = document.createElement('div');
+    todaySec.className='today-section';
+    todaySec.innerHTML = `<div class="today-label">Burası Bugün</div>
+      <div class="today-frame"><img src="${s.today.image}" alt="" onclick="openLightbox('${s.today.image}')" style="cursor:zoom-in;"></div>
+      <div class="today-caption">${s.today.caption||''}</div>`;
+    article.appendChild(todaySec);
+  }
+
+  if(s.sources && s.sources.length){
+    const srcSec = document.createElement('div');
+    srcSec.className='sources-section';
+    srcSec.innerHTML = `<div class="today-label">Kaynaklar</div>` +
+      s.sources.map(src => `<div class="source-item">${src}</div>`).join('');
+    article.appendChild(srcSec);
+  }
+
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('reader').classList.add('active');
+  window.scrollTo(0,0);
+
+  observeBeats();
+}
+
+function openLightbox(src){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(e){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightboxImg').src = '';
+}
+
+function observeBeats(){
+  const els = document.querySelectorAll('.beat-image');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in-view'); }
+    });
+  }, {threshold:0.15});
+  els.forEach(el=>obs.observe(el));
+
+  const paras = document.querySelectorAll('.article p');
+  const pObs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in-view'); }
+    });
+  }, {threshold:0.2});
+  paras.forEach(p=>pObs.observe(p));
+}
+
+window.addEventListener('scroll', ()=>{
+  const bar = document.getElementById('progressBar');
+  if(!document.getElementById('reader').classList.contains('active')){
+    bar.style.width = '0%';
+    return;
+  }
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  bar.style.width = Math.min(pct, 100) + '%';
+});
+
+renderHome();
+setTimeout(()=>{ const c = document.getElementById('curtain'); if(c) c.style.display='none'; }, 1600);
+</script>
 </body>
 </html>
