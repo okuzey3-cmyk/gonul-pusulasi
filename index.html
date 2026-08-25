@@ -65,7 +65,7 @@
   /* ---------- OKUMA MODU ---------- */
   #reader{min-height:100vh;}
   .reader-hero{position:relative; height:78vh; min-height:460px; overflow:hidden;}
-  .reader-hero img{width:100%; height:100%; object-fit:cover; filter:sepia(25%) contrast(1.05) brightness(.85);}
+  .reader-hero img{width:100%; height:100%; object-fit:cover; filter:sepia(25%) contrast(1.05) brightness(.85); cursor:zoom-in;}
   .reader-hero::after{content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(21,16,12,0.15) 0%, rgba(21,16,12,0.55) 55%, var(--film-black) 100%);}
   .hero-text{position:absolute; bottom:34px; left:0; right:0; padding:0 22px; z-index:2;}
   .hero-text .decade-label{color:var(--gold); font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.2em;}
@@ -80,6 +80,14 @@
   .beat-image img{width:100%; display:block; filter:sepia(30%) contrast(1.05);}
   .beat-caption{font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; padding:10px 22px 0; letter-spacing:.03em;}
   .beat-image.full-bleed img{max-height:70vh; object-fit:cover;}
+  .beat-image img{cursor:zoom-in;}
+
+  /* ---------- LIGHTBOX (fotoğraf büyütme) ---------- */
+  #lightbox{position:fixed; inset:0; z-index:1000; background:rgba(10,7,5,0.96); display:none; align-items:center; justify-content:center; touch-action:pinch-zoom pan-x pan-y; overflow:auto;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%; width:auto; height:auto; margin:auto; display:block; touch-action:pinch-zoom;}
+  #lightbox .lb-close{position:fixed; top:16px; right:16px; z-index:1001; width:40px; height:40px; border:1px solid var(--gold); background:rgba(21,16,12,0.85); color:var(--gold); font-size:20px; line-height:1; cursor:pointer;}
+  #lightbox .lb-hint{position:fixed; bottom:18px; left:0; right:0; text-align:center; font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; letter-spacing:.1em; pointer-events:none;}
 
   .end-mark{text-align:center; padding:40px 0 10px;}
   .end-mark .reel-divider{margin:0 auto 16px;}
@@ -122,6 +130,13 @@
     </div>
   </div>
   <div class="article" id="readerArticle"></div>
+</div>
+
+<!-- FOTOĞRAF BÜYÜTME (LIGHTBOX) -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox(event)">✕</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-hint">Kapatmak için dışına dokun</div>
 </div>
 
 <script>
@@ -260,6 +275,46 @@ DATA["1930lar"].stories.push({
   ]
 });
 
+DATA["1930lar"].stories.push({
+  id: "sydney-harbour-bridge",
+  year: "1923 – 1932",
+  place: "Sydney, Avustralya",
+  title: "Askıya Alınan Şehir",
+  teaser: "Sekiz yıl, altı milyon perçin ve bir milletin gökyüzüne bakışını değiştiren bir kemer.",
+  cover: WM('Tram_tracks_on_the_Sydney_Harbour_Bridge,_1931-1932_(7560232492).jpg'),
+  beats: [
+    { text: "1920'lerin başında Sydney'de körfezin iki yakası arasında ulaşım hâlâ feribotlara bağlıydı. Mühendis John Bradfield, yıllardır savunduğu bir fikri sonunda hayata geçirme fırsatı buldu: dünyanın en geniş çelik kemer köprüsünü inşa etmek. 1923'te İngiliz firması Dorman Long ile sözleşme imzalandı." },
+    { text: "İnşaat sekiz yıl sürdü. İki yakadan başlayan devasa çelik kollar, aylarca havada birbirine doğru uzatıldı — aralarında hâlâ metrelerce boşluk varken, işçiler bu yarım kemerlerin üzerinde çalışmaya devam etti. Tek bir hesap hatası, bütün projeyi felakete çevirebilirdi." },
+    { text: "Yaklaşık 1.400 işçi, günün büyük bölümünü yerden 130 metre yükseklikte geçirdi. Altı milyon perçin elle çakıldı; 52.800 ton çelik kullanıldı. Büyük Buhran'ın en şiddetli yıllarında bu proje, Sydney için nadir bir istihdam kaynağıydı.",
+      image: WM('The_roadway_and_pylons_of_the_Harbour_Bridge,_1932_(8282692485).jpg'),
+      caption: "Köprünün yol kaplaması ve kuleleri, 1932" },
+    { text: "1930'da iki kemer kolu nihayet ortada birleştiğinde, mühendisler bir milimetrelik dahi sapma olmadığını gördüler — dönemin mühendislik camiasında hâlâ anlatılan bir hassasiyet başarısıydı." },
+    { text: "19 Mart 1932'de köprü resmî olarak açıldığında, binlerce Sydney'li yürüyerek geçmek için sıraya girdi. Yerel halk köprüye kısa sürede bir takma ad taktı: 'The Coathanger' — Askı. Bugün hâlâ şehrin en tanınan simgesi, sekiz yıllık inatçı bir mühendislik hikâyesinin somut hâli.",
+      image: WM('Two_women_and_a_child_on_the_walkway_of_the_Sydney_Harbour_Bridge,_1932_(8283753516).jpg'),
+      caption: "Açılış günlerinde köprünün yürüyüş yolunda bir aile, 1932" }
+  ]
+});
+
+DATA["1930lar"].stories.push({
+  id: "jesse-owens",
+  year: "1936",
+  place: "Berlin, Almanya",
+  title: "Stadyumu Susturan Dört Altın",
+  teaser: "Bir rejim üstünlüğünü kanıtlamak istedi. Bir sporcu, tarihe bambaşka bir ders yazdı.",
+  cover: WM('Jesse_Owens_1936.jpg'),
+  beats: [
+    { text: "1936 yazında Berlin, Nazi Almanyası'nın gövde gösterisi için hazırlanmıştı. Adolf Hitler ve rejimi, olimpiyatları 'Aryan ırkının üstünlüğünü' dünyaya ispatlamak için bir sahne olarak görüyordu. Stadyumun locasında, kendi sporcularının zaferini izlemeye hazırlanıyordu." },
+    { text: "Ohio'lu bir işçi ailesinin oğlu olan Jesse Owens, o yaz oyunlara farklı bir hikâyeyle geldi. Daha üniversite yıllarında, tek bir öğleden sonrada üç dünya rekoru kırıp bir de dünya rekoruna eşitlenmişti — atletizm tarihinin en olağanüstü günlerinden biri olarak anılır." },
+    { text: "Berlin'de dört gün içinde dört altın madalya kazandı: 100 metre, 200 metre, uzun atlama ve 4x100 bayrak. Her yarışta stadyumu dolduran 100 binden fazla seyirci, ırkçı propagandanın iddia ettiğinin tam tersini gözleriyle gördü.",
+      image: WM('Bundesarchiv_Bild_183-R96374,_Berlin,_Olympiade,_Jesse_Owens_beim_Weitsprung.jpg'),
+      caption: "Owens, uzun atlama finalinde — Bundesarchiv, Ağustos 1936" },
+    { text: "Uzun atlama finalinde en unutulmaz an rakibiyle yaşandı: Alman atlet Luz Long, Owens'ın diskalifiye olma riskini fark edip ona teknik bir tavsiye verdi — bu tavsiye, Owens'ın altın madalyaya uzanmasına yardımcı oldu. İkili, yarışma bittikten sonra kol kola stadyumu terk etti; bu görüntü, dönemin propagandasına karşı sessiz bir cevap oldu.",
+      image: WM('Luz_Long_and_Jesse_Owens.png'),
+      caption: "Jesse Owens, rakibi Luz Long ile birlikte stadyumdan ayrılırken" },
+    { text: "Owens, Amerika'ya döndüğünde bile kendi ülkesinde ayrımcılıkla karşılaştı — Beyaz Saray'a davet edilmedi, otellerde ön kapıdan giremedi. Yine de Berlin'deki dört altın, on yıllar boyunca 'yeteneğin hiçbir ideolojiye boyun eğmediğinin' en güçlü kanıtlarından biri olarak hatırlandı." }
+  ]
+});
+
 let currentDecade = null;
 
 function renderHome(){
@@ -312,6 +367,7 @@ function openStory(decadeKey, storyId){
   const d = DATA[decadeKey];
   const s = d.stories.find(x=>x.id===storyId);
   document.getElementById('readerHeroImg').src = s.cover;
+  document.getElementById('readerHeroImg').onclick = ()=>openLightbox(s.cover);
   document.getElementById('readerDecade').textContent = `${d.title} · ${s.year}`;
   document.getElementById('readerTitle').textContent = s.title;
   document.getElementById('readerMeta').textContent = s.place;
@@ -325,7 +381,7 @@ function openStory(decadeKey, storyId){
     if(b.image){
       const wrap = document.createElement('div');
       wrap.className='beat-image';
-      wrap.innerHTML = `<img src="${b.image}" alt=""><div class="beat-caption">${b.caption||''}</div>`;
+      wrap.innerHTML = `<img src="${b.image}" alt="" onclick="openLightbox('${b.image}')"><div class="beat-caption">${b.caption||''}</div>`;
       article.appendChild(wrap);
     }
   });
@@ -339,6 +395,15 @@ function openStory(decadeKey, storyId){
   window.scrollTo(0,0);
 
   observeBeats();
+}
+
+function openLightbox(src){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(e){
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightboxImg').src = '';
 }
 
 function observeBeats(){
