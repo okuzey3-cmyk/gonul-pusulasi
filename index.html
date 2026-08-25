@@ -38,6 +38,11 @@
   .brand .sub{font-family:'Crimson Pro',serif; font-style:italic; color:#B7A88C; margin-top:6px; font-size:15px;}
   .reel-divider{width:60px; height:2px; background:var(--gold); margin:26px auto 34px; opacity:.6;}
 
+  .random-btn{display:block; margin:0 auto 34px; padding:14px 28px; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; transition:background .25s ease, color .25s ease;}
+  .random-btn:hover{background:var(--gold); color:var(--film-black);}
+
+  .progress-bar{position:fixed; top:0; left:0; height:3px; background:var(--gold); z-index:60; width:0%; transition:width .1s linear;}
+
   .decades{display:grid; grid-template-columns:1fr; gap:14px; max-width:520px; margin:0 auto;}
   .decade-card{position:relative; border:1px solid rgba(176,141,87,0.35); background:linear-gradient(160deg, rgba(176,141,87,0.08), transparent); padding:22px 20px; cursor:pointer; transition:transform .25s ease, border-color .25s ease;}
   .decade-card:active{transform:scale(0.98);}
@@ -96,6 +101,7 @@
 </head>
 <body>
 <div class="grain"></div>
+<div class="progress-bar" id="progressBar"></div>
 
 <!-- ANA EKRAN -->
 <div id="home" class="view active">
@@ -105,6 +111,7 @@
     <div class="sub">Gerçek olaylar, gerçek fotoğraflar — izler gibi oku</div>
   </div>
   <div class="reel-divider"></div>
+  <button class="random-btn" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>
   <div class="decades" id="decadeGrid"></div>
 </div>
 
@@ -678,7 +685,316 @@ DATA["1900ler"].stories.push({
   ]
 });
 
+DATA["1950ler"] = {
+  title: "1950'ler",
+  subtitle: "Savaşın ardından, imkânsızın yeniden tanımlandığı yıllar",
+  stories: [
+    {
+      id: "everest-1953",
+      year: "1953",
+      place: "Everest Dağı, Nepal-Tibet sınırı",
+      title: "Dünyanın Çatısına Çıkan İki Adam",
+      teaser: "Onlarca yıl kimse başaramamıştı. Bir arıcı ile bir dağ rehberi, dünyanın en yüksek noktasına adım attı.",
+      cover: WM('Edmund_Hillary,_c._1953,_autograph_removed.jpg'),
+      beats: [
+        { text: "1900'lerin ortasına gelindiğinde Everest, dünyanın en yüksek zirvesi olarak onlarca yıldır dağcıları kendine çekiyor ama hiçbirine zirveyi vermiyordu. 1920'lerden beri düzenlenen İngiliz seferlerinin çoğu, zirveye varamadan geri dönmüş, bazı tırmanıcılar hayatını kaybetmişti." },
+        { text: "1953'teki dokuzuncu İngiliz seferine, Yeni Zelandalı bir arıcı olan Edmund Hillary ve Nepal'li deneyimli dağ rehberi Tenzing Norgay katıldı. İkili, ekip içinde zirveye en yakın konumdaki tırmanış çiftiydi." },
+        { text: "28 Mayıs'ta, South Col'un üzerindeki yüksek bir kamptan yola çıktılar. Karla kaplı sırtlarda, iki yanında binlerce metrelik uçurumlarla ilerlediler; oksijen tüplerinin dondurucu soğukta çalışıp çalışmayacağından bile emin değillerdi." },
+        { text: "29 Mayıs 1953 sabahı saat 11:30'da, dünyanın en yüksek noktasına ilk kez insan ayağı bastı. Hillary daha sonra o anı şöyle anlattı: 'Biraz şaşkın, biraz da minnettardık.' Tenzing, zirvede Nepal, İngiltere, Birleşmiş Milletler ve Hindistan bayraklarını dalgalandırdı." },
+        { text: "Haber, Kraliçe II. Elizabeth'in taç giyme törenine denk gelen günlerde İngiltere'ye ulaştı ve büyük bir coşkuyla karşılandı. Hillary ve Tenzing, onlarca yıllık başarısız denemelerin ardından, insanlığın 'dünyanın çatısına' ulaşabileceğini kanıtladılar." }
+      ]
+    },
+    {
+      id: "disneyland-1955",
+      year: "1955",
+      place: "Anaheim, Kaliforniya, ABD",
+      title: "Bir Portakal Bahçesinde Kurulan Hayal",
+      teaser: "Herkes 'çocukça' dedi. Walt Disney, portakal bahçelerinin ortasında bir hayal ülkesi kurdu.",
+      cover: WM('Opening_Day_at_Disneyland.jpg'),
+      beats: [
+        { text: "1950'lerin başında Walt Disney, kızlarını gezdirdiği lunaparklardan hiç memnun değildi — kirli, bakımsız ve sadece çocuklara hitap eden yerlerdi. Aklında bambaşka bir fikir vardı: hem çocukların hem yetişkinlerin birlikte eğlenebileceği, tertemiz ve özenle kurgulanmış bir 'tema parkı'." },
+        { text: "Yatırımcıların çoğu bu fikri riskli buldu; Disney, projeyi finanse etmek için kendi hayat sigortasını bile ipotek ettirdi. Kaliforniya'da bir zamanlar portakal bahçesi olan 73 dönümlük bir arazi seçildi." },
+        { text: "İnşaat sadece bir yılda tamamlandı — ekipler günde neredeyse 24 saat çalıştı. Açılışa sadece birkaç saat kala boyalar hâlâ kuruyor, bazı çekim alanları henüz bitmemişti." },
+        { text: "17 Temmuz 1955'te park açıldığında beklenenin çok üzerinde, 28.000 kişi kapıya dayandı — çoğu sahte bilet ya da çitlerden atlayarak girmişti. Sıcaklık 38 dereceyi buluyordu, su tesisatı grev yüzünden yetersizdi; bazı kadınların topuklu ayakkabıları, henüz kurumamış asfalta saplandı." },
+        { text: "Gün, medyada 'Kara Pazar' olarak anıldı — ama felaket görünen bu açılış, kısa sürede dünyanın en çok ziyaret edilen eğlence parklarından birine dönüştü. Bir gazeteci Disney'e parkın ne zaman tamamlanacağını sorduğunda aldığı cevap ünlü oldu: 'Disneyland, dünyada hayal gücü kaldığı sürece asla tamamlanmayacak.'" }
+      ]
+    },
+    {
+      id: "sputnik-1957",
+      year: "1957",
+      place: "Baykonur Kozmodromu, Kazak SSC",
+      title: "Gökyüzündeki Küçük Bir Bip Sesi",
+      teaser: "Basketbol topu büyüklüğünde bir metal küre, dünyayı uzay çağına soktu.",
+      cover: WM('Sputnik_1.jpg'),
+      beats: [
+        { text: "1950'lerin ortasında ABD ve Sovyetler Birliği, kim önce uzaya bir uydu gönderecek diye sessiz bir yarış içindeydi. Çoğu Batılı bilim insanı, bu yarışı ABD'nin kazanacağını düşünüyordu." },
+        { text: "4 Ekim 1957'de Sovyet mühendisler, Kazakistan'daki Baykonur Kozmodromu'ndan bir R-7 roketiyle, parlak metal bir küre fırlattı: Sputnik 1. Çapı sadece 58 santimetre, ağırlığı 84 kilogramdı — üzerinde bilimsel bir alet bile yoktu, sadece basit bir radyo vericisi taşıyordu." },
+        { text: "Uydu, dünya çevresinde saatte 29.000 kilometre hızla dönerken, düzenli aralıklarla 'bip... bip...' sesleri yayınlıyordu. Bu basit sinyal, dünyanın dört bir yanındaki amatör radyocular tarafından yakalanıp dinlenebiliyordu." },
+        { text: "Haber ABD'de büyük bir şoka yol açtı — halk, gece gökyüzünde küçük bir ışık noktası olarak Sputnik'i izlemeye başladı. Bu 'Sputnik şoku', Amerikan hükümetini uzay ve bilim eğitimine devasa yatırımlar yapmaya itti; birkaç ay içinde NASA'nın kuruluşu hızlandı." },
+        { text: "Üç ay sonra Sputnik'in yörüngesi bozuldu ve atmosferde yanarak yok oldu — ama bıraktığı etki kalıcıydı. Basit bir metal küre ve bir bip sesi, insanlığı uzay çağının eşiğine taşıyan yarışı başlattı." }
+      ]
+    }
+  ]
+};
+
+DATA["1950ler"].stories.push({
+  id: "roger-bannister",
+  year: "1954",
+  place: "Oxford, İngiltere",
+  title: "İnsan Vücudunun Aşamadığı Sanılan Duvar",
+  teaser: "Doktorlar bunun fizyolojik olarak imkânsız olduğunu söylüyordu. Bir tıp öğrencisi, dört dakikayı kırdı.",
+  cover: WM('Roger_Bannister_1953.jpg'),
+  beats: [
+    { text: "1950'lerin başında bir mil (1.609 metre) koşusunu dört dakikanın altında tamamlamak, atletizmde aşılamaz kabul edilen bir sınırdı. Bazı fizyologlar bunun insan vücudu için fiziksel olarak imkânsız olduğunu iddia ediyordu." },
+    { text: "Roger Bannister, hem tıp fakültesinde okuyan hem de üst düzey bir atlet olan İngiliz bir koşucuydu. Antrenmanlarını hastanedeki çalışma saatleri arasına sıkıştırıyor, aralıklı koşu (interval training) gibi o dönem için yeni sayılan yöntemler deniyordu." },
+    { text: "6 Mayıs 1954'te, rüzgârlı ve soğuk bir günde, Oxford'daki Iffley Road pistinde koşuya çıktı. Yanında iki arkadaşı Chris Brasher ve Chris Chataway, tempo tutmak için ona eşlik etti." },
+    { text: "Bannister, mili 3 dakika 59,4 saniyede tamamladı — dört dakikalık duvar ilk kez yıkılmıştı. Spikerin süreyi anons etmeye 'three...' diye başlamasıyla birlikte, kalabalığın çığlıkları geri kalan rakamları bastırdı." },
+    { text: "Rekor sadece 46 gün sürdü; Avustralyalı John Landy kısa süre sonra rekoru kırdı. Ama asıl önemli olan zamandan çok, 'imkânsız'ın sadece zihinsel bir sınır olduğunun kanıtlanmasıydı — Bannister'ın rekoru kırmasından sonraki birkaç yıl içinde onlarca koşucu aynı eşiği geçti." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "salk-vaccine",
+  year: "1955",
+  place: "Pittsburgh, Pennsylvania, ABD",
+  title: "Bir Ailenin Korkusuna Son Veren Haber",
+  teaser: "Her yaz binlerce çocuğu felç eden bir hastalığa karşı, bir doktor sessizce çalıştı.",
+  cover: WM('Salk_headlines.jpg'),
+  beats: [
+    { text: "1950'lerin Amerikası'nda her yaz aileleri saran bir korku vardı: çocuk felci (polio). Hastalık özellikle çocukları hedef alıyor, bazılarını kalıcı olarak felç bırakıyor, bazılarını hayatından ediyordu. 1952'de tek bir yılda 58 binden fazla vaka kaydedildi." },
+    { text: "Pittsburgh Üniversitesi'nde çalışan viroloji araştırmacısı Jonas Salk, yıllardır ölü virüs parçacıklarıyla çalışan bir aşı geliştirmeye çalışıyordu — canlı virüs kullanan yaklaşımlardan daha güvenli olacağını düşünüyordu." },
+    { text: "Aşıyı önce hayvanlar üzerinde, sonra kendi ailesi de dahil gönüllüler üzerinde test etti. 1954'te ABD tarihinin en büyük tıbbi denemelerinden biri başladı: 1,8 milyon çocuk, 'polio öncüleri' adıyla anılan bu deneye katıldı." },
+    { text: "12 Nisan 1955'te, deneme sonuçlarının aşının güvenli ve etkili olduğunu gösterdiği duyurulduğunda, ülke çapında kiliseler çanlarını çaldı, mağazalar kapandı, insanlar sokaklarda ağladı — bir gazete o günü 'insanlığın en büyük zaferlerinden biri' olarak nitelendirdi." },
+    { text: "Salk, aşının patentini almayı reddetti; bir röportajda 'Güneşi patentleyebilir misiniz?' diyerek bu kararını açıkladı. Aşı, bir yıl içinde polio vakalarını yarı yarıya azalttı — bugün hastalık dünyanın büyük bölümünde neredeyse tamamen ortadan kalkmış durumda." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "uss-nautilus",
+  year: "1954 – 1958",
+  place: "Kuzey Kutbu, Arktik Okyanusu altı",
+  title: "Buzun Altından Geçen İlk Gemi",
+  teaser: "Bir denizaltı, güneşi hiç görmeden, dünyanın en ulaşılmaz noktasının altından geçti.",
+  cover: WM('USS_Nautilus_(SSN-571)_underway_at_sea,_in_1958.jpg'),
+  beats: [
+    { text: "1954'te ABD Donanması, nükleer enerjiyle çalışan ilk denizaltıyı, USS Nautilus'u hizmete soktu. Geleneksel dizel denizaltıların aksine, Nautilus'un nükleer reaktörü, sürekli yüzeye çıkıp hava almaya gerek kalmadan haftalarca su altında kalmasını sağlıyordu." },
+    { text: "Bu yeni yetenek, mühendislere daha önce imkânsız görünen bir fikir verdi: Kuzey Kutbu'nun altından, buzların hiç erimediği donmuş okyanusun içinden geçmek. Temmuz 1958'de Nautilus, gizli bir görev olan 'Operation Sunshine' için Hawaii'den yola çıktı." },
+    { text: "Denizaltı, Alaska açıklarında sulara daldı ve kuzeye yöneldi. Kaptan William Anderson ve 116 kişilik mürettebat, üzerlerindeki buz katmanının kalınlığını sürekli ölçerek ilerliyordu — bazı yerlerde buz, denizaltının üzerinden sadece birkaç metre yukarıdaydı." },
+    { text: "3 Ağustos 1958'de, saat 23:15'te Nautilus, Kuzey Kutbu'nun tam altından geçti — bir geminin bu noktaya ulaştığı ilk seferdi. 96 saat boyunca su altında kalarak 2.945 kilometre yol kat etti ve Grönland ile Svalbard arasında yeniden yüzeye çıktı." },
+    { text: "Görev, sadece bir mühendislik zaferi değildi — Soğuk Savaş'ın gerginleştiği bir dönemde, Sovyetler'in Sputnik'i fırlatmasından kısa süre sonra, ABD'ye teknolojik bir prestij kazandırdı. Nautilus'un buzun altından sessizce geçişi, denizciliğin daha önce hayal bile edilmemiş bir sınırını aştı." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "boeing-707",
+  year: "1954 – 1958",
+  place: "Seattle, Washington, ABD",
+  title: "Gökyüzünü Küçülten Uçak",
+  teaser: "Bir prototip, kıtalar arası yolculuğu haftalardan saatlere indiren bir çağı başlattı.",
+  cover: WM('N710PA.jpg'),
+  beats: [
+    { text: "1950'lerin başında Atlantik'i uçarak geçmek hâlâ günler süren, pervaneli uçaklarla yapılan yorucu bir yolculuktu. Boeing, bu yolculuğu kökten değiştirecek bir fikirle çalışıyordu: yolcu taşımacılığına uygun, güvenilir bir jet uçağı." },
+    { text: "Şirket, 1954'te '367-80' adlı bir prototip geliştirdi — mühendisler ona sevgiyle 'Dash 80' diyordu. Bu prototip, hem askeri hem sivil pazara hitap edebilecek esnek bir tasarıma sahipti." },
+    { text: "Prototipten geliştirilen Boeing 707'nin ilk üretim uçağı, 20 Aralık 1957'de test pilotu Tex Johnston'ın kumandasında havalandı. Kötü hava koşulları yüzünden ilk uçuş sadece 7 dakika sürdü, ama aynı gün yapılan ikinci denemede uçak bir saatten fazla havada kaldı." },
+    { text: "26 Ekim 1958'de Pan American Havayolları, 707'yi New York-Paris hattında düzenli sefere soktu. Yolculuk süresi, pervaneli uçaklarla yaklaşık 12 saatten, jet motoruyla 8 saate indi." },
+    { text: "707, sadece bir uçak modeli değil, 'Jet Çağı'nın başlangıcı olarak anıldı. Kıtalar arası seyahat artık sıradan insanların da erişebileceği bir şeye dönüşmeye başladı — dünya, bu tek uçak tipiyle gözle görülür şekilde küçüldü." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "rosa-parks",
+  year: "1955 – 1956",
+  place: "Montgomery, Alabama, ABD",
+  title: "Ayağa Kalkmayı Reddeden Kadın",
+  teaser: "Bir otobüste yerinden kalkmayı reddeden bir terzi, bir şehri 381 gün yürüttü.",
+  cover: WM('1956_face_detail,_Rosa_Parks_being_fingerprinted_by_Deputy_Sheriff_D.H._Lackey_after_being_arrested_on_February_22,_1956,_during_the_Montgomery_bus_boycott_(cropped).jpg'),
+  beats: [
+    { text: "1 Aralık 1955'te, Alabama'nın Montgomery kentinde, işten eve dönen 42 yaşındaki terzi Rosa Parks, bindiği otobüste oturuyordu. Şoför, o dönemin ayrımcı kurallarına göre, beyaz bir yolcuya yer açması için ondan kalkmasını istedi." },
+    { text: "Parks kalkmayı reddetti. Sessizce, ama kararlılıkla oturmaya devam etti. Kısa süre sonra tutuklandı — bu, dönemin ayrımcı otobüs kurallarına karşı planlanmamış ama simgesel bir andı." },
+    { text: "Montgomery'nin siyah topluluğu, tutuklamaya yanıt olarak şehrin otobüslerini tamamen boykot etmeye karar verdi. Boykot, genç bir vaiz olan Martin Luther King Jr.'ın liderliğinde organize edildi; binlerce kişi işe yürüyerek, araba paylaşarak ya da taksiyle gitti." },
+    { text: "Boykot 381 gün sürdü. Otobüs şirketleri, yolcularının büyük kısmını oluşturan siyah topluluğun katılımı olmadan ciddi mali kayıplar yaşadı. Boykot boyunca Parks ve diğer organizatörler tehditlere ve baskıya rağmen kararlılıklarını korudu." },
+    { text: "20 Aralık 1956'da, federal mahkemenin otobüslerdeki ırk ayrımını anayasaya aykırı bulmasının ardından boykot sona erdi. Rosa Parks'ın sessiz duruşu, ABD'deki sivil haklar hareketinin en belirleyici anlarından biri olarak tarihe geçti." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "univac-1952",
+  year: "1952",
+  place: "New York, ABD",
+  title: "Bir Makinenin Seçimi Tahmin Ettiği Gece",
+  teaser: "Anket şirketleri bir sonuç öngörüyordu. Devasa bir hesap makinesi, çok farklı bir şey söyledi.",
+  cover: WM('UNIVAC_1_demo.jpg'),
+  beats: [
+    { text: "1952'de ABD başkanlık seçimi gecesi, CBS televizyonu sıradışı bir deney yapmaya karar verdi: seçim sonuçlarını tahmin etmek için UNIVAC I adlı devasa bir elektronik bilgisayarı kullanmak. O dönem halk, 'bilgisayar' kelimesini neredeyse hiç duymamıştı." },
+    { text: "Anket şirketlerinin çoğu, Adlai Stevenson ile Dwight Eisenhower arasında başa baş bir yarış öngörüyordu. Ama oyların sadece yüzde 5,5'i sayıldığında, UNIVAC'ın hesaplamaları çok net bir sonuca işaret ediyordu: Eisenhower'ın ezici bir farkla kazanacağı." },
+    { text: "CBS'teki yapımcılar, bu sonucun 'çok abartılı' olduğunu düşünüp yayınlamaktan çekindi — böyle net bir tahminin makinenin bir hatası olduğuna inanmışlardı. Saatler sonra gerçek oylar UNIVAC'ı doğrulayınca, ekip canlı yayında bunu itiraf etmek zorunda kaldı." },
+    { text: "Yayın sırasında sunucu Walter Cronkite, mühendis Presper Eckert'le birlikte kameraların önünde makinenin nasıl çalıştığını izleyicilere anlattı — bu, milyonlarca insanın bir bilgisayarı ilk kez görüp duyduğu andı." },
+    { text: "O gece, sadece bir seçim tahmini değil, bilgisayarların gündelik hayata, siyasete ve habercilik dünyasına girişinin de sembolik başlangıcıydı. UNIVAC'ın sessiz hesaplamaları, insanların makinelere olan bakışını kökten değiştirdi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "transistor-radio",
+  year: "1954",
+  place: "Indianapolis, Indiana, ABD",
+  title: "Cebe Sığan Bir Devrim",
+  teaser: "Büyük radyo şirketlerinin hiçbiri ilgilenmedi. Küçük bir firma, cebe sığan geleceği yarattı.",
+  cover: WM('Vintage_Regency_TR-1_Transistor_Radio,_Mahogany_Color,_4_Transistors,_Made_in_USA_(9804504753).jpg'),
+  beats: [
+    { text: "1950'lerin başında radyolar hâlâ hantal vakum tüpleriyle çalışıyordu — ağır, kırılgan ve çok fazla enerji tüketen parçalardı. 1947'de icat edilen transistör, çok daha küçük ve dayanıklı bir alternatif sunuyordu, ama maliyeti bir tüpün yirmi katıydı." },
+    { text: "1954'te Texas Instruments, transistörlerini kullanacak bir radyo üretmesi için büyük radyo şirketlerine gitti — RCA, Philco ve Emerson gibi devler teklife hiç ilgi göstermedi. Sonunda küçük bir Indianapolis firması olan Regency, riski üstlenmeyi kabul etti." },
+    { text: "Ekip, birkaç ay gibi kısa bir sürede cebe sığacak kadar küçük bir radyo tasarladı: Regency TR-1. Dört transistörle çalışan cihaz, 18 Ekim 1954'te tanıtıldı ve 1 Kasım'da New York ile Los Angeles'ta satışa çıktı." },
+    { text: "TR-1, 49,95 dolarlık fiyatına rağmen (dönemin ortalama haftalık maaşına yakın bir tutar) hızla tükendi — insanlar cebe sığan, pilli, anında çalışan bir radyoyu ilk kez deneyimliyordu. Yaklaşık 150.000 adet satıldı." },
+    { text: "TR-1'in başarısı, tüketici elektroniğinde transistör çağını başlattı. Birkaç yıl içinde Japon bir firma da benzer radyolar üretmeye başladı — kısa süre sonra adını değiştirip dünya çapında tanınan bir marka olacaktı: Sony. Küçük bir cesaretin, koca bir endüstriyi nasıl dönüştürebileceğinin örneğiydi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "barbie-1959",
+  year: "1959",
+  place: "New York, ABD",
+  title: "Bir Annenin Kızına Verdiği Fikir",
+  teaser: "Kızının bebeklerle oynama şeklini izleyen bir kadın, oyuncak endüstrisini yeniden tasarladı.",
+  cover: WM('Early_Barbie_dolls.jpg'),
+  beats: [
+    { text: "1950'lerde oyuncak bebekler neredeyse istisnasız bebek ya da küçük çocuk şeklindeydi — kızların 'anne oynaması' bekleniyordu. Mattel'in kurucularından Ruth Handler, kızı Barbara'nın kâğıt bebeklerle yetişkin rolleri canlandırarak oynadığını fark etti." },
+    { text: "Handler, kızlar için yetişkin bir kadın vücuduna sahip, farklı kıyafetler ve mesleklerle 'hayal kurdurabilecek' bir bebek fikrini şirkete önerdi. Erkek yöneticilerin çoğu bu fikri tuhaf ve pazarlanamaz buldu." },
+    { text: "Handler, Avrupa gezisinde gördüğü Alman 'Bild Lilli' bebeğinden ilham alarak tasarımı geliştirmeye devam etti. Kızının adını vererek bebeğe 'Barbie' adını verdi." },
+    { text: "9 Mart 1959'da New York'taki bir oyuncak fuarında tanıtıldığında, oyuncak alıcıları ilk başta soğuk karşıladı — çoğu, bu 'yetişkin görünümlü' bebeğin anneler tarafından uygun bulunmayacağını düşünüyordu. Ama piyasaya çıktığında ilk yılda 350 binden fazla satıldı." },
+    { text: "Barbie, kısa sürede sadece bir oyuncak değil, kültürel bir simgeye dönüştü — zamanla astronot, doktor, pilot gibi yüzlerce meslek kıyafetiyle üretildi. Bir annenin kızını gözlemlemesiyle başlayan fikir, altmış yılı aşkın süredir dünya çapında milyarlarca kez satılan bir oyuncak imparatorluğuna dönüştü." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "antarctic-crossing",
+  year: "1955 – 1958",
+  place: "Antarktika",
+  title: "Buzul Kıtayı Baştan Sona Geçen İlk Sefer",
+  teaser: "Amundsen ve Scott'tan 46 yıl sonra, iki ekip Antarktika'yı ilk kez uçtan uca geçti.",
+  cover: WM('Sir_Edmund_Hillary_and_Sir_Vivian_Fuchs,_1958.jpg'),
+  beats: [
+    { text: "1911-1912'de Amundsen ve Scott'ın Güney Kutbu'na ulaşmasından sonra, kimse Antarktika kıtasını baştan sona geçmeyi başaramamıştı. 1955'te İngiliz jeolog Vivian Fuchs, bu 'imkânsız' hedefi gerçekleştirmek için bir sefer planladı." },
+    { text: "Plan iki ekip gerektiriyordu: Fuchs'un liderliğindeki ekip Weddell Denizi kıyısından başlayıp Güney Kutbu üzerinden geçecek, Yeni Zelandalı Edmund Hillary'nin (Everest'in fatihi) liderliğindeki ikinci ekip ise Ross Denizi tarafından yola çıkıp Kutup'a giden yolu işaretleyip erzak depoları kuracaktı." },
+    { text: "Fuchs'un ekibi, kar araçları ve traktörlerle, 240 kilometre karelik çatlaklarla dolu buz tabakalarını aşarak ilerledi. Bazı günler sadece birkaç kilometre kat edebiliyorlardı; motorlu araçlar sık sık buz çatlaklarına saplanıyordu.",
+      image: WM('Tractors_in_Antarctica_(1957).JPG'),
+      caption: "Sefer ekibinin kullandığı traktörler, Antarktika, 1957" },
+    { text: "Hillary'nin destek ekibi, planlanandan daha hızlı ilerleyip Güney Kutbu'na ulaştı — bu, Amundsen ve Scott'tan sonra kutba kara yoluyla ulaşan ilk kişiler oldular. Fuchs'un ana ekibi birkaç hafta sonra aynı noktaya vardı." },
+    { text: "2 Mart 1958'de, 99 gün ve yaklaşık 3.500 kilometrelik bir yolculuğun ardından, ekip kıtayı baştan sona geçerek Ross Denizi kıyısına ulaştı. Bu sefer, sadece bir coğrafi başarı değil, ekip çalışmasının ve sabırlı planlamanın, buzul bir kıtanın en zorlu koşullarını nasıl aşabileceğinin kanıtıydı." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "st-lawrence-seaway",
+  year: "1954 – 1959",
+  place: "Kanada – ABD sınırı",
+  title: "Okyanusu Kıtanın Kalbine Taşıyan Su Yolu",
+  teaser: "Denizden binlerce kilometre uzaktaki şehirler, bu kanal sayesinde birer liman kentine dönüştü.",
+  cover: WM('St._Lawrence_Seaway_construction_1959_(cropped).png'),
+  beats: [
+    { text: "1950'lerin başında Büyük Göller bölgesi, dünyanın en büyük tatlı su rezervlerinden birine sahipti, ama okyanus gemileri bu göllere ulaşamıyordu — aradaki nehirler ve çağlayanlar geçit vermiyordu. On yıllardır konuşulan bir fikir vardı: Saint Lawrence Nehri boyunca bir dizi kanal ve baraj inşa etmek." },
+    { text: "1954'te Kanada ve ABD, ortak bir projeyle inşaata başladı. İşçiler, gemilerin farklı su seviyeleri arasında geçebilmesi için devasa kilit (lock) sistemleri inşa etti; bazı bölgelerde nehir yatağı tamamen yeniden şekillendirildi." },
+    { text: "Proje sırasında birkaç köy, yükselen su seviyeleri altında kalacağı için tamamen taşındı — evler ve hatta mezarlıklar yeni yerlere nakledildi. Bu, projenin en tartışmalı ve duygusal yönlerinden biriydi." },
+    { text: "26 Haziran 1959'da su yolu resmi olarak açıldı; Kraliçe II. Elizabeth ve ABD Başkanı Dwight Eisenhower törene birlikte katıldı. Artık okyanus gemileri, Atlantik'ten kalkıp Büyük Göller'in en iç noktalarına, denizden 3.700 kilometre uzaktaki limanlara kadar ulaşabiliyordu." },
+    { text: "Saint Lawrence Su Yolu, Chicago, Detroit ve Toronto gibi 'iç kesim' şehirlerini birer uluslararası liman kentine dönüştürdü. İki ülkenin yıllarca süren ortak emeği, kıtanın ekonomik haritasını kalıcı olarak yeniden çizdi." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "velcro",
+  year: "1941 – 1955",
+  place: "İsviçre",
+  title: "Bir Köpek Yürüyüşünden Doğan Fikir",
+  teaser: "Pantolonuna yapışan dikenli tohumları merakla inceleyen bir mühendis, on yıl sonra bir devrim yarattı.",
+  cover: WM('Velcro.jpg'),
+  beats: [
+    { text: "1941'de İsviçreli mühendis George de Mestral, köpeğiyle Alp dağlarında bir yürüyüşe çıktı. Eve döndüklerinde hem kendi pantolonunda hem köpeğinin tüylerinde onlarca dikenli tohum (pıtrak) yapışmış olduğunu fark etti." },
+    { text: "Çoğu insan bu tohumları sinirlenerek çıkarıp atardı. De Mestral, meraklı bir mühendis olarak tohumları mikroskop altına aldı — küçük kanca şeklinde uzantıların, kumaşın ilmeklerine nasıl kusursuzca tutunduğunu keşfetti." },
+    { text: "Bu doğal mekanizmayı yapay olarak yeniden üretme fikri aklına takıldı: biri kancalarla, diğeri ilmeklerle kaplı iki kumaş şeridi birbirine geçici ama sağlam biçimde tutunabilirdi. Ama fikri hayata geçirmek, yıllarca süren zorlu bir deneme sürecine dönüştü." },
+    { text: "İlk denemelerde kancalar ya çok küçük ya çok büyük çıkıyordu; pamuklu kumaş yeterince dayanıklı değildi. Fransa'daki bir dokumacıyla birlikte çalışarak, naylon ipliği kızılötesi ışıkla sertleştirip dayanıklı kancalar üretmeyi başardı." },
+    { text: "1955'te patentini aldığı bu malzemeye, Fransızca 'velours' (kadife) ve 'crochet' (kanca) kelimelerini birleştirerek 'Velcro' adını verdi. Başlarda alaycı tepkiler alsa da, sonraki yıllarda NASA'nın uzay giysilerinden çocuk ayakkabılarına kadar her yerde kullanılan bu icat, meraklı bir köpek yürüyüşünün nasıl kalıcı bir mirasa dönüşebileceğinin kanıtı oldu." }
+  ]
+});
+
+DATA["1950ler"].stories.push({
+  id: "diners-club",
+  year: "1949 – 1950",
+  place: "New York, ABD",
+  title: "Cüzdanını Unutan Adamın Fikri",
+  teaser: "Bir akşam yemeği faturasını ödeyemeyen bir işadamı, nakitsiz bir dünyanın kapısını araladı.",
+  cover: WM('20160810_114242_Diners_Club.jpg'),
+  beats: [
+    { text: "1949'da New York'ta iş adamı Frank McNamara, müşterileriyle bir restoranda yemek yerken hesabı ödemek için cüzdanına uzandığında, cüzdanını başka bir ceketinde unuttuğunu fark etti. Utanç verici anı, eşinin gelip hesabı ödemesiyle atlattı." },
+    { text: "McNamara bu deneyimi bir daha yaşamak istemedi. Avukatı Ralph Schneider ile birlikte, insanların nakit taşımadan yemek yiyip sonra tek bir fatura ile ödeme yapabileceği bir sistem tasarlamaya başladı." },
+    { text: "8 Şubat 1950'de McNamara ve Schneider, fikri ilk kez test etmek için aynı restorana, Major's Cabin Grill'e geri döndüler. Hesabı, küçük kartondan yapılma yeni bir kartla ödediler — bu an, sonradan 'İlk Akşam Yemeği' (The First Supper) olarak anılacaktı." },
+    { text: "Kart, ilk yılında New York'un iş dünyasından 10.000 üyeye ve 28 restorana ulaştı. Diners Club üyeleri aylık faturalarını tek seferde ödüyor, restoranlar ise küçük bir komisyon karşılığında ödemeyi garantiye alıyordu." },
+    { text: "Diners Club, dünyanın ilk genel amaçlı ödeme kartı olarak kabul edilir. Bir akşam yemeğinde yaşanan küçük bir utanç anı, on yıllar içinde American Express ve Visa gibi devlerin de dahil olduğu, nakitsiz ödemenin standart hâline geldiği bir sektörün kapısını araladı." }
+  ]
+});
+
+DATA["1920ler"] = {
+  title: "1920'ler",
+  subtitle: "Caz çağının coşkusu ve cesur ilklerin onyılı",
+  stories: [
+    {
+      id: "lindbergh-1927",
+      year: "1927",
+      place: "New York, ABD — Paris, Fransa",
+      title: "Tek Başına, Tek Motorla, Bir Okyanusun Üzerinden",
+      teaser: "33 saat boyunca uykusuz, tek başına, sadece pusulasıyla bir okyanusu geçti.",
+      cover: WM('Charles_Lindbergh_arrived_at_Croydon_Field,_Surrey,_England,_May_29,_1927.jpg'),
+      beats: [
+        { text: "1927'de bir New York gazetesi, Atlantik'i New York'tan Paris'e kesintisiz uçarak geçecek ilk pilota 25.000 dolar ödül koymuştu. Birkaç deneyimli pilot bu girişimde hayatını kaybetmiş, çoğu uzman bunun tek motorlu bir uçakla imkânsız olduğunu düşünüyordu." },
+        { text: "25 yaşındaki posta pilotu Charles Lindbergh, bu göreve gönüllü oldu — üstelik yalnız uçmak istiyordu, çoğu rakibinin tercih ettiği çok motorlu, çok kişilik uçakların aksine. Küçük bir şirkete kendi özel tasarımlı uçağını, 'Spirit of St. Louis'i yaptırdı." },
+        { text: "20 Mayıs 1927 sabahı, çamurlu bir pistten kalkışı zar zor başardı — uçak, fazla yakıt yükü yüzünden pistin sonuna kadar yerden kesilemedi. Önünde 5.800 kilometrelik, sadece bir pusula ve haritayla geçilecek bir okyanus vardı." },
+        { text: "33,5 saat süren uçuş boyunca Lindbergh hiç uyumadı; bazı anlarda uykuya dalmamak için gözlerini açık tutmakta zorlandı, buzlanan kanatlarla ve yön kaybıyla mücadele etti. Sadece bir sandviç ve birkaç litre suyla yolculuğunu tamamladı." },
+        { text: "21 Mayıs akşamı Paris'teki Le Bourget Havaalanı'na indiğinde, 150.000'den fazla kişi onu karşılamak için alana akın etmişti. Lindbergh bir gecede dünya çapında bir kahramana dönüştü; uçuşu, ticari havacılığa olan güveni kalıcı olarak değiştirdi." }
+      ]
+    },
+    {
+      id: "king-tut-tomb",
+      year: "1922",
+      place: "Krallar Vadisi, Mısır",
+      title: "Altın Parıltısının Görüldüğü An",
+      teaser: "Yıllarca süren başarısız kazıların ardından, bir mumun ışığında tarih yeniden yazıldı.",
+      cover: WM('Tuts_Tomb_Opened.JPG'),
+      beats: [
+        { text: "1900'lerin başından beri Mısır'ın Krallar Vadisi'nde kazı yapan arkeolog Howard Carter, yıllarca hiçbir önemli buluntuya rastlamamıştı. Finansörü Lord Carnarvon, artan maliyetler yüzünden desteğini kesmeyi düşünüyordu; Carter'a son bir sezon daha süre tanıdı." },
+        { text: "İşçiler, daha önce hiç incelenmemiş küçük bir alanda kazı yaparken taş bir basamağa rastladı. Basamakları takip ettikçe mühürlü bir kapıya ulaştılar — mühürler, binlerce yıldır kimsenin buraya girmediğini gösteriyordu." },
+        { text: "26 Kasım 1922'de Carter, kapıda küçük bir delik açıp içeriye bir mum tuttu. Carnarvon 'Bir şey görüyor musun?' diye sorduğunda Carter'ın verdiği yanıt tarihe geçti: 'Evet, harika şeyler.'" },
+        { text: "Mumun ışığında görülenler, o güne kadar bulunmuş en sağlam kalmış firavun mezarıydı: altın kaplamalı mobilyalar, heykeller, arabalar ve nihayetinde genç firavun Tutankhamun'un mumyası. Neredeyse tüm diğer kraliyet mezarları binlerce yıl önce yağmalanmışken, bu mezar neredeyse el değmemiş durumdaydı." },
+        { text: "Keşif, dünya çapında bir 'Mısır çılgınlığı' başlattı — moda, mimari ve sanattan etkilendi. Yıllarca süren sabırlı ve büyük ölçüde başarısız bir arayışın ardından gelen bu keşif, arkeoloji tarihinin en unutulmaz anlarından biri olarak kaldı." }
+      ]
+    },
+    {
+      id: "winter-olympics-1924",
+      year: "1924",
+      place: "Chamonix, Fransa",
+      title: "Buzun ve Karın İlk Olimpiyatı",
+      teaser: "Kimse buna 'olimpiyat' demeye cesaret edemiyordu. Küçük bir dağ kasabası, yeni bir geleneğin ilkini yarattı.",
+      cover: WM('Toronto_Granites_1924_Winter_Olympics_champions.jpg'),
+      beats: [
+        { text: "1920'lerin başında Yaz Olimpiyatları köklü bir gelenekti, ama kayak, patinaj gibi kış sporları hiçbir zaman resmi bir olimpiyat çatısı altında toplanmamıştı. Uluslararası Olimpiyat Komitesi içinde bu fikre karşı çıkanlar vardı — bazı üyeler kış sporlarının 'gerçek' olimpiyat ruhuna uymadığını düşünüyordu." },
+        { text: "Fransa'nın Alp eteklerindeki küçük Chamonix kasabası, 1924'te 'Uluslararası Kış Sporları Haftası' adlı bir etkinliğe ev sahipliği yapmayı teklif etti — resmi olarak olimpiyat unvanı almadan, bir deneme niteliğinde." },
+        { text: "16 ülkeden yaklaşık 250 sporcu katıldı; buz pateni, kayak, kızak ve hokey gibi dallarda yarıştılar. Kasabanın mütevazı imkânları düşünüldüğünde, organizasyon beklenmedik bir ilgi gördü." },
+        { text: "Etkinlik o kadar başarılı geçti ki, bir yıl sonra Uluslararası Olimpiyat Komitesi bu haftayı geriye dönük olarak resmi 'I. Kış Olimpiyat Oyunları' ilan etti. Chamonix, planlamadan bir gelenek başlatmıştı." },
+        { text: "O günden beri Kış Olimpiyatları, dünyanın en büyük spor etkinliklerinden biri olarak dört yılda bir düzenleniyor. Küçük bir dağ kasabasının deneme niteliğindeki haftası, bugün milyarlarca izleyicinin takip ettiği küresel bir geleneğin ilk adımı oldu." }
+      ]
+    }
+  ]
+};
+
 let currentDecade = null;
+
+function openRandomStory(){
+  const allStories = [];
+  Object.keys(DATA).forEach(key=>{
+    const d = DATA[key];
+    if(!d) return;
+    d.stories.forEach(s=> allStories.push({decadeKey:key, id:s.id}));
+  });
+  const pick = allStories[Math.floor(Math.random()*allStories.length)];
+  openStory(pick.decadeKey, pick.id);
+}
 
 function renderHome(){
   const grid = document.getElementById('decadeGrid');
@@ -778,6 +1094,18 @@ function observeBeats(){
   }, {threshold:0.15});
   els.forEach(el=>obs.observe(el));
 }
+
+window.addEventListener('scroll', ()=>{
+  const bar = document.getElementById('progressBar');
+  if(!document.getElementById('reader').classList.contains('active')){
+    bar.style.width = '0%';
+    return;
+  }
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  bar.style.width = Math.min(pct, 100) + '%';
+});
 
 renderHome();
 </script>
