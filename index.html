@@ -2,740 +2,356 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Görsel Depo — Dijital Nabız</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Arşiv | Tarihin Sinema Odası</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#13161d;
-    --ink-2:#1c202a;
-    --bone:#f2ede2;
-    --bone-dim:#c9c3b4;
-    --wire:#b23b3b;
-    --wire-dim:#7a2b2b;
-    --teal:#3f6b64;
-    --line:rgba(242,237,226,0.12);
-    --radius:2px;
+    --paper:#EDE3D0;
+    --paper-dim:#E2D5BC;
+    --ink:#241A12;
+    --sepia:#4A3623;
+    --gold:#B08D57;
+    --rust:#8C3B2E;
+    --film-black:#15100C;
+    --grain-opacity:0.05;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--ink);
-    color:var(--bone);
-    font-family:'Inter',sans-serif;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
-  ::selection{background:var(--wire);color:var(--bone);}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--film-black); color:var(--paper); font-family:'Crimson Pro',serif;}
+  body{-webkit-font-smoothing:antialiased; overflow-x:hidden;}
 
-  /* ---------- Header / Masthead ---------- */
-  header.masthead{
-    border-bottom:1px solid var(--line);
-    padding:28px 20px 20px;
-    position:relative;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--wire);
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-bottom:10px;
-  }
-  .eyebrow::before{
-    content:"";
-    width:6px;height:6px;
-    background:var(--wire);
-    border-radius:50%;
-    display:inline-block;
-    animation:pulse 2s infinite;
-  }
-  @keyframes pulse{
-    0%,100%{opacity:1;}
-    50%{opacity:.3;}
-  }
-  h1{
-    font-family:'Fraunces',serif;
-    font-optical-sizing:auto;
-    font-weight:600;
-    font-size:clamp(28px,7vw,42px);
-    line-height:1.02;
-    margin:0 0 4px;
-    letter-spacing:-.01em;
-  }
-  .subhead{
-    color:var(--bone-dim);
-    font-size:14px;
-    max-width:520px;
-    line-height:1.5;
-  }
-  .gear-btn{
-    position:absolute;
-    top:24px; right:16px;
-    background:none;
-    border:1px solid var(--line);
-    color:var(--bone-dim);
-    width:38px;height:38px;
-    border-radius:50%;
-    font-size:16px;
-    cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:border-color .2s, color .2s;
-  }
-  .gear-btn:hover{border-color:var(--wire); color:var(--bone);}
-
-  /* ---------- Settings panel ---------- */
-  .settings{
-    display:none;
-    border-bottom:1px solid var(--line);
-    background:var(--ink-2);
-    padding:18px 20px 22px;
-  }
-  .settings.open{display:block;}
-  .settings h3{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.1em;
-    color:var(--bone-dim);
-    margin:0 0 12px;
-  }
-  .field{margin-bottom:10px;}
-  .field label{
-    display:block;
-    font-size:12px;
-    color:var(--bone-dim);
-    margin-bottom:4px;
-    font-family:'IBM Plex Mono',monospace;
-  }
-  .field input{
-    width:100%;
-    background:var(--ink);
-    border:1px solid var(--line);
-    color:var(--bone);
-    padding:10px 12px;
-    font-size:14px;
-    border-radius:var(--radius);
-    font-family:'IBM Plex Mono',monospace;
-  }
-  .field input:focus{outline:none;border-color:var(--wire);}
-  .save-btn{
-    background:var(--wire);
-    color:var(--bone);
-    border:none;
-    padding:10px 18px;
-    font-size:13px;
-    font-weight:600;
-    border-radius:var(--radius);
-    cursor:pointer;
-    margin-top:4px;
-  }
-  .save-btn:hover{background:var(--wire-dim);}
-  .key-hint{font-size:11px;color:var(--bone-dim);margin-top:8px;line-height:1.5;}
-  .key-hint a{color:var(--teal);}
-
-  /* ---------- Search ---------- */
-  .search-zone{
-    padding:22px 20px 16px;
-    border-bottom:1px solid var(--line);
-  }
-  .search-row{
-    display:flex;
-    gap:0;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    overflow:hidden;
-    background:var(--ink-2);
-  }
-  .search-row input{
-    flex:1;
-    background:transparent;
-    border:none;
-    color:var(--bone);
-    padding:14px 16px;
-    font-size:16px;
-    font-family:'Inter',sans-serif;
-  }
-  .search-row input:focus{outline:none;}
-  .search-row input::placeholder{color:var(--bone-dim);}
-  .search-row button{
-    background:var(--wire);
-    border:none;
-    color:var(--bone);
-    padding:0 22px;
-    font-size:13px;
-    font-weight:600;
-    letter-spacing:.03em;
-    cursor:pointer;
-    font-family:'IBM Plex Mono',monospace;
-    text-transform:uppercase;
-  }
-  .search-row button:hover{background:var(--wire-dim);}
-  .search-row button:disabled{background:var(--bone-dim);cursor:default;}
-
-  .chips{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .chip{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    border:1px solid var(--line);
-    color:var(--bone-dim);
-    background:none;
-    padding:6px 12px;
-    border-radius:20px;
-    cursor:pointer;
-    transition:all .15s;
-  }
-  .chip:hover{border-color:var(--wire);color:var(--bone);}
-
-  .translate-note{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    color:var(--teal);
-    margin-top:10px;
-    min-height:14px;
+  /* film grain overlay */
+  .grain{position:fixed; inset:0; pointer-events:none; z-index:999; opacity:var(--grain-opacity); mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ---------- Results ---------- */
-  .results-wrap{padding:18px 20px 60px;}
-  .status-line{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:var(--bone-dim);
-    margin-bottom:14px;
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:6px;
-  }
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
-  @media(min-width:720px){
-    .grid{grid-template-columns:repeat(4,1fr);}
-  }
-  .card{
-    position:relative;
-    background:var(--ink-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    overflow:hidden;
-    cursor:pointer;
-    aspect-ratio:1/1;
-  }
-  .card img{
-    width:100%;height:100%;
-    object-fit:cover;
-    display:block;
-    transition:transform .3s;
-  }
-  .card:hover img{transform:scale(1.04);}
-  .card .badge{
-    position:absolute;
-    top:6px;left:6px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:9px;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-    background:rgba(19,22,29,0.85);
-    color:var(--bone);
-    padding:3px 7px;
-    border-radius:2px;
-  }
-  .card .score{
-    position:absolute;
-    bottom:6px;right:6px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:9px;
-    background:rgba(19,22,29,0.85);
-    color:var(--teal);
-    padding:3px 6px;
-    border-radius:2px;
-  }
-  .card .overlay{
-    position:absolute;inset:0;
-    background:linear-gradient(to top, rgba(19,22,29,0.9) 0%, transparent 45%);
-    display:flex;align-items:flex-end;
-    padding:8px;
-    opacity:0;
-    transition:opacity .2s;
-  }
-  .card:hover .overlay{opacity:1;}
-  .card .cred{
-    font-size:11px;
-    color:var(--bone);
-    font-family:'Inter',sans-serif;
-  }
+  .view{display:none;}
+  .view.active{display:block;}
 
-  .empty, .loading, .error{
-    text-align:center;
-    padding:60px 20px;
-    color:var(--bone-dim);
-    font-size:14px;
-  }
-  .loading::after{
-    content:"";
-    display:block;
-    width:24px;height:24px;
-    border:2px solid var(--line);
-    border-top-color:var(--wire);
-    border-radius:50%;
-    margin:16px auto 0;
-    animation:spin .8s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .error{color:var(--wire);}
+  /* ---------- ANA EKRAN ---------- */
+  #home{min-height:100vh; padding:56px 20px 80px;}
+  .brand{text-align:center; margin-bottom:8px;}
+  .brand .eyebrow{font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.25em; color:var(--gold); text-transform:uppercase;}
+  .brand h1{font-family:'Oswald',sans-serif; font-weight:700; font-size:44px; letter-spacing:.02em; margin-top:10px; color:var(--paper);}
+  .brand .sub{font-family:'Crimson Pro',serif; font-style:italic; color:#B7A88C; margin-top:6px; font-size:15px;}
+  .reel-divider{width:60px; height:2px; background:var(--gold); margin:26px auto 34px; opacity:.6;}
 
-  /* ---------- Modal ---------- */
-  .modal-bg{
-    display:none;
-    position:fixed;inset:0;
-    background:rgba(19,22,29,0.92);
-    z-index:50;
-    align-items:center;justify-content:center;
-    padding:20px;
-  }
-  .modal-bg.open{display:flex;}
-  .modal{
-    background:var(--ink-2);
-    border:1px solid var(--line);
-    max-width:600px;width:100%;
-    max-height:88vh;
-    overflow-y:auto;
-    border-radius:var(--radius);
-  }
-  .modal img{width:100%;display:block;}
-  .modal-body{padding:18px;}
-  .modal-body h3{
-    font-family:'Fraunces',serif;
-    font-size:18px;
-    margin:0 0 10px;
-    font-weight:600;
-  }
-  .meta-row{
-    display:flex;justify-content:space-between;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:var(--bone-dim);
-    margin-bottom:6px;
-  }
-  .modal-actions{
-    display:flex;gap:10px;margin-top:16px;
-  }
-  .modal-actions a, .modal-actions button{
-    flex:1;
-    text-align:center;
-    padding:12px;
-    border-radius:var(--radius);
-    font-size:13px;
-    font-weight:600;
-    text-decoration:none;
-    cursor:pointer;
-    border:1px solid var(--line);
-  }
-  .modal-actions a{background:var(--wire);color:var(--bone);border:none;}
-  .modal-actions button{background:none;color:var(--bone-dim);}
-  .close-x{
-    position:absolute;top:10px;right:14px;
-    background:none;border:none;color:var(--bone-dim);
-    font-size:22px;cursor:pointer;
-  }
-  .modal{position:relative;}
+  .decades{display:grid; grid-template-columns:1fr; gap:14px; max-width:520px; margin:0 auto;}
+  .decade-card{position:relative; border:1px solid rgba(176,141,87,0.35); background:linear-gradient(160deg, rgba(176,141,87,0.08), transparent); padding:22px 20px; cursor:pointer; transition:transform .25s ease, border-color .25s ease;}
+  .decade-card:active{transform:scale(0.98);}
+  .decade-card:hover{border-color:var(--gold);}
+  .decade-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase;}
+  .decade-title{font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; margin-top:6px; color:var(--paper);}
+  .decade-count{font-size:13px; color:#8C7F68; margin-top:4px;}
+  .decade-card::after{content:'→'; position:absolute; right:20px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:20px; opacity:.7;}
+
+  /* ---------- KATEGORİ / HİKAYE LİSTESİ ---------- */
+  #category{min-height:100vh; padding:0 0 60px;}
+  .cat-header{padding:50px 20px 24px; text-align:center; border-bottom:1px solid rgba(176,141,87,0.25);}
+  .back-btn{position:fixed; top:18px; left:16px; z-index:50; background:rgba(21,16,12,0.85); border:1px solid var(--gold); color:var(--gold); font-family:'Special Elite',monospace; font-size:12px; padding:8px 14px; cursor:pointer; letter-spacing:.05em;}
+  .cat-header .decade-label{display:block;}
+  .cat-header h2{font-family:'Oswald',sans-serif; font-size:34px; margin-top:8px;}
+  .story-list{max-width:560px; margin:28px auto 0; padding:0 20px; display:grid; gap:18px;}
+  .story-card{display:flex; gap:14px; border:1px solid rgba(176,141,87,0.25); background:rgba(176,141,87,0.04); cursor:pointer; overflow:hidden; transition:border-color .25s ease;}
+  .story-card:hover{border-color:var(--gold);}
+  .story-card img{width:110px; height:110px; object-fit:cover; filter:sepia(35%) contrast(1.05);}
+  .story-card-body{padding:12px 14px 12px 0; display:flex; flex-direction:column; justify-content:center;}
+  .story-year{font-family:'Special Elite',monospace; font-size:10px; color:var(--gold); letter-spacing:.15em;}
+  .story-title{font-family:'Oswald',sans-serif; font-size:18px; margin-top:4px; line-height:1.25;}
+  .story-teaser{font-size:13px; color:#B7A88C; margin-top:6px; line-height:1.4;}
+
+  /* ---------- OKUMA MODU ---------- */
+  #reader{min-height:100vh;}
+  .reader-hero{position:relative; height:78vh; min-height:460px; overflow:hidden;}
+  .reader-hero img{width:100%; height:100%; object-fit:cover; filter:sepia(25%) contrast(1.05) brightness(.85);}
+  .reader-hero::after{content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(21,16,12,0.15) 0%, rgba(21,16,12,0.55) 55%, var(--film-black) 100%);}
+  .hero-text{position:absolute; bottom:34px; left:0; right:0; padding:0 22px; z-index:2;}
+  .hero-text .decade-label{color:var(--gold); font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.2em;}
+  .hero-text h1{font-family:'Oswald',sans-serif; font-size:38px; line-height:1.1; margin-top:10px; text-shadow:0 2px 10px rgba(0,0,0,.5);}
+  .hero-text .place-time{font-size:14px; color:#D9CDB4; margin-top:10px; font-style:italic;}
+
+  .article{max-width:640px; margin:0 auto; padding:44px 22px 100px; background:var(--film-black);}
+  .article p{font-size:19px; line-height:1.75; color:#E9DFC9; margin-bottom:26px;}
+  .article p:first-of-type::first-letter{font-family:'Oswald',sans-serif; font-size:58px; float:left; line-height:0.85; padding-right:10px; padding-top:6px; color:var(--gold); font-weight:600;}
+  .beat-image{margin:36px -22px 36px; opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease;}
+  .beat-image.in-view{opacity:1; transform:translateY(0);}
+  .beat-image img{width:100%; display:block; filter:sepia(30%) contrast(1.05);}
+  .beat-caption{font-family:'Special Elite',monospace; font-size:11px; color:#8C7F68; padding:10px 22px 0; letter-spacing:.03em;}
+  .beat-image.full-bleed img{max-height:70vh; object-fit:cover;}
+
+  .end-mark{text-align:center; padding:40px 0 10px;}
+  .end-mark .reel-divider{margin:0 auto 16px;}
+  .end-mark span{font-family:'Special Elite',monospace; font-size:12px; color:var(--gold); letter-spacing:.2em;}
 </style>
 </head>
 <body>
+<div class="grain"></div>
 
-<header class="masthead">
-  <div class="eyebrow">Dijital Nabız / dahili araç</div>
-  <h1>Görsel Depo</h1>
-  <div class="subhead">Türkçe ara, arka planda üç kaynak taranır, haber için en uygun kareler öne çıkar.</div>
-  <button class="gear-btn" id="gearBtn" title="Ayarlar">⚙</button>
-</header>
-
-<div class="settings" id="settingsPanel">
-  <h3>API Anahtarları</h3>
-  <div class="field">
-    <label>Unsplash Access Key</label>
-    <input type="text" id="key-unsplash" autocomplete="off" spellcheck="false">
+<!-- ANA EKRAN -->
+<div id="home" class="view active">
+  <div class="brand">
+    <div class="eyebrow">Bir seans başlıyor</div>
+    <h1>ARŞİV</h1>
+    <div class="sub">Gerçek olaylar, gerçek fotoğraflar — izler gibi oku</div>
   </div>
-  <div class="field">
-    <label>Pexels API Key</label>
-    <input type="text" id="key-pexels" autocomplete="off" spellcheck="false">
-  </div>
-  <div class="field">
-    <label>Pixabay API Key</label>
-    <input type="text" id="key-pixabay" autocomplete="off" spellcheck="false">
-  </div>
-  <button class="save-btn" id="saveKeys">Kaydet</button>
-  <div class="key-hint">Anahtarlar sadece bu cihazın tarayıcısında (localStorage) saklanır, hiçbir sunucuya gönderilmez.</div>
+  <div class="reel-divider"></div>
+  <div class="decades" id="decadeGrid"></div>
 </div>
 
-<div class="search-zone">
-  <div class="search-row">
-    <input type="text" id="searchInput" placeholder="örn. deprem, enflasyon, seçim mitingi..." autocomplete="off">
-    <button id="searchBtn">Ara</button>
+<!-- KATEGORİ EKRANI -->
+<div id="category" class="view">
+  <button class="back-btn" onclick="showHome()">‹ Arşive Dön</button>
+  <div class="cat-header">
+    <span class="decade-label" id="catLabel"></span>
+    <h2 id="catTitle"></h2>
   </div>
-  <div class="chips">
-    <button class="chip" data-term="ekonomi">Ekonomi</button>
-    <button class="chip" data-term="spor">Spor</button>
-    <button class="chip" data-term="siyaset">Siyaset</button>
-    <button class="chip" data-term="sağlık">Sağlık</button>
-    <button class="chip" data-term="teknoloji">Teknoloji</button>
-    <button class="chip" data-term="hava durumu">Hava Durumu</button>
-    <button class="chip" data-term="eğitim">Eğitim</button>
-    <button class="chip" data-term="trafik">Trafik</button>
-  </div>
-  <div class="translate-note" id="translateNote"></div>
+  <div class="story-list" id="storyList"></div>
 </div>
 
-<div class="results-wrap">
-  <div class="status-line" id="statusLine" style="display:none;"></div>
-  <div id="resultsArea">
-    <div class="empty">Arama kutusuna bir haber konusu yaz veya yukarıdaki etiketlerden birini seç.</div>
-  </div>
-</div>
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <button class="close-x" id="closeModal">×</button>
-    <img id="modalImg" src="" alt="">
-    <div class="modal-body">
-      <h3 id="modalTitle"></h3>
-      <div class="meta-row"><span>Kaynak</span><span id="modalSource"></span></div>
-      <div class="meta-row"><span>Fotoğrafçı</span><span id="modalPhotog"></span></div>
-      <div class="meta-row"><span>Boyut</span><span id="modalDims"></span></div>
-      <div class="modal-actions">
-        <a id="modalDownload" href="#" target="_blank" rel="noopener">İndir</a>
-        <button id="modalCopy">Bağlantıyı Kopyala</button>
-      </div>
+<!-- OKUMA MODU -->
+<div id="reader" class="view">
+  <button class="back-btn" onclick="showCategory(currentDecade)">‹ Geri</button>
+  <div class="reader-hero">
+    <img id="readerHeroImg" src="" alt="">
+    <div class="hero-text">
+      <div class="decade-label" id="readerDecade"></div>
+      <h1 id="readerTitle"></h1>
+      <div class="place-time" id="readerMeta"></div>
     </div>
   </div>
+  <div class="article" id="readerArticle"></div>
 </div>
 
 <script>
-/* ============ Ayarlar / API anahtarları ============ */
-const gearBtn = document.getElementById('gearBtn');
-const settingsPanel = document.getElementById('settingsPanel');
-gearBtn.addEventListener('click', () => settingsPanel.classList.toggle('open'));
-
-const keyFields = {
-  unsplash: document.getElementById('key-unsplash'),
-  pexels: document.getElementById('key-pexels'),
-  pixabay: document.getElementById('key-pixabay'),
-};
-function loadKeys(){
-  Object.keys(keyFields).forEach(k=>{
-    keyFields[k].value = localStorage.getItem('gd_key_'+k) || '';
-  });
-}
-document.getElementById('saveKeys').addEventListener('click', ()=>{
-  Object.keys(keyFields).forEach(k=>{
-    localStorage.setItem('gd_key_'+k, keyFields[k].value.trim());
-  });
-  settingsPanel.classList.remove('open');
-  showTranslateNote('Anahtarlar kaydedildi.');
-});
-loadKeys();
-
-function getKey(name){ return localStorage.getItem('gd_key_'+name) || ''; }
-
-/* ============ Türkçe haber terimleri sözlüğü ============
-   Genel çeviri motorundan önce kontrol edilir; haber bağlamında
-   daha isabetli İngilizce karşılıklar için. */
-const NEWS_DICTIONARY = {
-  "ekonomi": "economy finance",
-  "enflasyon": "inflation economy",
-  "piyasa": "financial market stock exchange",
-  "borsa": "stock exchange trading",
-  "faiz": "interest rate bank",
-  "işsizlik": "unemployment job seeking",
-  "deprem": "earthquake disaster rubble",
-  "sel": "flood disaster",
-  "yangın": "wildfire fire disaster",
-  "seçim": "election voting ballot",
-  "meclis": "parliament government building",
-  "siyaset": "politics government",
-  "mahkeme": "courtroom justice law",
-  "adalet": "justice law court",
-  "spor": "sports stadium athlete",
-  "futbol": "football soccer stadium",
-  "basketbol": "basketball court game",
-  "sağlık": "healthcare hospital medicine",
-  "hastane": "hospital medical",
-  "aşı": "vaccine healthcare",
-  "eğitim": "education classroom school",
-  "üniversite": "university campus students",
-  "trafik": "traffic road city cars",
-  "hava durumu": "weather sky clouds",
-  "teknoloji": "technology computer digital",
-  "yapay zeka": "artificial intelligence technology",
-  "göç": "migration refugees border",
-  "mülteci": "refugee migration",
-  "enerji": "energy power plant",
-  "elektrik": "electricity power grid",
-  "tarım": "agriculture farming field",
-  "çevre": "environment nature climate",
-  "iklim": "climate change environment",
-  "ulaşım": "transportation transit city",
-  "konut": "housing real estate building",
-  "emlak": "real estate housing property",
-  "turizm": "tourism travel destination",
-  "miting": "rally protest crowd",
-  "protesto": "protest demonstration crowd",
-  "polis": "police law enforcement",
-  "asker": "military soldier army",
-  "savaş": "war conflict military",
-  "diplomasi": "diplomacy government meeting",
-};
-
-function dictionaryLookup(term){
-  const lower = term.trim().toLowerCase();
-  if (NEWS_DICTIONARY[lower]) return NEWS_DICTIONARY[lower];
-  // parça parça eşleşme dene
-  const words = lower.split(/\s+/);
-  const hits = words.map(w => NEWS_DICTIONARY[w]).filter(Boolean);
-  if (hits.length) return hits.join(' ');
-  return null;
-}
-
-/* Genel çeviri (sözlükte yoksa) - ücretsiz, anahtarsız MyMemory API */
-async function translateTerm(term){
-  const dictHit = dictionaryLookup(term);
-  if (dictHit){
-    showTranslateNote(`"${term}" → "${dictHit}" (haber sözlüğü)`);
-    return dictHit;
-  }
-  try{
-    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(term)}&langpair=tr|en`);
-    const data = await res.json();
-    const translated = data?.responseData?.translatedText;
-    if (translated){
-      showTranslateNote(`"${term}" → "${translated}" (otomatik çeviri)`);
-      return translated;
-    }
-  }catch(e){
-    console.warn('Çeviri başarısız, orijinal terim kullanılacak', e);
-  }
-  showTranslateNote(`"${term}" çevrilemedi, orijinal terimle aranıyor`);
-  return term;
-}
-function showTranslateNote(msg){
-  document.getElementById('translateNote').textContent = msg;
-}
-
-/* ============ API çağrıları ============ */
-async function searchUnsplash(q){
-  const key = getKey('unsplash');
-  if (!key) return [];
-  try{
-    const res = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=12&orientation=landscape`, {
-      headers:{ Authorization: `Client-ID ${key}` }
-    });
-    if(!res.ok) return [];
-    const data = await res.json();
-    return (data.results||[]).map(p=>({
-      id:'u_'+p.id,
-      source:'Unsplash',
-      thumb:p.urls.small,
-      full:p.urls.regular,
-      download:p.links.download || p.urls.full,
-      photographer:p.user?.name || 'Bilinmiyor',
-      width:p.width, height:p.height,
-      pageUrl:p.links.html
-    }));
-  }catch(e){ console.warn('Unsplash hata', e); return []; }
-}
-
-async function searchPexels(q){
-  const key = getKey('pexels');
-  if (!key) return [];
-  try{
-    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=12&orientation=landscape`, {
-      headers:{ Authorization: key }
-    });
-    if(!res.ok) return [];
-    const data = await res.json();
-    return (data.photos||[]).map(p=>({
-      id:'p_'+p.id,
-      source:'Pexels',
-      thumb:p.src.medium,
-      full:p.src.large,
-      download:p.src.original,
-      photographer:p.photographer || 'Bilinmiyor',
-      width:p.width, height:p.height,
-      pageUrl:p.url
-    }));
-  }catch(e){ console.warn('Pexels hata', e); return []; }
-}
-
-async function searchPixabay(q){
-  const key = getKey('pixabay');
-  if (!key) return [];
-  try{
-    const res = await fetch(`https://pixabay.com/api/?key=${key}&q=${encodeURIComponent(q)}&per_page=12&image_type=photo&orientation=horizontal`);
-    if(!res.ok) return [];
-    const data = await res.json();
-    return (data.hits||[]).map(p=>({
-      id:'pb_'+p.id,
-      source:'Pixabay',
-      thumb:p.webformatURL,
-      full:p.largeImageURL,
-      download:p.largeImageURL,
-      photographer:p.user || 'Bilinmiyor',
-      width:p.imageWidth, height:p.imageHeight,
-      pageUrl:p.pageURL
-    }));
-  }catch(e){ console.warn('Pixabay hata', e); return []; }
-}
-
-/* ============ Akıllı sıralama ============
-   Kriterler:
-   - Çözünürlük (yüksek çözünürlük habercilik için daha kullanışlı)
-   - Format: yatay/geniş formatlar haber sitesi kapak görseli için tercih edilir
-   - Kaynak çeşitliliği: tek kaynağın sonuçları ekranı doldurmasın diye round-robin
+/* ============ VERİ KÜTÜPHANESİ ============
+   Her hikaye: baslik, yil, yer, kapak görseli, teaser, ve
+   "beats" dizisi: sırayla paragraf + o paragrafa ait görsel.
+   Görseller Wikimedia Commons üzerinden Special:FilePath ile
+   hotlink ediliyor (kamu malı / serbest lisanslı gerçek arşiv fotoğrafları).
 */
-function scoreImage(img){
-  let score = 0;
-  const megapixels = (img.width * img.height) / 1000000;
-  score += Math.min(megapixels, 12) * 4; // çözünürlük katkısı, tavan var
+const WM = f => `https://commons.wikimedia.org/wiki/Special:FilePath/${f}?width=1200`;
 
-  const ratio = img.width / img.height;
-  if (ratio >= 1.3 && ratio <= 2.2) score += 15; // haber kapağı için ideal yatay oran
-  else if (ratio > 2.2) score += 5; // çok panoramik, daha az ideal
-  else score -= 10; // dikey/kare, kapak görseli için daha zayıf
-
-  return Math.round(score);
-}
-
-function rankAndInterleave(images){
-  images.forEach(img => img.score = scoreImage(img));
-
-  const bySource = {};
-  images.forEach(img=>{
-    if (!bySource[img.source]) bySource[img.source] = [];
-    bySource[img.source].push(img);
-  });
-  Object.values(bySource).forEach(arr => arr.sort((a,b)=>b.score-a.score));
-
-  const sources = Object.keys(bySource);
-  const result = [];
-  let i = 0;
-  let added = true;
-  while(added){
-    added = false;
-    for(const s of sources){
-      if (bySource[s][i]){
-        result.push(bySource[s][i]);
-        added = true;
+const DATA = {
+  "1930lar": {
+    title: "1930'lar",
+    subtitle: "Büyük Buhran'ın gölgesinde, imkânsızı başaranlar",
+    stories: [
+      {
+        id: "empire-state",
+        year: "1930 – 1931",
+        place: "New York, ABD",
+        title: "Gökyüzüne 13 Ayda Çıkan Bina",
+        teaser: "Dünya, çöküşün eşiğindeyken bir grup işçi tarihin en hızlı gökdelenini dikti.",
+        cover: WM("Empire_state_building_USA.jpg"),
+        beats: [
+          { text: "1929'un sonbaharında Wall Street çöktüğünde, New York'un gökyüzünde hâlâ bitmemiş bir yarış vardı: dünyanın en yüksek binası kim olacaktı? Chrysler Building mi, yoksa henüz kâğıt üzerinde bile olmayan bir proje mi? Şehir, ekonominin çöktüğü bir anda gökyüzüne bakmaya karar verdi." },
+          { text: "17 Mart 1930'da 34. Cadde'de kazma vuruldu. Plan delilikti: 102 kat, 410 metre, ve bunu bir buçuk yıldan kısa sürede bitirmek. Mimarlar William F. Lamb'in ekibi, çizimleri neredeyse günlük olarak inşaat sahasına yetiştiriyordu — bina, tasarlanırken aynı anda yükseliyordu.",
+            image: WM("Zeppelin_bij_Empire_State_Building_in_aanbouw_-_Zeppelin_near_the_Empire_State_Building_under_construction_(6943970242).jpg"),
+            caption: "İnşaat halindeki bina üzerinde bir zeplin, Ekim 1930 — Nationaal Archief" },
+          { text: "İşçiler arasında en dikkat çekenler, Kanada'daki Kahnawake yerleşiminden gelen Mohawk demirci ustalarıydı. Yerden yüzlerce metre yükseklikte, çelik kirişler üzerinde güvenlik ipi bile takmadan yürüyor, öğle yemeklerini gökyüzünde yiyorlardı. Basın onlara 'gökyüzü çocukları' adını taktı." },
+          { text: "İnşaat hızı o kadar olağanüstüydü ki bazı haftalarda dört buçuk kat birden yükseliyordu — günde ortalama 3.400 tuğla döşeniyordu. 14 Ağustos 1930'da, tek bir günde 3.439 işçi aynı anda sahada çalıştı.",
+            image: WM("Old_timer_structural_worker2.jpg"),
+            caption: "Çelik iskelet üzerinde çalışan bir demirci ustası, 1930" },
+          { text: "11 Nisan 1931'de bina, planlanandan 12 gün önce tamamlandı. Büyük Buhran'ın en karanlık yılında, boş ofisler yüzünden yıllarca 'Empty State Building' diye alay konusu oldu — ama zamanla dünyanın en tanınan silüetlerinden biri hâline geldi. Bugün hâlâ, umutsuzluğun ortasında cesaretle yükselen bir hikâye olarak anlatılıyor." }
+        ]
       }
-    }
-    i++;
-  }
-  return result;
-}
+    ]
+  },
+  "1930lar-koprum": null
+};
 
-/* ============ Arama akışı ============ */
-const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-const resultsArea = document.getElementById('resultsArea');
-const statusLine = document.getElementById('statusLine');
+/* Golden Gate ve Snow White'ı aynı kategoriye ekleyelim */
+DATA["1930lar"].stories.push({
+  id: "golden-gate",
+  year: "1933 – 1937",
+  place: "San Francisco, ABD",
+  title: "\"Yapılamaz\" Denen Köprü",
+  teaser: "Mühendisler imkânsız dediği için değil, herkes imkânsız dediği için inşa ettiler.",
+  cover: WM("Golden_gate_bridge.jpg"),
+  beats: [
+    { text: "1930'ların başında San Francisco Körfezi'ni geçmenin tek yolu feribotlardı. Askeri yetkililer ve mühendisler yıllarca aynı şeyi söyledi: burada bir köprü inşa etmek imkânsız — akıntı çok güçlü, sisler çok yoğun, deniz tabanı çok derin. Yüzlerce dava açıldı, çevreciler ve feribot şirketleri projeyi durdurmaya çalıştı." },
+    { text: "Mühendis Joseph Strauss, herkesin 'hayır' dediği yerde ısrar etti. 5 Ocak 1933'te, Büyük Buhran'ın tam ortasında kazma vuruldu. Proje, o dönemde işsiz kalan binlerce kişiye iş demekti — bir topluluk için umut, bir mühendislik ekibi için bilinmeyene atılan bir adımdı.",
+      image: WM("View_of_early_Golden_Gate_Bridge_construction_around_Fort_Point,_1933.jpg"),
+      caption: "Fort Point çevresinde erken inşaat çalışmaları, 1933" },
+    { text: "Deniz tabanına inen ayaklar, o güne kadar denenmemiş yöntemlerle döküldü; işçiler devasa kulelerin tepesinde, körfezin soğuk rüzgârına karşı çelik halatlar gerdiler. Strauss, döneminin standartlarının çok ötesinde bir önlem aldı: işçilerin altına dev bir güvenlik ağı gerdirdi. Bu ağ, düşen 19 işçinin hayatını kurtardı — onlar sonradan 'Yarı Yolda Kulübü' diye anılan bir gruba katıldı.",
+      image: WM("The_Golden_Gate_Bridge_under_construction.jpg"),
+      caption: "Kule ve ana kablo çalışmaları sırasında köprü, inşaat döneminden" },
+    { text: "27 Mayıs 1937'de köprü trafiğe açılmadan önce, bir gün boyunca sadece yayalara ayrıldı. 200.000'den fazla insan, yürüyerek, koşarak, hatta paten kayarak 2,7 kilometrelik köprüyü geçti. Ertesi gün araç trafiğine açıldığında, dünyanın o güne kadar gördüğü en uzun asma köprü tamamlanmıştı — bütçesinin altında ve planlanandan erken.",
+      image: WM("Golden_Gate_Bridge_Rivet_1937.jpg"),
+      caption: "Köprünün karakteristik 'International Orange' rengi ve perçinleri, 1937" },
+    { text: "Bugün Golden Gate Köprüsü sadece bir ulaşım hattı değil, imkânsızın nasıl 'henüz denenmemiş' olduğunu hatırlatan bir simge. Herkesin durduğu yerde bir mühendisin ısrarı, bir şehrin silüetini sonsuza dek değiştirdi." }
+  ]
+});
 
-async function runSearch(rawTerm){
-  const term = rawTerm.trim();
-  if (!term){ return; }
+DATA["1930lar"].stories.push({
+  id: "snow-white",
+  year: "1937",
+  place: "Hollywood, ABD",
+  title: "Disney'in Çılgınlığı",
+  teaser: "Herkes ona 'batacaksın' dedi. O, sinema tarihini yeniden yazdı.",
+  cover: WM("Snow_white_1937_trailer_screenshot_(1).jpg"),
+  beats: [
+    { text: "1934'te Walt Disney, stüdyosundaki herkese aynı şeyi söylediğinde ekibi sessizce birbirine baktı: uzun metrajlı, tam renkli bir çizgi film yapacaklardı. O güne kadar animasyon sadece birkaç dakikalık kısa filmlerden ibaretti. Hollywood bu fikre 'Disney'in Çılgınlığı' adını taktı." },
+    { text: "Proje, dönemin parası için akıl almaz bir bütçeye, 1,5 milyon dolara ulaştı — Disney bunun için evini bile ipotek ettirdi. Yüzlerce animatör, her kareyi elle çizdi; sadece filmin kendisi 250.000'den fazla ayrı resimden oluşuyordu. Banka yetkilileri projeyi finanse ederken hâlâ şüpheliydi." },
+    { text: "21 Aralık 1937'de, Los Angeles'taki Carthay Circle Theatre'da film galasını yaptığında, salondaki hiç kimse - hatta Disney'in kendisi bile - ne olacağından emin değildi. Işıklar söndü, ilk renkli uzun metrajlı animasyon film perdeye yansıdı.",
+      image: WM("Snow_white_1937_trailer_screenshot_(1).jpg"),
+      caption: "Filmin orijinal fragmanından bir kare, 1937" },
+    { text: "Salon, filmin sonunda ayakta alkışladı. Film, 1,5 milyon dolarlık maliyetine karşılık dünya çapında 8 milyon dolardan fazla hasılat yaptı — 1938'in en çok kazanan filmi oldu. Disney, sinemanın tamamen yeni bir türünü, tek başına ve herkesin 'imkânsız' dediği bir bahisle yaratmıştı." },
+    { text: "Bugün her uzun metrajlı animasyon filminin kökeninde, o gece Carthay Circle'da ışıklar söndüğünde başlayan cesaret var. Disney'in çılgınlığı, sinemanın en kalıcı miraslarından birine dönüştü." }
+  ]
+});
 
-  const hasAnyKey = getKey('unsplash') || getKey('pexels') || getKey('pixabay');
-  if (!hasAnyKey){
-    resultsArea.innerHTML = `<div class="error">Önce ⚙ Ayarlar panelinden en az bir API anahtarı gir.</div>`;
-    return;
-  }
+DATA["1930lar"].stories.push({
+  id: "hoover-dam",
+  year: "1931 – 1936",
+  place: "Black Canyon, Nevada-Arizona sınırı, ABD",
+  title: "Çölün Ortasında Bir Dev",
+  teaser: "İşsizliğin en yüksek olduğu yılda, 21.000 kişi imkânsız bir yapıyı 2 yıl erken bitirdi.",
+  cover: WM('Hoover_Dam_1934_(12664127905).jpg'),
+  beats: [
+    { text: "1931'de Amerika'nın dörtte biri işsizdi. Colorado Nehri her yıl taştığında aşağı vadideki çiftlikleri sular altında bırakıyor, güneybatının çölleri ise susuzluktan kavruluyordu. Mühendisler yıllardır bir çözüm öneriyordu: nehri Black Canyon'da devasa bir barajla durdurmak. Ama bu, o güne kadar inşa edilmiş en yüksek barajdan da yüksek olacaktı." },
+    { text: "Mart 1931'de 'Six Companies' adlı altı inşaat şirketinin oluşturduğu ortaklık, işi üstlendi. İnşaat sahası o kadar uzak ve çorak bir çöldü ki işçiler için sıfırdan bir şehir kurmaları gerekti — Boulder City. Yaz sıcağında kanyonun dibi 50 dereceyi buluyordu; bazı işçiler sıcak çarpmasından hayatını kaybetti." },
+    { text: "Kanyonun taş duvarlarını temizlemek için 'high-scaler' denen bir işçi grubu görevlendirildi: koltuk değneği gibi halatlara asılıp yüzlerce metre boşlukta sallanarak gevşek kayaları dinamitle patlatıyorlardı. Bu iş, dağcılık becerisi ve sinir gücü isteyen, inşaatın en tehlikeli görevlerinden biriydi.",
+      image: WM('High_scalers_cleaning_canyon_wall_above_Nevada_power_plant_site_-_NARA_-_293863.jpg'),
+      caption: "Kanyon duvarını temizleyen 'high-scaler' işçiler — ABD Ulusal Arşivi" },
+    { text: "Nehrin kendisi barajın önündeki en büyük engeldi. Colorado'yu geçici olarak dört devasa tünelden geçirip yatağını kurutmaları, sonra da temeli kayaya kadar inip beton dökmeye başlamaları gerekiyordu. Beton o kadar kalın dökülüyordu ki normal yöntemle soğuması 125 yıl sürerdi — mühendisler içine soğutucu boru ağları döşeyerek bu süreyi aylara indirdiler.",
+      image: WM('High-scalers_working_on_Arizona_abutment_-_NARA_-_293766.jpg'),
+      caption: "Kanyon duvarında çalışan işçiler, Arizona kıyısı" },
+    { text: "İnşaat boyunca resmi kayıtlara göre 96 kişi hayatını kaybetti. Buna rağmen proje, ölümcül tehlikelere rağmen bir iş, bir maaş, bir gelecek anlamına geliyordu — Büyük Buhran'ın ortasında binlerce aile için hayatta kalma şansıydı." },
+    { text: "30 Eylül 1935'te, planlanandan iki yıl önce, Başkan Franklin Roosevelt barajı hizmete açtı. 221 metre yükseklikte, o güne kadar dünyanın en yüksek yapısıydı; ardında biriken Lake Mead, insan eliyle yaratılmış en büyük rezervuarlardan biri oldu. Bugün hâlâ milyonlarca eve elektrik veriyor — çaresizliğin ortasında, azimle örülmüş bir beton dev olarak." }
+  ]
+});
 
-  searchBtn.disabled = true;
-  searchBtn.textContent = '...';
-  statusLine.style.display = 'none';
-  resultsArea.innerHTML = `<div class="loading">"${term}" için görseller aranıyor</div>`;
+DATA["1930lar"].stories.push({
+  id: "rockefeller-center",
+  year: "1931 – 1939",
+  place: "Manhattan, New York, ABD",
+  title: "Kimsenin İnanmadığı Şehir İçinde Şehir",
+  teaser: "Kirası ödenmesin diye başlayan bir proje, Büyük Buhran'ın en cesur inşaatına dönüştü.",
+  cover: WM('Rockefeller_Center_in_1933.jpg'),
+  beats: [
+    { text: "1929'da John D. Rockefeller Jr., Manhattan'ın göbeğinde bir arsayı uzun vadeli kiraladığında plan bambaşkaydı: burada yeni bir opera binası yükselecekti. Ama birkaç hafta sonra borsa çöktü, opera ortakları projeden çekildi. Rockefeller'ın önünde iki seçenek vardı — kirayı üstlenip devasa bir zarara razı olmak, ya da arsayı başka bir şeye dönüştürmek." },
+    { text: "Rockefeller, dönemin en akıl almaz kararlarından birini verdi: krizin ortasında, kimsenin ofis kiralamayacağı bir dönemde, koca bir 'şehir içinde şehir' inşa etmeye karar verdi. 14 binadan oluşacak kompleks, o zamana kadar özel sermayeyle yapılan en büyük şehir içi inşaat projesi olacaktı." },
+    { text: "22 Temmuz 1931'de kazma vuruldu. Proje, işsizliğin zirvede olduğu bir dönemde 40 ila 60 bin kişiye iş verdi — taş ustaları, demirciler, ressamlar, heykeltıraşlar. 1,25 milyon ton moloz kazıldı, 39 milyon tuğla örüldü. New York'un çöken ekonomisinde, Rockefeller Center âdeta tek başına bir iş kolu gibiydi." },
+    { text: "Merkezindeki RCA Building (bugünkü 30 Rockefeller Plaza), 1933'te tamamlandığında 259 metreyle şehrin yeni bir simgesi oldu; hemen yanında dünyanın en büyük iç mekân tiyatrosu Radio City Music Hall açıldı.",
+      image: WM('Rockefeller_Center,_December_1933.jpg'),
+      caption: "Rockefeller Center, Aralık 1933" },
+    { text: "1939'a gelindiğinde kompleks tamamlanmıştı — Büyük Buhran'ın tam ortasında başlayıp bitmiş, hem bir mimari başyapıt hem de 'karamsarlığın ortasında inatla inşa etmenin' sembolü olmuştu. Bugün hâlâ New York'un kalbinde, bir zamanlar kimsenin inanmadığı bir cesaretin anıtı olarak duruyor." }
+  ]
+});
 
-  const englishQuery = await translateTerm(term);
+DATA["1930lar"].stories.push({
+  id: "amelia-earhart",
+  year: "1932",
+  place: "Newfoundland'dan Kuzey İrlanda'ya, Atlantik Okyanusu üzerinden",
+  title: "Fırtınanın İçinden Tek Başına Geçen Kadın",
+  teaser: "Herkes onu '1928'in yolcusu' olarak hatırlıyordu. O, tarihe kendi kanatlarıyla geçmek istedi.",
+  cover: WM('Earhart.jpg'),
+  beats: [
+    { text: "1928'de Amelia Earhart, Atlantik'i uçarak geçen ilk kadın olarak manşetlere çıkmıştı — ama sadece yolcuydu, uçağı o kullanmamıştı. Kendi deyimiyle 'bir çuval patatesten' farksızdı. Aldığı övgüyü hak etmediğini düşünüyor, bunu kendine kanıtlamak istiyordu." },
+    { text: "20 Mayıs 1932'de, Lindbergh'in aynı okyanusu tek başına geçtiği günün tam beşinci yıl dönümünde, Newfoundland'dan kalktı. Uçağı, parlak kırmızı tek motorlu bir Lockheed Vega'ydı — yanında sadece bir termos kahve, biraz peksimet ve bir harita vardı." },
+    { text: "Uçuş plandan çok daha zor geçti. Yükseklik ölçer bozuldu, motor alev püskürtmeye başladı, kanatlar buzlanmaya başladı. Fırtınalar onu saatlerce savurdu; bazı anlarda okyanus yüzeyine tehlikeli derecede yaklaştı.",
+      image: WM('Amelia_Earhart_and_group.jpg'),
+      caption: "Earhart, dönemin basınıyla ve destek ekibiyle birlikte" },
+    { text: "15 saat süren mücadelenin ardından, Fransa'ya varma hedefinden saparak Kuzey İrlanda'daki bir çiftlik arazisine indi. Bir çiftçi ona 'uzaktan mı geldiniz?' diye sorduğunda, cevabı kısaydı: 'Amerika'dan.'" },
+    { text: "Bu uçuşla Earhart, Atlantik'i tek başına geçen ilk kadın ve Lindbergh'ten sonra bunu başaran ilk ikinci kişi oldu. Beyaz Saray'da kendisine madalya verildiğinde şunları söyledi: 'Küçük başarımın, kadınların da uçtuğu gerçeğine dikkat çekmiş olmasından mutluluk duyarım.' Cesareti, bir neslin hayal gücünü değiştirdi." }
+  ]
+});
 
-  const [u, p, pb] = await Promise.all([
-    searchUnsplash(englishQuery),
-    searchPexels(englishQuery),
-    searchPixabay(englishQuery)
-  ]);
+let currentDecade = null;
 
-  let all = [...u, ...p, ...pb];
-
-  if (all.length === 0){
-    resultsArea.innerHTML = `<div class="empty">"${term}" için sonuç bulunamadı. Farklı bir kelime dene veya API anahtarlarını kontrol et.</div>`;
-    return;
-  }
-
-  all = rankAndInterleave(all);
-
-  statusLine.style.display = 'flex';
-  statusLine.innerHTML = `<span>${all.length} sonuç · "${englishQuery}" ile tarandı</span><span>Unsplash ${u.length} · Pexels ${p.length} · Pixabay ${pb.length}</span>`;
-
-  resultsArea.innerHTML = '';
-  const grid = document.createElement('div');
-  grid.className = 'grid';
-  all.forEach(img=>{
+function renderHome(){
+  const grid = document.getElementById('decadeGrid');
+  grid.innerHTML = '';
+  Object.keys(DATA).forEach(key=>{
+    const d = DATA[key];
+    if(!d) return;
     const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${img.thumb}" loading="lazy" alt="">
-      <div class="badge">${img.source}</div>
-      <div class="score">★ ${img.score}</div>
-      <div class="overlay"><span class="cred">${img.photographer}</span></div>
-    `;
-    card.addEventListener('click', ()=>openModal(img));
+    card.className='decade-card';
+    card.onclick=()=>showCategory(key);
+    card.innerHTML = `<div class="decade-label">Dönem</div>
+      <div class="decade-title">${d.title}</div>
+      <div class="decade-count">${d.stories.length} hikâye — ${d.subtitle}</div>`;
     grid.appendChild(card);
   });
-  resultsArea.appendChild(grid);
-
-  searchBtn.disabled = false;
-  searchBtn.textContent = 'Ara';
 }
 
-searchBtn.addEventListener('click', ()=>runSearch(searchInput.value));
-searchInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') runSearch(searchInput.value); });
+function showHome(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  window.scrollTo(0,0);
+}
 
-document.querySelectorAll('.chip').forEach(chip=>{
-  chip.addEventListener('click', ()=>{
-    searchInput.value = chip.dataset.term;
-    runSearch(chip.dataset.term);
+function showCategory(key){
+  currentDecade = key;
+  const d = DATA[key];
+  document.getElementById('catLabel').textContent = 'Dönem';
+  document.getElementById('catTitle').textContent = d.title;
+  const list = document.getElementById('storyList');
+  list.innerHTML = '';
+  d.stories.forEach(s=>{
+    const card = document.createElement('div');
+    card.className='story-card';
+    card.onclick=()=>openStory(key, s.id);
+    card.innerHTML = `<img src="${s.cover}" alt="">
+      <div class="story-card-body">
+        <div class="story-year">${s.year} · ${s.place}</div>
+        <div class="story-title">${s.title}</div>
+        <div class="story-teaser">${s.teaser}</div>
+      </div>`;
+    list.appendChild(card);
   });
-});
-
-/* ============ Modal ============ */
-const modalBg = document.getElementById('modalBg');
-function openModal(img){
-  document.getElementById('modalImg').src = img.full;
-  document.getElementById('modalTitle').textContent = img.photographer + ' için görsel';
-  document.getElementById('modalSource').textContent = img.source;
-  document.getElementById('modalPhotog').textContent = img.photographer;
-  document.getElementById('modalDims').textContent = `${img.width} × ${img.height}`;
-  document.getElementById('modalDownload').href = img.download;
-  document.getElementById('modalCopy').onclick = ()=>{
-    navigator.clipboard.writeText(img.pageUrl || img.full);
-    document.getElementById('modalCopy').textContent = 'Kopyalandı ✓';
-    setTimeout(()=>{ document.getElementById('modalCopy').textContent = 'Bağlantıyı Kopyala'; }, 1500);
-  };
-  modalBg.classList.add('open');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('category').classList.add('active');
+  window.scrollTo(0,0);
 }
-document.getElementById('closeModal').addEventListener('click', ()=> modalBg.classList.remove('open'));
-modalBg.addEventListener('click', (e)=>{ if(e.target === modalBg) modalBg.classList.remove('open'); });
+
+function openStory(decadeKey, storyId){
+  const d = DATA[decadeKey];
+  const s = d.stories.find(x=>x.id===storyId);
+  document.getElementById('readerHeroImg').src = s.cover;
+  document.getElementById('readerDecade').textContent = `${d.title} · ${s.year}`;
+  document.getElementById('readerTitle').textContent = s.title;
+  document.getElementById('readerMeta').textContent = s.place;
+
+  const article = document.getElementById('readerArticle');
+  article.innerHTML='';
+  s.beats.forEach(b=>{
+    const p = document.createElement('p');
+    p.textContent = b.text;
+    article.appendChild(p);
+    if(b.image){
+      const wrap = document.createElement('div');
+      wrap.className='beat-image';
+      wrap.innerHTML = `<img src="${b.image}" alt=""><div class="beat-caption">${b.caption||''}</div>`;
+      article.appendChild(wrap);
+    }
+  });
+  const end = document.createElement('div');
+  end.className='end-mark';
+  end.innerHTML = `<div class="reel-divider"></div><span>SON</span>`;
+  article.appendChild(end);
+
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('reader').classList.add('active');
+  window.scrollTo(0,0);
+
+  observeBeats();
+}
+
+function observeBeats(){
+  const els = document.querySelectorAll('.beat-image');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in-view'); }
+    });
+  }, {threshold:0.15});
+  els.forEach(el=>obs.observe(el));
+}
+
+renderHome();
 </script>
 </body>
 </html>
