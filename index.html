@@ -52,6 +52,11 @@
   .decade-count{font-size:13px; color:#8C7F68; margin-top:4px;}
   .decade-card::after{content:'→'; position:absolute; right:20px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:20px; opacity:.7;}
 
+  .analysis-card{border-color:rgba(107,150,168,0.45); background:linear-gradient(160deg, rgba(107,150,168,0.10), transparent);}
+  .analysis-card:hover{border-color:#6B96A8;}
+  .analysis-card .decade-label{color:#6B96A8;}
+  .analysis-card::after{color:#6B96A8;}
+
   /* ---------- KATEGORİ / HİKAYE LİSTESİ ---------- */
   #category{min-height:100vh; padding:0 0 60px;}
   .cat-header{padding:50px 20px 24px; text-align:center; border-bottom:1px solid rgba(176,141,87,0.25);}
@@ -133,6 +138,14 @@
   .today-frame{padding:10px; background:linear-gradient(180deg, rgba(176,141,87,0.10), rgba(176,141,87,0.02)); border:1px solid rgba(176,141,87,0.3); box-shadow:0 12px 30px rgba(0,0,0,0.35); overflow:hidden;}
   .today-frame img{width:100%; display:block; filter:none; animation: kenburns 22s ease-in-out infinite alternate;}
   .today-caption{font-family:'Crimson Pro',serif; font-style:italic; font-size:13px; color:#B7A88C; text-align:center; padding:12px 22px 0;}
+
+  .sources-section{margin:36px 0 20px; padding:18px 20px; border:1px solid rgba(107,150,168,0.3); background:rgba(107,150,168,0.05);}
+  .sources-section .today-label{color:#6B96A8; text-align:left; margin-bottom:10px;}
+  .source-item{font-family:'Special Elite',monospace; font-size:11px; color:#9FB8C4; line-height:1.8; word-break:break-all;}
+
+  .analogy-box{display:flex; gap:12px; margin:8px 0 30px; padding:16px 18px; background:rgba(107,150,168,0.08); border-left:3px solid #6B96A8;}
+  .analogy-icon{font-size:20px; flex-shrink:0;}
+  .analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:16px; line-height:1.6; color:#C9DCE3;}
 </style>
 </head>
 <body>
@@ -1465,6 +1478,43 @@ DATA["1960lar"].stories.push({
   ]
 });
 
+DATA["analiz"] = {
+  title: "Analiz",
+  subtitle: "Güncel konuları derinlemesine, doğrulanmış kaynaklarla anlama",
+  isAnalysis: true,
+  stories: [
+    {
+      id: "togg-yerlilik",
+      year: "2025",
+      place: "Gemlik, Bursa — Türkiye",
+      title: "Togg Gerçekten Yerli mi?",
+      teaser: "Basit cevap: kısmen. Ama bu 'kısmen'in içinde neler var, birlikte bakalım.",
+      cover: WM('Togg_T10X.jpg'),
+      beats: [
+        { text: "Önce en basit soruyla başlayalım: 'yerli araba' ne demek? Bir arabanın her vidasının Türkiye'de üretilmesi mi? Hayır — dünyada böyle bir araba neredeyse yok. 'Yerli' demek, arabanın parçalarının ve değerinin ne kadarının o ülkede üretildiği demek. Buna 'yerlilik oranı' deniyor ve yüzde olarak ölçülüyor." },
+        { text: "Bunu şöyle düşünebilirsin: bir pasta yapıyorsun. Unu, yumurtayı, şekeri kendi mutfağında hazırladın diyelim — ama vanilya özütünü marketten aldın, o da ithal bir ürün. Pastanın büyük kısmı 'senin emeğin' ama küçük bir parçası dışarıdan geldi. Arabalar da böyle: yüzlerce parçadan oluşuyor, bazıları yerli, bazıları ithal.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Yerlilik oranı, pastanın yüzde kaçının kendi mutfağında yapıldığını söylemek gibi — tamamı değil, büyük bir kısmı." },
+        { text: "Togg, 2018'de beş büyük Türk şirketinin (Anadolu Grubu, BMC, Kök Grup, Turkcell, Zorlu Holding) bir araya gelmesiyle kurulan bir konsorsiyum — yani şirketin sahipliği tamamen Türk. Devlet de projeye destek veriyor, TOBB (Türkiye Odalar ve Borsalar Birliği) da işin içinde. Bu kısım net: Togg, yabancı bir şirketin Türkiye'deki şubesi değil, gerçekten Türk sermayeli bir girişim." },
+        { text: "Fabrika da Bursa'nın Gemlik ilçesinde, gerçekten Türkiye'de — 2022'de açıldı. Yani bazı sosyal medya iddialarının aksine (ki bunlar bağımsız doğrulama kuruluşu Teyit.org tarafından yanlış bulundu), araba yurt dışında üretilip Türkiye'ye getirilmiyor; montaj gerçekten burada yapılıyor." },
+        { text: "İşin can alıcı noktası bataryada. Bir elektrikli arabanın maliyetinin neredeyse yarısı bataryadan geliyor — yani arabanın 'kalbi' diyebiliriz. Togg, bataryayı Çinli (ama ABD merkezli olarak tanımlanan) Farasis şirketiyle ortak kurduğu Siro adlı şirkette üretiyor. Ama lityum-iyon hücrelerin (bataryanın en kritik, en pahalı parçası) kendisi ilk aşamada Çin'de üretilip Türkiye'ye ithal ediliyor; Türkiye'de yapılan iş, bu hücreleri paketlemek ve modül haline getirmek.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Bir akıllı telefonun 'Türkiye'de monte edildi' yazması gibi — kutuyu, kasayı, montajı burada yaparsın ama telefonun beyni olan işlemci çipi hâlâ Tayvan'dan gelir. Togg'un bataryasında da benzer bir durum var: paketleme burada, ama hücrenin kendisi henüz değil." },
+        { text: "Buna rağmen resmi rakamlar şöyle: Togg, 2023'te satışa çıktığında yüzde 51 yerlilik oranıyla başladı. Bataryanın bir kısmının Türkiye'de paketlenmeye başlamasıyla bu oran, 2025 başında yüzde 72'ye yükseldiği açıklandı. Şirket, 2026'da Gemlik'teki tesiste lityum hücrelerin de tamamen Türkiye'de üretilmeye başlanmasını hedefliyor — bu gerçekleşirse yerlilik oranı daha da artacak." },
+        { text: "Arabanın tasarımında İtalyan tasarım firması Pininfarina'nın katkısı var; bazı mühendislik ve test süreçlerinde Almanya ve İngiltere merkezli firmalarla çalışılıyor. Bu, aslında dünya genelinde otomotiv sektöründe alışılmış bir durum — Mercedes'ten Toyota'ya kadar hemen hiçbir marka, arabasının her aşamasını tek bir ülkede yapmıyor. Modern bir araba, dünyanın dört bir yanından gelen parçaların bir araya toplanmasıyla ortaya çıkıyor." },
+        { text: "Peki bu 'yerlilik' iddiasını nasıl özetleyebiliriz? Togg'un sahipliği, tasarımı, montajı ve giderek artan oranda parça tedariki gerçekten Türkiye'de — bu doğrulanmış bir gerçek, sosyal medyadaki 'aslında hepsi ithal' iddiaları yanlış. Ama bataryanın en değerli parçası (hücreler) hâlâ büyük ölçüde ithal — bu da doğrulanmış bir gerçek. İkisi de aynı anda doğru: Togg, dünya standartlarına göre oldukça yüksek bir yerlilik oranına sahip, Türkiye'de üretilen diğer arabalardan (Renault Clio, Hyundai i10, Fiat Egea) daha yerli — ama 'yüzde yüz yerli' değil, çünkü böyle bir modern araba pratikte neredeyse imkânsız." },
+        { text: "Kısacası: 'Togg yerli mi?' sorusunun tek kelimelik bir cevabı yok. Sahiplik ve montaj açısından kesinlikle evet. Parça tedariki açısından büyük ölçüde ve giderek artan oranda evet. Ama bataryanın kalbi gibi en kritik parçalarda henüz tam bağımsız değil — tıpkı dünyadaki hemen her modern araba gibi.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: Bir ev inşa ettiğini düşün — arsası senin, işçiler senin ekibin, tuğlaları kendi fabrikandan aldın. Ama çatı kiremitlerini henüz komşu ülkeden alıyorsun çünkü kendi kiremit fabrikan daha yeni kuruluyor. Ev yine de 'senin evin' — sadece her malzemesi henüz kendi topraklarından çıkmıyor." }
+      ],
+      sources: [
+        "Wikipedia (EN) — Togg: en.wikipedia.org/wiki/Togg",
+        "Teyit.org — 'Videonun Togg'un yurtdışında üretilerek Türkiye'ye getirildiğini gösterdiği iddiası' (doğrulama analizi)",
+        "Yeni Şafak — 'Togg'da yerliliği batarya artırdı' (Ocak 2025)",
+        "Cumhur Haber Ajansı — 'Togg'un Yerlilik Oranı %72'ye Yükseldi' (Ocak 2025)",
+        "Anadolu Ajansı — Sanayi ve Teknoloji Bakanlığı açıklamaları, Togg yerlilik oranı duyuruları"
+      ]
+    }
+  ]
+};
+
 let currentDecade = null;
 let randomQueue = null;
 
@@ -1500,11 +1550,12 @@ function renderHome(){
     const d = DATA[key];
     if(!d) return;
     const card = document.createElement('div');
-    card.className='decade-card';
+    card.className = d.isAnalysis ? 'decade-card analysis-card' : 'decade-card';
     card.onclick=()=>showCategory(key);
-    card.innerHTML = `<div class="decade-label">Dönem</div>
+    const label = d.isAnalysis ? 'Güncel Analiz' : 'Dönem';
+    card.innerHTML = `<div class="decade-label">${label}</div>
       <div class="decade-title">${d.title}</div>
-      <div class="decade-count">${d.stories.length} hikâye — ${d.subtitle}</div>`;
+      <div class="decade-count">${d.stories.length} ${d.isAnalysis ? 'rapor' : 'hikâye'} — ${d.subtitle}</div>`;
     grid.appendChild(card);
   });
 }
@@ -1560,6 +1611,12 @@ function openStory(decadeKey, storyId){
       wrap.innerHTML = `<img src="${b.image}" alt="" onclick="openLightbox('${b.image}')"><div class="beat-caption">${b.caption||''}</div>`;
       article.appendChild(wrap);
     }
+    if(b.analogy){
+      const abox = document.createElement('div');
+      abox.className='analogy-box';
+      abox.innerHTML = `<div class="analogy-icon">💡</div><div class="analogy-text">${b.analogy}</div>`;
+      article.appendChild(abox);
+    }
   });
   const end = document.createElement('div');
   end.className='end-mark';
@@ -1573,6 +1630,14 @@ function openStory(decadeKey, storyId){
       <div class="today-frame"><img src="${s.today.image}" alt="" onclick="openLightbox('${s.today.image}')" style="cursor:zoom-in;"></div>
       <div class="today-caption">${s.today.caption||''}</div>`;
     article.appendChild(todaySec);
+  }
+
+  if(s.sources && s.sources.length){
+    const srcSec = document.createElement('div');
+    srcSec.className='sources-section';
+    srcSec.innerHTML = `<div class="today-label">Kaynaklar</div>` +
+      s.sources.map(src => `<div class="source-item">${src}</div>`).join('');
+    article.appendChild(srcSec);
   }
 
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
