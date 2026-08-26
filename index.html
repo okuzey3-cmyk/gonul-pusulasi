@@ -297,7 +297,7 @@
   <div class="map-header">
     <div class="decade-label" style="text-align:center;">Dünya Haritası</div>
     <h2 style="text-align:center; font-family:'Oswald',sans-serif; font-size:26px; margin-top:6px;">Hikayeleri Keşfet</h2>
-    <div class="map-hint">Küreyi parmağınla döndür, altın noktalara dokun</div>
+    <div class="map-hint">Döndürmek için sürükle, yakınlaştırmak için iki parmakla sıkıştır</div>
   </div>
   <div id="globeContainer"></div>
   <div id="mapSheet" class="map-sheet">
@@ -2167,6 +2167,8 @@ let globeMarkers = [];
 let globeDragging = false, globeDragMoved = false;
 let globeLastX = 0, globeLastY = 0;
 let globeVelX = 0.0015, globeVelY = 0;
+let globeActivePointers = new Map();
+let globePinching = false, globePinchStartDist = 0, globePinchStartZ = 3.1;
 
 function openMapView(){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -2188,21 +2190,107 @@ function initGlobe(){
   globeRenderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
   globeRenderer.setSize(width, height);
   globeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  globeRenderer.outputEncoding = THREE.sRGBEncoding;
   container.appendChild(globeRenderer.domElement);
 
   globeGroup = new THREE.Group();
   globeScene.add(globeGroup);
 
-  const geo = new THREE.SphereGeometry(1, 48, 48);
+  const geo = new THREE.SphereGeometry(1, 64, 64);
   const loader = new THREE.TextureLoader();
-  const earthTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Solarsystemscope_texture_2k_earth_daymap.jpg?width=1600";
-  const mat = new THREE.MeshBasicMaterial({map: loader.load(earthTexUrl)});
+  loader.crossOrigin = 'anonymous';
+  const earthTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Solarsystemscope_texture_2k_earth_daymap.jpg?width=2000";
+  const bordersTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Blank_Map_of_The_World_Equirectangular_Projection.png?width=2000";
+  const bumpTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/World_elevation_map.png?width=2000";
+  const mat = new THREE.MeshPhongMaterial({color:0x1b3a5c, shininess:10});
   const earth = new THREE.Mesh(geo, mat);
   globeGroup.add(earth);
+  loader.load(bumpTexUrl,
+    (tex)=>{ mat.bumpMap = tex; mat.bumpScale = 0.045; mat.needsUpdate = true; },
+    undefined,
+    ()=>{}
+  );
 
-  const glowGeo = new THREE.SphereGeometry(1.015, 48, 48);
-  const glowMat = new THREE.MeshBasicMaterial({color:0xC9A45C, transparent:true, opacity:0.06, side:THREE.BackSide});
+  function loadImg(url){
+    return new Promise((resolve, reject)=>{
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = ()=>resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+  Promise.all([loadImg(earthTexUrl), loadImg(bordersTexUrl)]).then(([baseImg, borderImg])=>{
+    const cw = 2000, ch = 1000;
+    const canvas = document.createElement('canvas');
+    canvas.width = cw; canvas.height = ch;
+    const ctx = canvas.getContext('2d');
+    ctx.filter = 'saturate(220%) brightness(1.12) contrast(1.18)';
+    ctx.drawImage(baseImg, 0, 0, cw, ch);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 0.55;
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.drawImage(borderImg, 0, 0, cw, ch);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+
+    const COUNTRY_LABELS = [
+      ["KANADA",60,-98],["ABD",39,-98],["MEKSİKA",23,-102],["BREZİLYA",-10,-55],
+      ["ARJANTİN",-35,-64],["ŞİLİ",-33,-70],["KOLOMBİYA",4,-72],["PERU",-10,-76],
+      ["VENEZUELA",8,-66],["BOLİVYA",-17,-65],["RUSYA",62,95],["ÇİN",35,103],
+      ["HİNDİSTAN",22,79],["KAZAKİSTAN",48,68],["MOĞOLİSTAN",46,103],
+      ["SUUDİ ARABİSTAN",24,45],["İRAN",32,53],["TÜRKİYE",39,35],["MISIR",27,30],
+      ["LİBYA",27,17],["CEZAYİR",28,3],["SUDAN",15,30],["ÇAD",15,19],
+      ["NİJER",17,10],["MALİ",17,-4],["NİJERYA",9,8],["ETİYOPYA",9,40],
+      ["KENYA",1,38],["GÜNEY AFRİKA",-29,24],["KONGO DC",-3,23],["TANZANYA",-6,35],
+      ["AVUSTRALYA",-25,134],["ENDONEZYA",-2,118],["GRÖNLAND",72,-40],
+      ["NORVEÇ",62,10],["İSVEÇ",62,16],["FİNLANDİYA",64,26],["İNGİLTERE",54,-2],
+      ["FRANSA",46,2],["İSPANYA",40,-4],["ALMANYA",51,10],["İTALYA",43,12],
+      ["UKRAYNA",49,32],["POLONYA",52,19],["JAPONYA",37,138],["G. KORE",36,128],
+      ["TAYLAND",15,101],["VİETNAM",16,106],["PAKİSTAN",30,70],["AFGANİSTAN",33,66],
+      ["IRAK",33,44],["MYANMAR",21,96],["FİLİPİNLER",13,122],["YENİ ZELANDA",-41,174],
+      ["PARAGUAY",-23,-58],["EKVADOR",-1,-78],["KÜBA",22,-79],["MISIR",27,30]
+    ];
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = "bold 16px Arial, sans-serif";
+    COUNTRY_LABELS.forEach(([name,lat,lng])=>{
+      const x = (lng + 180) / 360 * cw;
+      const y = (90 - lat) / 180 * ch;
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.strokeText(name, x, y);
+      ctx.fillStyle = 'rgba(30,22,14,0.92)';
+      ctx.fillText(name, x, y);
+    });
+
+    const canvasTex = new THREE.CanvasTexture(canvas);
+    canvasTex.encoding = THREE.sRGBEncoding;
+    canvasTex.anisotropy = globeRenderer.capabilities.getMaxAnisotropy();
+    mat.map = canvasTex;
+    mat.color.set(0xffffff);
+    mat.needsUpdate = true;
+  }).catch(()=>{ console.warn('Harita dokusu yüklenemedi, düz renk gösteriliyor.'); });
+
+  const cloudsMat = new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0});
+  const cloudsGeo = new THREE.SphereGeometry(1.008, 48, 48);
+  const clouds = new THREE.Mesh(cloudsGeo, cloudsMat);
+  globeGroup.add(clouds);
+  const cloudsTexUrl = "https://commons.wikimedia.org/wiki/Special:FilePath/Solarsystemscope_texture_2k_earth_clouds.jpg?width=2000";
+  loader.load(cloudsTexUrl,
+    (tex)=>{ tex.encoding = THREE.sRGBEncoding; cloudsMat.map = tex; cloudsMat.opacity = 0.25; cloudsMat.needsUpdate = true; },
+    undefined,
+    ()=>{}
+  );
+
+  const glowGeo = new THREE.SphereGeometry(1.04, 48, 48);
+  const glowMat = new THREE.MeshBasicMaterial({color:0x6FAFEA, transparent:true, opacity:0.12, side:THREE.BackSide});
   globeGroup.add(new THREE.Mesh(glowGeo, glowMat));
+
+  const light1 = new THREE.DirectionalLight(0xffffff, 1.6);
+  light1.position.set(5,3,5);
+  globeScene.add(light1);
+  globeScene.add(new THREE.AmbientLight(0xffffff, 0.45));
 
   const markerGeo = new THREE.SphereGeometry(0.022, 12, 12);
   const groups = {};
@@ -2237,7 +2325,12 @@ function initGlobe(){
   dom.addEventListener('pointerdown', onGlobePointerDown);
   dom.addEventListener('pointermove', onGlobePointerMove);
   window.addEventListener('pointerup', onGlobePointerUp);
+  window.addEventListener('pointercancel', onGlobePointerUp);
   dom.addEventListener('touchstart', e=>e.preventDefault(), {passive:false});
+  dom.addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    globeCamera.position.z = Math.max(1.4, Math.min(6, globeCamera.position.z + e.deltaY * 0.0025));
+  }, {passive:false});
 
   window.addEventListener('resize', onGlobeResize);
 
@@ -2256,13 +2349,33 @@ function onGlobeResize(){
 }
 
 function onGlobePointerDown(e){
-  globeDragging = true;
-  globeDragMoved = false;
-  globeLastX = e.clientX;
-  globeLastY = e.clientY;
+  globeActivePointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(globeActivePointers.size === 1){
+    globeDragging = true;
+    globeDragMoved = false;
+    globeLastX = e.clientX;
+    globeLastY = e.clientY;
+  } else if(globeActivePointers.size === 2){
+    globeDragging = false;
+    globePinching = true;
+    globePinchStartDist = getPinchDistance();
+    globePinchStartZ = globeCamera.position.z;
+  }
 }
 function onGlobePointerMove(e){
-  if(!globeDragging) return;
+  if(!globeActivePointers.has(e.pointerId)) return;
+  globeActivePointers.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+  if(globePinching && globeActivePointers.size === 2){
+    const dist = getPinchDistance();
+    const scale = globePinchStartDist / dist;
+    let newZ = globePinchStartZ * scale;
+    newZ = Math.max(1.4, Math.min(6, newZ));
+    globeCamera.position.z = newZ;
+    return;
+  }
+
+  if(!globeDragging || globeActivePointers.size !== 1) return;
   const dx = e.clientX - globeLastX;
   const dy = e.clientY - globeLastY;
   if(Math.abs(dx) > 3 || Math.abs(dy) > 3) globeDragMoved = true;
@@ -2274,11 +2387,28 @@ function onGlobePointerMove(e){
   globeLastY = e.clientY;
 }
 function onGlobePointerUp(e){
-  if(!globeDragging) return;
-  globeDragging = false;
-  if(!globeDragMoved){
-    handleGlobeTap(e);
+  globeActivePointers.delete(e.pointerId);
+  if(globeActivePointers.size < 2){
+    globePinching = false;
   }
+  if(globeActivePointers.size === 0){
+    if(globeDragging && !globeDragMoved){
+      handleGlobeTap(e);
+    }
+    globeDragging = false;
+  } else if(globeActivePointers.size === 1){
+    const remaining = [...globeActivePointers.values()][0];
+    globeDragging = true;
+    globeDragMoved = true;
+    globeLastX = remaining.x;
+    globeLastY = remaining.y;
+  }
+}
+function getPinchDistance(){
+  const pts = [...globeActivePointers.values()];
+  const dx = pts[0].x - pts[1].x;
+  const dy = pts[0].y - pts[1].y;
+  return Math.sqrt(dx*dx + dy*dy);
 }
 
 function handleGlobeTap(e){
