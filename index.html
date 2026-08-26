@@ -257,7 +257,7 @@
     color:var(--page-accent); padding-bottom:10px; margin-bottom:18px; border-bottom:1px solid rgba(139,106,52,0.25);
   }
   .book-page .drop-body p{
-    font-family:'Crimson Pro',serif; font-size:18px; line-height:1.7; color:var(--ink); margin-bottom:0;
+    font-family:'Crimson Pro',serif; font-weight:600; font-size:19px; line-height:1.75; color:var(--ink); margin-bottom:0;
     opacity:1 !important; transform:none !important;
   }
   .book-page .drop-body p::first-letter{
@@ -274,10 +274,15 @@
   .book-page .page-analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:var(--ink-soft); line-height:1.55;}
 
   .book-page-footer{
-    position:absolute; bottom:0; left:0; right:0; z-index:5; text-align:center; padding:10px 0;
+    position:absolute; bottom:0; left:0; right:0; z-index:1001; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 0;
     font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.1em; color:#8C7F68;
-    background:linear-gradient(180deg, transparent, var(--film-black) 70%); pointer-events:none;
+    background:linear-gradient(180deg, transparent, var(--film-black) 70%);
   }
+  .footer-dice{
+    pointer-events:auto; cursor:pointer; width:15px; height:15px; color:var(--gold); opacity:.75;
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .footer-dice:active{opacity:1; transform:scale(0.85);}
   .swipe-hint{position:absolute; top:50%; left:0; right:0; transform:translateY(-50%); text-align:center; font-family:'Special Elite',monospace; font-size:10px; color:rgba(140,127,104,0.5); pointer-events:none; letter-spacing:.1em;}
   .article p.in-view{opacity:1; transform:translateY(0);}
 
@@ -1857,6 +1862,37 @@ DATA["bilim-teknoloji"] = {
         { text: "Yıllar içinde mühendisler lazerin binlerce pratik kullanımını keşfetti: markette ürünleri okuyan barkod tarayıcılar, CD ve DVD'lerdeki verileri okuyan küçük lazerler, internetin fiber optik kablolardaki verileri ışık hızında taşıması, göz ameliyatlarında milimetrenin altında hassasiyetle kesim yapabilme, hatta cep telefonlarındaki yüz tanıma sistemleri." },
         { text: "'Bir çözüm arayan buluş' diye alay edilen bu teknoloji, bugün günde milyarlarca kez, çoğu zaman farkında bile olmadığımız şekillerde hayatımıza dokunuyor — süpermarket kasasından fiber internet hattına, göz doktorundan akıllı telefonun kamerasına kadar. Bazen bir buluşun asıl kullanım alanı, icat edildiği günden çok sonra ortaya çıkıyor." }
       ]
+    },
+    {
+      id: "dna-sarmali",
+      year: "1953 – Bugün",
+      place: "Cambridge, İngiltere",
+      title: "Hayatın Şifresini Çözen Yarış",
+      teaser: "Bir kağıt-makas modeliyle, iki bilim insanı hayatın kendi el yazısını okumayı başardı.",
+      cover: WM('DNA_Model_Crick-Watson.jpg'),
+      beats: [
+        { text: "1950'lerin başında bilim insanları, canlıların genetik bilgisini taşıyan DNA molekülünün var olduğunu biliyordu ama şeklinin ne olduğunu bilmiyordu. Bu şekli ilk çözen kişi, hem tıbbı hem biyolojiyi kökten değiştirecekti — dünya çapında bir yarış başlamıştı." },
+        { text: "Cambridge Üniversitesi'nde çalışan fizikçi Francis Crick ve genç Amerikalı biyolog James Watson, Londra'daki Rosalind Franklin ve Maurice Wilkins'in çektiği X-ışını kırınım görüntülerinden faydalanarak DNA'nın yapısını çözmeye çalışıyordu." },
+        { text: "Bunu şöyle düşünebilirsin: DNA'nın şeklini bulmak, karanlıkta sadece gölgesine bakarak bir nesnenin ne olduğunu anlamaya çalışmak gibiydi. Franklin'in çektiği 'Fotoğraf 51' adlı görüntü, o gölgenin netleştiği kritik bir andı.",
+          analogy: "💡 Bunu şöyle düşünebilirsin: X-ışını kırınım deseni, bir nesnenin gölgesinden şeklini tahmin etmeye benzer — Franklin'in fotoğrafı, DNA'nın 'sarmal' bir merdiven gibi burgu şeklinde olduğuna dair en güçlü ipucuydu." },
+        { text: "Watson ve Crick, laboratuvarlarında kağıttan kestikleri moleküler parçaları ve metal atölye artıklarını kullanarak fiziksel bir model üzerinde deneme yanılma yaptılar. 28 Şubat 1953'te, parçaları doğru şekilde bir araya getirdiklerinde çözümü buldular: DNA, birbirine sarılmış çift bir sarmaldı." },
+        { text: "Bu keşif, genetik bilginin nasıl kopyalanıp nesilden nesile aktarıldığını gösterdi ve modern genetiğin, DNA testlerinin, gen tedavilerinin ve suç mahallinde kullanılan DNA analizinin temelini attı. Watson, Crick ve Wilkins 1962'de Nobel Ödülü kazandı; Franklin ise 1958'de erken yaşta hayatını kaybettiği için bu ödülü alamadı — ama katkısı bugün bilim tarihinde ayrıca anılıyor." }
+      ]
+    },
+    {
+      id: "x-isini-kesfi",
+      year: "1895",
+      place: "Würzburg, Almanya",
+      title: "Karanlık Bir Laboratuvarda Görülen Tuhaf Parıltı",
+      teaser: "Bir fizikçi, kapalı bir tüpten sızan görünmez bir ışın keşfetti — ve eşinin elinin kemiklerini gördü.",
+      cover: WM("First_medical_X-ray_by_Wilhelm_R%C3%B6ntgen_of_his_wife_Anna_Bertha_Ludwig's_hand_-_18951222.jpg"),
+      beats: [
+        { text: "8 Kasım 1895'te Almanya'nın Würzburg kentinde fizik profesörü Wilhelm Röntgen, katot ışını tüpleriyle deney yapıyordu. Tüpü siyah bir kartonla tamamen kapatıp karanlık bir odada çalışırken, yakındaki bir ekranın tuhaf bir şekilde yeşil ışıkla parladığını fark etti." },
+        { text: "Bu garip parıltının kaynağı ışık olamazdı — tüp tamamen ışık geçirmez bir kutunun içindeydi. Röntgen, bilinmeyen bir ışının tahta, kağıt, hatta 1000 sayfalık bir kitabı bile geçebildiğini test ederek keşfetti. Bu görünmez ışınlara, matematikteki bilinmeyeni simgeleyen 'X' harfinden esinlenerek 'X-ışınları' adını verdi." },
+        { text: "Altı hafta boyunca gizlice bu yeni ışının özelliklerini araştıran Röntgen, 22 Aralık 1895'te eşi Anna Bertha'nın elini ışının önüne tutup bir fotoğraf plakasına kaydetti. Ortaya çıkan görüntüde, eşinin eldeki alyansı ve kemikleri, etli kısım neredeyse görünmez hâlde net bir şekilde beliriyordu." },
+        { text: "Anna Bertha, kendi elinin röntgenini gördüğünde dehşete kapılıp 'Kendi ölümümü gördüm' dediği rivayet edilir. Haber dünya basınına yayıldığında bazı gazeteler bunu bir 'şaka ya da aldatmaca' sanmış, bazıları ise hayranlıkla karşılamıştı." },
+        { text: "Röntgen, bu keşfi için 1901'de ilk Nobel Fizik Ödülü'nü kazandı, ama buluşunu hiç patentlemedi — insanlığın ortak yararına açık kalmasını istedi. Bugün hastanelerdeki kırık teşhisinden havalimanı güvenlik taramalarına kadar her yerde kullanılan X-ışınları, karanlık bir laboratuvarda fark edilen tuhaf bir yeşil parıltıyla başladı." }
+      ]
     }
   ]
 };
@@ -1927,6 +1963,36 @@ DATA["osmanli-tarihi"] = {
         { text: "Cephede, henüz yarbay rütbesindeki Mustafa Kemal (sonradan Atatürk), 25 Nisan'da düşman çıkarmasını fark ettiğinde birliklerine tarihe geçen emri verdi: 'Size taarruzu değil, ölmeyi emrediyorum.' Bu kararlılık, kritik Conkbayırı mevzisinin elde tutulmasında belirleyici oldu." },
         { text: "Aylarca süren, her iki tarafta da ağır kayıplara yol açan çetin bir mevzi savaşının ardından, müttefik kuvvetleri Ocak 1916'da yarımadayı tamamen tahliye etti. Çanakkale zaferi, Osmanlı için savaşın son yıllarındaki en önemli askeri başarılardan biri oldu ve Mustafa Kemal'in liderlik kariyerinin de dönüm noktalarından biri olarak tarihe geçti." }
       ]
+    },
+    {
+      id: "preveze-zaferi",
+      year: "1538",
+      place: "Preveze, Yunanistan kıyıları",
+      title: "Üç Kat Büyük Bir Donanmaya Karşı",
+      teaser: "Haçlı donanması sayıca üç kat üstündü. Barbaros'un manevra ustalığı, Akdeniz'in kaderini belirledi.",
+      cover: WM('Battle_of_Preveza_(1538).jpg'),
+      beats: [
+        { text: "1530'larda Akdeniz, Osmanlı ile Kutsal Roma İmparatoru V. Karl liderliğindeki Haçlı ittifakı arasında bir güç mücadelesinin sahnesiydi. Osmanlı'nın Preveze Kalesi'ni kuşatması üzerine, Papa'nın da desteklediği devasa bir Haçlı donanması bölgeye yöneldi." },
+        { text: "Kaptan-ı Derya Barbaros Hayreddin Paşa'nın emrindeki Osmanlı donanması 120 kadırga ve yaklaşık 20 bin askerden oluşuyordu. Cenevizli amiral Andrea Doria komutasındaki Haçlı donanması ise 168 kadırga, 140 kalyon ve yaklaşık 60 bin askerle, sayıca neredeyse üç kat üstündü." },
+        { text: "27-28 Eylül 1538'de başlayan çarpışmada Doria, önce ağır toplarla Osmanlı donanmasını dağıtmayı planladı. Ama yeterli rüzgâr olmayınca Haçlı donanmasının ağır kalyonları hareketsiz kaldı — Barbaros bu fırsatı değerlendirip kalyonların arasına dalarak saldırıya geçti." },
+        { text: "Turgut Reis'in filosu Haçlı donanmasının arkasına sarkarken, Barbaros ön sıradaki gemileri yararak ilerledi. Andrea Doria, donanmasının bir çembere sıkışmakta olduğunu görünce geri çekilme emri verdi. Beş saat süren çatışmanın ardından Haçlı donanması 128 gemi kaybederek dağınık bir şekilde kaçtı." },
+        { text: "Preveze zaferi, sayıca çok daha büyük bir donanmaya karşı manevra ustalığı ve doğru zamanlamayla kazanılan bir zafer olarak, Osmanlı'nın Akdeniz'deki hâkimiyetini on yıllarca pekiştirdi. Bugün 27 Eylül, Türkiye'de Deniz Kuvvetleri Günü olarak anılıyor." }
+      ]
+    },
+    {
+      id: "bayezid-yahudileri-kabul",
+      year: "1492",
+      place: "İspanya — Osmanlı toprakları",
+      title: "Bir Kapının Kapandığı Yerde Açılan Diğeri",
+      teaser: "Bir kraliyet onları kovdu. Bir sultan donanma gönderip onları güvenle taşıdı.",
+      cover: WM('Portrait_of_Sultan_Bayezid_II_of_the_Ottoman_Empire.jpg'),
+      beats: [
+        { text: "31 Mart 1492'de İspanya'nın Katolik kralları Ferdinand ve Isabella, Elhamra Fermanı'yla ülkedeki tüm Yahudilerin Hristiyanlığa geçmesini ya da birkaç ay içinde ülkeyi terk etmesini emretti. On binlerce aile, yüzyıllardır yaşadıkları topraklardan aniden sürgüne gönderilmiş oldu." },
+        { text: "Osmanlı Sultanı II. Bayezid, bu haberi aldığında hızlı bir karar verdi: Amiral Kemal Reis komutasındaki donanmayı, sürgün edilen Yahudileri güvenle Osmanlı topraklarına taşımak üzere İspanya'ya gönderdi." },
+        { text: "Bayezid, imparatorluğun her yerindeki valilere fermanlar göndererek mültecilerin sıcak karşılanmasını, engellenmemesini emretti; onlara kötü davrananları ağır cezalarla tehdit etti. Rivayete göre İspanyol Kralı'nın bu göçü 'bilge bir hükümdar' olarak anıldığını duyunca çevresindekilere şöyle dediği aktarılır: 'Siz Ferdinand'a bilge bir kral mı diyorsunuz? O, kendi ülkesini fakirleştirip benimkini zenginleştiren bir adam.'" },
+        { text: "Binlerce Sefarad Yahudisi, başta Selanik ve İstanbul olmak üzere Osmanlı şehirlerine yerleşti. Beraberlerinde getirdikleri zanaat, ticaret ve bilgi birikimi, İstanbul'daki ilk matbaanın 1493'te bu topluluk tarafından kurulmasına kadar uzanan bir katkı zinciri yarattı." },
+        { text: "Bu göç, yüzyıllar sonra bugün hâlâ konuşulan Ladino dilini ve Sefarad kültürünü Osmanlı topraklarında yaşatmaya devam etti. Bir kraliyetin kapattığı kapının hemen ardından, başka bir hükümdarın açtığı kapı, on binlerce insanın hayatını kurtaran bir insani sığınak oldu." }
+      ]
     }
   ]
 };
@@ -1994,6 +2060,21 @@ DATA["girisimcilik"] = {
         { text: "1934'te şirkete Danca 'leg godt' (iyi oyna) ifadesinden esinlenerek LEGO adını verdi. 1942'de bir kısa devre yüzünden fabrika yeniden tamamen yandı — Christiansen, ikinci kez küllerinden yeniden inşa etti." },
         { text: "1947'de Danimarka'nın ilk plastik enjeksiyon makinesini satın aldı ve deneyler yapmaya başladı. 1949'da, İngiliz bir şirketin tasarımından ilham alarak 'Otomatik Kenetlenen Tuğla' adlı bir ürün üretti — bugünkü LEGO tuğlalarının atasıydı." },
         { text: "Christiansen, 1958'de hayatını kaybettiğinde şirket 140 çalışana ulaşmıştı. 1960'ta üçüncü bir yangın ahşap oyuncak deposunu kül edince, oğlu Godtfred kararı verdi: artık sadece plastik üretilecekti. İki yangından sağ çıkan bu marangozluk atölyesi, bugün dünyanın en büyük oyuncak şirketi." }
+      ]
+    },
+    {
+      id: "airbnb-hava-yatagi",
+      year: "2007 – 2008",
+      place: "San Francisco, ABD",
+      title: "Kira Ödeyemeyen İki Tasarımcının Fikri",
+      teaser: "Yatak odalarını hava yataklarıyla dolduran iki oda arkadaşı, konaklama sektörünü yeniden yazdı.",
+      cover: WM('Brian_Chesky_Airbnb.jpg'),
+      beats: [
+        { text: "Ekim 2007'de San Francisco'da ev arkadaşı olan tasarımcılar Brian Chesky ve Joe Gebbia, kira ödemekte zorlanıyordu. Şehirde büyük bir tasarım konferansı düzenlenecek, tüm oteller doluydu — ikili, bir fırsat sezdi." },
+        { text: "Oturma odalarına üç hava yatağı serip kahvaltı sözü vererek küçük, basit bir web sitesi kurdular: 'AirBed & Breakfast'. İlk konferansta üç yabancıyı evlerinde ağırlayıp bir miktar para kazandılar." },
+        { text: "2008'in başında teknik bilgiye sahip eski oda arkadaşları Nathan Blecharczyk'i üçüncü ortak olarak dahil ettiler. Ağustos 2008'de siteyi resmi olarak açtılar, ama beklenen ilgiyi göremediler — aylarca hemen hemen hiç rezervasyon gelmedi." },
+        { text: "Para sıkıntısı o kadar büyüktü ki ekip, 2008 ABD başkanlık seçimleri sırasında adayların yüzlerini taşıyan özel kahvaltı gevrekleri ('Obama O's' ve 'Cap'n McCain's') tasarlayıp satarak 30.000 dolar topladı — yatırımcı bulamadıkları bu dönemde şirketi ayakta tutan yaratıcı bir çözümdü." },
+        { text: "Ünlü girişim hızlandırıcısı Y Combinator'a kabul edildikten sonra fikir yavaş yavaş ivme kazanmaya başladı. Bugün Airbnb, dünya çapında milyonlarca ilanla, konaklama sektörünü kökten değiştiren bir şirket — hepsi, kira ödeyemeyen iki tasarımcının oturma odasına serdiği birkaç hava yatağıyla başladı." }
       ]
     }
   ]
@@ -2801,7 +2882,16 @@ function renderBookPages(){
 }
 
 function updateFooter(){
-  document.getElementById('bookFooter').textContent = `${bookCurrentIndex+1} / ${bookPages.length}`;
+  document.getElementById('bookFooter').innerHTML =
+    `<span>${bookCurrentIndex+1} / ${bookPages.length}</span>
+     <svg class="footer-dice" onclick="openRandomStory()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+       <rect x="4" y="4" width="16" height="16" rx="3"/>
+       <circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/>
+       <circle cx="15.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/>
+       <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+       <circle cx="8.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>
+       <circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>
+     </svg>`;
   const bar = document.getElementById('progressBar');
   if(bar){
     const pct = ((bookCurrentIndex+1) / bookPages.length) * 100;
@@ -2897,6 +2987,9 @@ window.addEventListener('scroll', ()=>{
 
 /* ============ KÜRE HARİTASI ============ */
 const LOCATIONS = {
+  "preveze-zaferi":[38.9591,20.7517], "bayezid-yahudileri-kabul":[41.0082,28.9784],
+  "airbnb-hava-yatagi":[37.7749,-122.4194], "dna-sarmali":[52.2043,0.1218],
+  "x-isini-kesfi":[49.7913,9.9534],
   "istanbulun-fethi":[41.0082,28.9784], "suleymaniye-camii":[41.0165,28.9639],
   "piri-reis-haritasi":[40.4131,26.6739], "canakkale-zaferi":[40.3728,26.4022],
   "amazon-garaj":[47.6104,-122.2007], "ikea-mutfak-masasi":[56.5528,14.1339],
