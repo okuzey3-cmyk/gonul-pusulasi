@@ -113,6 +113,26 @@
   .thematic-card .decade-label{color:#B88CE6;}
   .thematic-card .decade-arrow{color:#B88CE6;}
 
+  .filter-tabs{display:flex; gap:8px; max-width:520px; margin:0 auto 20px; padding:0 20px; overflow-x:auto;}
+  .filter-tab{
+    flex-shrink:0; padding:8px 16px; border-radius:20px; border:1px solid rgba(176,141,87,0.3);
+    font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.08em; color:#8C7F68;
+    cursor:pointer; transition:all .2s ease; background:transparent;
+  }
+  .filter-tab.active{background:var(--gold); color:var(--film-black); border-color:var(--gold);}
+
+  .today-history-card{
+    max-width:520px; margin:0 auto 22px; padding:0 20px;
+  }
+  .today-history-inner{
+    position:relative; border-radius:16px; overflow:hidden; padding:16px; display:flex; gap:12px; align-items:center;
+    background:linear-gradient(135deg, rgba(201,164,92,0.12), rgba(201,164,92,0.03));
+    border:1px solid rgba(201,164,92,0.4); cursor:pointer;
+  }
+  .today-history-inner img{width:56px; height:56px; border-radius:10px; object-fit:cover; flex-shrink:0;}
+  .today-history-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.15em; color:var(--gold); text-transform:uppercase;}
+  .today-history-title{font-family:'Oswald',sans-serif; font-size:16px; color:var(--paper); margin-top:3px;}
+
   /* ---------- KATEGORİ / HİKAYE LİSTESİ ---------- */
   #category{min-height:100vh; padding:0 0 60px;}
   .cat-header{padding:50px 20px 24px; text-align:center; border-bottom:1px solid rgba(176,141,87,0.25);}
@@ -130,7 +150,7 @@
 
   /* ---------- OKUMA MODU ---------- */
   #reader{min-height:100vh;}
-  .reader-hero{position:relative; height:78vh; min-height:460px; overflow:hidden;}
+  .reader-hero{position:relative; height:42vh; min-height:280px; overflow:hidden;}
   .reader-hero img{width:100%; height:100%; object-fit:cover; filter:sepia(25%) contrast(1.05) brightness(.85); cursor:zoom-in;}
   .reader-hero::after{content:''; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(21,16,12,0.15) 0%, rgba(21,16,12,0.55) 55%, var(--film-black) 100%);}
   .hero-text{position:absolute; bottom:34px; left:0; right:0; padding:0 22px; z-index:2;}
@@ -175,6 +195,67 @@
 
   /* Paragraf metni yukarı kayarak belirsin */
   .article p{opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s ease;}
+
+  /* ========== KİTAP / DERGİ SAYFASI OKUMA MODU ========== */
+  :root{
+    --page-bg:#F0E7D2;
+    --page-bg2:#E9DEC3;
+    --ink:#2B2118;
+    --ink-soft:#5A4C39;
+    --page-accent:#8B6A34;
+  }
+  .book-viewport{
+    position:relative; width:100%; height:calc(100vh - 42vh); min-height:56vh;
+    perspective:1800px; overflow:hidden; background:var(--film-black);
+  }
+  .book-page{
+    position:absolute; inset:0; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.05) 0%, transparent 3%),
+      radial-gradient(ellipse at top left, var(--page-bg2), var(--page-bg) 70%);
+    box-shadow: inset 0 0 60px rgba(90,70,40,0.12);
+    transform-origin: left center;
+    backface-visibility: hidden;
+    transition: transform .55s cubic-bezier(.4,.1,.2,1), box-shadow .55s ease;
+    padding: 26px 26px 60px;
+  }
+  .book-page::before{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  }
+  .book-page.leaving-left{ transform: rotateY(-155deg); box-shadow: 40px 0 60px rgba(0,0,0,0.5); }
+  .book-page.leaving-right{ transform: rotateY(155deg); box-shadow: -40px 0 60px rgba(0,0,0,0.5); }
+  .book-page.entering{ transform: rotateY(0deg); }
+  .book-page.hidden-stack{ transform: rotateY(0deg); z-index:0; }
+
+  .page-header{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'Special Elite',monospace; font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+    color:var(--page-accent); padding-bottom:10px; margin-bottom:18px; border-bottom:1px solid rgba(139,106,52,0.25);
+  }
+  .book-page .drop-body p{
+    font-family:'Crimson Pro',serif; font-size:18px; line-height:1.7; color:var(--ink); margin-bottom:0;
+    opacity:1 !important; transform:none !important;
+  }
+  .book-page .drop-body p::first-letter{
+    font-family:'Oswald',sans-serif; font-size:52px; float:left; line-height:0.82; padding-right:8px; padding-top:4px;
+    color:var(--page-accent); font-weight:600;
+  }
+  .book-page .page-image{margin:20px 0; border-radius:4px; overflow:hidden; box-shadow:0 8px 24px rgba(90,70,40,0.3); border:1px solid rgba(139,106,52,0.3);}
+  .book-page .page-image img{width:100%; display:block; filter:sepia(20%) contrast(1.05);}
+  .book-page .page-caption{font-family:'Crimson Pro',serif; font-style:italic; font-size:12px; color:var(--ink-soft); padding:8px 4px 0; text-align:center;}
+  .book-page .page-analogy{
+    display:flex; gap:10px; margin-top:18px; padding:14px 16px; background:rgba(139,106,52,0.08);
+    border-left:3px solid var(--page-accent); border-radius:0 6px 6px 0;
+  }
+  .book-page .page-analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:var(--ink-soft); line-height:1.55;}
+
+  .book-page-footer{
+    position:absolute; bottom:0; left:0; right:0; z-index:5; text-align:center; padding:10px 0;
+    font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.1em; color:#8C7F68;
+    background:linear-gradient(180deg, transparent, var(--film-black) 70%); pointer-events:none;
+  }
+  .swipe-hint{position:absolute; top:50%; left:0; right:0; transform:translateY(-50%); text-align:center; font-family:'Special Elite',monospace; font-size:10px; color:rgba(140,127,104,0.5); pointer-events:none; letter-spacing:.1em;}
   .article p.in-view{opacity:1; transform:translateY(0);}
 
   /* ---------- LIGHTBOX (fotoğraf büyütme) ---------- */
@@ -262,6 +343,8 @@
   <div class="decades" id="searchResults" style="display:none;"></div>
   <button class="random-btn" id="randomBtnHome" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>
   <button class="map-btn" onclick="openMapView()">🌍 Haritada Keşfet</button>
+  <div id="todayInHistory" style="display:none;"></div>
+  <div class="filter-tabs" id="filterTabs"></div>
   <div class="decades" id="decadeGrid"></div>
 </div>
 
@@ -286,7 +369,9 @@
       <div class="place-time" id="readerMeta"></div>
     </div>
   </div>
-  <div class="article" id="readerArticle"></div>
+  <div class="book-viewport" id="bookViewport">
+    <div class="book-page-footer" id="bookFooter"></div>
+  </div>
 </div>
 
 <!-- FOTOĞRAF BÜYÜTME (LIGHTBOX) -->
@@ -1731,6 +1816,92 @@ DATA["bilim-teknoloji"] = {
   ]
 };
 
+DATA["osmanli-tarihi"] = {
+  title: "Osmanlı Tarihi",
+  subtitle: "Bir imparatorluğun kuruluş, fetih ve direniş anları",
+  isThematic: true,
+  stories: [
+    {
+      id: "istanbulun-fethi",
+      year: "1453",
+      place: "İstanbul (Konstantinopolis)",
+      title: "53 Günde Düşen Bin Yıllık Sur",
+      teaser: "Surlar bin yıldır hiç aşılmamıştı. 21 yaşında bir sultan, gemileri karadan yürüterek bunu değiştirdi.",
+      cover: WM('Constantinople_1453.jpg'),
+      beats: [
+        { text: "1453'e gelindiğinde Konstantinopolis'in surları, 1.100 yılı aşkın süredir hiçbir orduya düşmemiş, dünyanın en sağlam savunma hatlarından biriydi. Şehir birçok kez kuşatılmış ama her seferinde bu surlar arkasında dayanmıştı." },
+        { text: "21 yaşındaki II. Mehmed, tahta geçtiğinde bu şehri almayı kendine hedef koydu. Macar mühendis Urban'ı, o güne kadar görülmemiş büyüklükte toplar dökmesi için görevlendirdi — bu toplardan biri, sekiz kilometre öteden bile duyulan bir sesle 270 kiloluk gülleler fırlatabiliyordu." },
+        { text: "6 Nisan 1453'te başlayan kuşatma haftalarca sürdü, ama surlar yine de dayandı. Osmanlı donanması, şehri deniz tarafından kuşatmaya çalıştığında, Haliç'in girişi zincirle kapatılmıştı — gemiler içeri giremiyordu." },
+        { text: "Mehmed, bu engeli aşmak için akıl almaz bir plana başvurdu: gemilerinin bir kısmını, yağlanmış kütükler üzerinde karadan sürükleterek bir gecede Haliç'in içine indirdi. Sabah olduğunda Bizanslılar, savunmasız zannettikleri Haliç'te Osmanlı gemilerini gördüklerinde şaşkına döndüler." },
+        { text: "29 Mayıs 1453 sabahı, haftalardır süren top ateşiyle yıpranan surlarda açılan bir gedikten Osmanlı kuvvetleri şehre girdi. Bin yıllık Bizans İmparatorluğu'nun başkenti düştü; Mehmed, tarihe 'Fatih' unvanıyla geçti. Şehir, kısa sürede yeniden inşa edilip Osmanlı İmparatorluğu'nun başkenti oldu — bugünkü İstanbul'un temelleri bu günde atıldı." }
+      ],
+      today: { image: WM('Istanbul_asv2020-02_img49_S%C3%BCleymaniye_Mosque.jpg'), caption: "İstanbul, günümüzde" }
+    },
+    {
+      id: "suleymaniye-camii",
+      year: "1550 – 1557",
+      place: "İstanbul",
+      title: "Bir Ustanın Kalfalık Eseri",
+      teaser: "Kendi ustalık eserini değil, kalfalık dönemine ait bir yapıyı yaptığını söyledi — o eser bugün hâlâ İstanbul'un silüetini tanımlıyor.",
+      cover: WM('S%C3%BCleymaniye_Mosque,_Istanbul.jpg'),
+      beats: [
+        { text: "1550'de Kanuni Sultan Süleyman, İstanbul'un yedi tepesinden birine, döneminin en büyük mimarı Mimar Sinan'a devasa bir külliye inşa ettirmeye karar verdi — sadece bir cami değil, medrese, hastane, imarethane ve hamamları da içeren koca bir şehir içinde şehir." },
+        { text: "Sinan, bu dönemde kariyerinin ortasındaydı ve teknik olarak son derece zorlu bir hedefi vardı: Ayasofya'nın devasa kubbesini geride bırakacak, ama ondan daha dengeli, daha az yapısal desteğe ihtiyaç duyan bir kubbe tasarlamak." },
+        { text: "Yedi yıl süren inşaat sırasında Sinan, kubbenin ağırlığını dört büyük fil ayağı sütuna dağıtan yenilikçi bir sistem geliştirdi — bu sayede kubbe, iç mekânda neredeyse hiç görünmeyen destekler üzerinde asılı gibi duruyordu." },
+        { text: "1557'de tamamlanan Süleymaniye Camii, 53 metre yüksekliğinde bir kubbeye, dört minareye (Süleyman'ın İstanbul'u fetheden dördüncü Osmanlı padişahı olduğuna işaretle) ve şehre hâkim bir silüete sahipti." },
+        { text: "Sinan, kariyerinin ilerleyen yıllarında Edirne'deki Selimiye Camii'ni tamamladığında, Süleymaniye'yi kendi 'kalfalık' (ustalığa giden yoldaki orta seviye) eseri, Selimiye'yi ise asıl 'ustalık eseri' olarak tanımladı — bu alçakgönüllü değerlendirmeye rağmen Süleymaniye, bugün hâlâ İstanbul'un en tanınan simgelerinden biri ve UNESCO Dünya Mirası listesinde yer alıyor." }
+      ],
+      today: { image: WM('S%C3%BCleymaniye_Mosque,_Istanbul.jpg'), caption: "Süleymaniye Camii, günümüzde" }
+    }
+  ]
+};
+
+DATA["girisimcilik"] = {
+  title: "Girişimcilik & İş Dünyası",
+  subtitle: "Bir garajda, bir dükkânda başlayıp dünyayı değiştiren fikirler",
+  isThematic: true,
+  stories: [
+    {
+      id: "amazon-garaj",
+      year: "1994 – Bugün",
+      place: "Bellevue, Washington (Vaşington), ABD",
+      title: "Bir Garajda Başlayan İmparatorluk",
+      teaser: "Kitap satan küçük bir web sitesi, bugün dünyanın en büyük şirketlerinden birine dönüştü.",
+      cover: WM("Amazon's_founding_site_in_Bellevue,_Washington_-_garage.jpg"),
+      beats: [
+        { text: "1994'te New York'ta bir yatırım şirketinde çalışan Jeff Bezos, internetin yıllık yüzde binlerce büyüdüğünü fark etti. İyi maaşlı işini bırakıp, bu büyümeden faydalanacak bir çevrimiçi mağaza kurmaya karar verdi." },
+        { text: "Ülkeyi arabayla baştan sona geçip Seattle yakınlarındaki Bellevue'ya taşındı; kiraladığı evin garajını ofis olarak kullandı — birkaç masa, birkaç bilgisayar, ve kapı üzerine kurulu iki masadan oluşan basit bir çalışma alanıydı." },
+        { text: "Bezos, önce hangi ürünü satacağına karar vermesi gerekiyordu; kitapları seçti çünkü hem standarttı (her kitabın tek bir doğru versiyonu vardı) hem de milyonlarca farklı başlık olduğu için hiçbir fiziksel mağaza hepsini raflarında bulunduramazdı." },
+        { text: "16 Temmuz 1995'te, şirketin adını (başlangıçta 'Cadabra' iken, telefonda 'cadaver' - ceset diye yanlış anlaşıldığı için Amazon'a çevrilmişti) taşıyan web sitesi yayına girdi. İlk ay içinde, hiç reklam yapmadan, ABD'nin 50 eyaletinin ve 45 farklı ülkenin tamamına kitap sattılar." },
+        { text: "Bezos'un o dönemki tek stratejisi, kâr etmek yerine büyümeye ve müşteri deneyimine yatırım yapmaktı — yıllarca zarar etmeyi göze aldı. Bugün Amazon, kitaptan bulut bilişime kadar uzanan, dünyanın en değerli şirketlerinden biri — ve hepsi, bir garajdaki birkaç masayla başladı." }
+      ]
+    }
+  ]
+};
+
+DATA["cografya-kesifler"] = {
+  title: "Coğrafya & Keşifler",
+  subtitle: "Haritanın boş bıraktığı yerleri dolduran cesur yolculuklar",
+  isThematic: true,
+  stories: [
+    {
+      id: "vasco-da-gama",
+      year: "1497 – 1498",
+      place: "Lizbon, Portekiz — Calicut, Hindistan",
+      title: "Afrika'nın Etrafından Hindistan'a Giden Yol",
+      teaser: "Avrupa'nın baharata ulaşmasının tek yolu tehlikeli kara kervanlarıydı. Bir denizci, bunu değiştirdi.",
+      cover: WM('A_chegada_de_Vasco_da_Gama_a_Calicute_em_1498.jpg'),
+      beats: [
+        { text: "1400'lerin sonunda Avrupa'nın baharat, ipek ve değerli taşlara ulaşmasının tek yolu, Orta Doğu üzerinden geçen uzun, pahalı ve tehlikeli kervan yollarıydı. Portekiz Kraliyeti, Afrika'nın etrafından dolaşıp doğrudan Hindistan'a deniz yoluyla ulaşmanın yollarını arıyordu." },
+        { text: "Daha önce Bartolomeu Dias, 1488'de Afrika'nın en güney ucuna (Ümit Burnu) ulaşmıştı, ama oradan Hindistan'a devam eden kimse olmamıştı. Portekiz Kralı, bu görevi deneyimli denizci Vasco da Gama'ya verdi." },
+        { text: "8 Temmuz 1497'de dört gemi ve yaklaşık 170 kişilik bir mürettebatla Lizbon'dan yola çıkan da Gama, Ümit Burnu'nu geçtikten sonra bilinen hiçbir haritanın göstermediği sularda ilerledi — açık okyanusta, kıyıyı takip etmeden doğrudan güneye inip sonra doğuya dönerek rüzgâr ve akıntıları ustaca kullandı." },
+        { text: "Yolculuk sırasında mürettebatın büyük kısmı iskorbüt hastalığından hayatını kaybetti; dört gemiden sadece ikisi yolculuğu tamamlayabildi. Doğu Afrika kıyısında bir Müslüman denizciden yardım alarak, Hint Okyanusu'nu geçmek için gereken rehberliği buldular." },
+        { text: "20 Mayıs 1498'de da Gama'nın filosu, Hindistan'ın Calicut kentine ulaştı — Avrupa'dan denizyoluyla Hindistan'a varan ilk sefer. Bu yolculuk, Avrupa ile Asya arasındaki ticaretin merkezini kervan yollarından okyanuslara kaydırdı ve sonraki yüzyıllarda Portekiz'in (ve ardından diğer Avrupa güçlerinin) Hint Okyanusu ticaretinde belirleyici bir rol oynamasının kapısını açtı." }
+      ]
+    }
+  ]
+};
+
 DATA["1980ler"] = {
   title: "1980'ler",
   subtitle: "Kişisel bilgisayarın, cebe sığan iletişimin ve büyük değişimlerin onyılı",
@@ -2259,19 +2430,50 @@ function handleSearch(query){
   });
 }
 
+let currentFilter = 'tumu';
+
+function renderFilterTabs(){
+  const tabs = document.getElementById('filterTabs');
+  const options = [
+    {key:'tumu', label:'Tümü'},
+    {key:'donem', label:'Dönemler'},
+    {key:'tema', label:'Temalar'},
+    {key:'analiz', label:'Analiz'}
+  ];
+  tabs.innerHTML = '';
+  options.forEach(opt=>{
+    const btn = document.createElement('div');
+    btn.className = 'filter-tab' + (currentFilter === opt.key ? ' active' : '');
+    btn.textContent = opt.label;
+    btn.onclick = ()=>{ currentFilter = opt.key; renderHome(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function matchesFilter(d){
+  if(currentFilter === 'tumu') return true;
+  if(currentFilter === 'donem') return !d.isAnalysis && !d.isThematic;
+  if(currentFilter === 'tema') return !!d.isThematic;
+  if(currentFilter === 'analiz') return !!d.isAnalysis;
+  return true;
+}
+
 function renderHome(){
+  renderFilterTabs();
+  renderTodayInHistory();
   const grid = document.getElementById('decadeGrid');
   grid.innerHTML = '';
   let i = 0;
   Object.keys(DATA).forEach(key=>{
     const d = DATA[key];
     if(!d) return;
+    if(!matchesFilter(d)) return;
     const card = document.createElement('div');
     let cls = 'decade-card';
     let label = 'Dönem';
     let unit = 'hikâye';
     if(d.isAnalysis){ cls += ' analysis-card'; label = 'Güncel Analiz'; unit = 'rapor'; }
-    if(d.isThematic){ cls += ' thematic-card'; label = 'Bilim & Teknoloji'; unit = 'hikâye'; }
+    if(d.isThematic){ cls += ' thematic-card'; label = 'Tema'; unit = 'hikâye'; }
     card.className = cls;
     card.style.animationDelay = (i * 0.08) + 's';
     i++;
@@ -2283,6 +2485,45 @@ function renderHome(){
       <div class="decade-arrow">→</div>`;
     grid.appendChild(card);
   });
+}
+
+const TODAY_IN_HISTORY = {
+  "12-17":"wright-brothers", "05-20":"amelia-earhart", "05-29":"istanbulun-fethi",
+  "07-20":"apollo-11", "07-23":"telstar-1", "08-28":"mlk-dream", "02-25":"ali-liston",
+  "12-03":"barnard-heart", "06-27":"atm-enfield", "10-29":"arpanet", "02-09":"boeing-747",
+  "08-15":"woodstock", "01-24":"macintosh-1984", "11-09":"berlin-wall-fall",
+  "02-08":"diners-club", "11-02":"kdka-radio", "07-25":"bleriot-channel",
+  "11-26":"king-tut-tomb", "08-26":"womens-suffrage", "06-14":"alcock-brown",
+  "02-26":"grand-canyon-park", "03-12":"girl-scouts-founding", "03-06":"oreo-cookie",
+  "02-17":"armory-show", "10-20":"sydney-opera-house", "08-06":"ederle-channel",
+  "09-03":"bluebird", "05-29-2":"everest-1953", "07-17":"disneyland-1955",
+  "10-04":"sputnik-1957", "05-06":"roger-bannister", "03-16":"goddard-rocket",
+  "08-12":"ibm-pc-5150", "07-13":"live-aid-1985", "08-03":"uss-nautilus",
+  "12-01":"rosa-parks", "10-18":"transistor-radio", "12-12":"marconi-radio",
+  "10-27":"nyc-subway", "04-18":"sf-earthquake", "04-11":"apollo-13",
+  "12-16":"great-white-fleet", "06-26":"st-lawrence-seaway", "04-12":"salk-vaccine"
+};
+
+function renderTodayInHistory(){
+  const wrap = document.getElementById('todayInHistory');
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const dd = String(now.getDate()).padStart(2,'0');
+  const key = `${mm}-${dd}`;
+  const storyId = TODAY_IN_HISTORY[key];
+  if(!storyId){ wrap.style.display='none'; wrap.innerHTML=''; return; }
+  const found = locateStory(storyId);
+  if(!found){ wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  wrap.innerHTML = `<div class="today-history-card">
+    <div class="today-history-inner" onclick="openStory('${found.decadeKey}','${found.story.id}')">
+      <img src="${found.story.cover}" alt="">
+      <div>
+        <div class="today-history-label">📅 Bugün Tarihte</div>
+        <div class="today-history-title">${found.story.title}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function showHome(){
@@ -2322,6 +2563,9 @@ function showCategory(key){
   window.scrollTo(0,0);
 }
 
+let bookPages = [];
+let bookCurrentIndex = 0;
+
 function openStory(decadeKey, storyId){
   currentDecade = decadeKey;
   const d = DATA[decadeKey];
@@ -2332,53 +2576,125 @@ function openStory(decadeKey, storyId){
   document.getElementById('readerTitle').textContent = s.title;
   document.getElementById('readerMeta').textContent = s.place;
 
-  const article = document.getElementById('readerArticle');
-  article.innerHTML='';
-  s.beats.forEach(b=>{
-    const p = document.createElement('p');
-    p.textContent = b.text;
-    article.appendChild(p);
-    if(b.image){
-      const wrap = document.createElement('div');
-      wrap.className='beat-image';
-      wrap.innerHTML = `<img src="${b.image}" alt="" onclick="openLightbox('${b.image}')"><div class="beat-caption">${b.caption||''}</div>`;
-      article.appendChild(wrap);
-    }
-    if(b.analogy){
-      const abox = document.createElement('div');
-      abox.className='analogy-box';
-      abox.innerHTML = `<div class="analogy-icon">💡</div><div class="analogy-text">${b.analogy}</div>`;
-      article.appendChild(abox);
-    }
-  });
-  const end = document.createElement('div');
-  end.className='end-mark';
-  end.innerHTML = `<div class="reel-divider"></div><span>SON</span>
-    <button class="random-btn end-random-btn" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>`;
-  article.appendChild(end);
+  bookPages = s.beats.map(b => ({ text:b.text, image:b.image, caption:b.caption, analogy:b.analogy }));
+  bookPages.push({ isEnd:true, today:s.today, sources:s.sources });
+  bookCurrentIndex = 0;
 
-  if(s.today){
-    const todaySec = document.createElement('div');
-    todaySec.className='today-section';
-    todaySec.innerHTML = `<div class="today-label">Burası Bugün</div>
-      <div class="today-frame"><img src="${s.today.image}" alt="" onclick="openLightbox('${s.today.image}')" style="cursor:zoom-in;"></div>
-      <div class="today-caption">${s.today.caption||''}</div>`;
-    article.appendChild(todaySec);
-  }
-
-  if(s.sources && s.sources.length){
-    const srcSec = document.createElement('div');
-    srcSec.className='sources-section';
-    srcSec.innerHTML = `<div class="today-label">Kaynaklar</div>` +
-      s.sources.map(src => `<div class="source-item">${src}</div>`).join('');
-    article.appendChild(srcSec);
-  }
+  renderBookPages(d.title);
 
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('reader').classList.add('active');
   window.scrollTo(0,0);
+}
 
-  observeBeats();
+function buildPageInnerHTML(page, index){
+  if(page.isEnd){
+    let html = `<div class="page-header"><span>ARŞİV</span><span>${index+1} / ${bookPages.length}</span></div>`;
+    html += `<div style="text-align:center; padding:30px 0;"><div style="width:50px;height:2px;background:var(--page-accent);margin:0 auto 14px;opacity:.6;"></div><span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:.2em;color:var(--page-accent);">SON</span></div>`;
+    if(page.today){
+      html += `<div style="margin-top:20px;">
+        <div style="text-align:center;font-family:'Special Elite',monospace;font-size:10px;letter-spacing:.15em;color:var(--page-accent);text-transform:uppercase;margin-bottom:10px;">Burası Bugün</div>
+        <div class="page-image"><img src="${page.today.image}" alt="" onclick="openLightbox('${page.today.image}')" style="cursor:zoom-in;"></div>
+        <div class="page-caption">${page.today.caption||''}</div>
+      </div>`;
+    }
+    if(page.sources && page.sources.length){
+      html += `<div style="margin-top:24px; padding:14px 16px; background:rgba(139,106,52,0.08); border:1px solid rgba(139,106,52,0.25); border-radius:6px;">
+        <div style="font-family:'Special Elite',monospace;font-size:10px;letter-spacing:.15em;color:var(--page-accent);text-transform:uppercase;margin-bottom:8px;">Kaynaklar</div>
+        ${page.sources.map(src=>`<div style="font-family:'Special Elite',monospace;font-size:10px;color:var(--ink-soft);line-height:1.8;">${src}</div>`).join('')}
+      </div>`;
+    }
+    html += `<button class="random-btn end-random-btn" style="margin-top:26px;color:var(--page-accent);border-color:var(--page-accent);" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>`;
+    return html;
+  }
+  let html = `<div class="page-header"><span>ARŞİV</span><span>${index+1} / ${bookPages.length}</span></div>`;
+  html += `<div class="drop-body"><p>${page.text}</p></div>`;
+  if(page.image){
+    html += `<div class="page-image"><img src="${page.image}" alt="" onclick="openLightbox('${page.image}')"></div>
+      <div class="page-caption">${page.caption||''}</div>`;
+  }
+  if(page.analogy){
+    html += `<div class="page-analogy"><div>💡</div><div class="page-analogy-text">${page.analogy}</div></div>`;
+  }
+  return html;
+}
+
+function renderBookPages(){
+  const viewport = document.getElementById('bookViewport');
+  const footer = document.getElementById('bookFooter');
+  viewport.innerHTML = '';
+  viewport.appendChild(footer);
+  bookPages.forEach((page, i)=>{
+    const el = document.createElement('div');
+    el.className = 'book-page';
+    el.style.zIndex = (bookPages.length - i);
+    el.style.display = i === bookCurrentIndex ? 'block' : (i < bookCurrentIndex ? 'none' : 'block');
+    el.innerHTML = buildPageInnerHTML(page, i);
+    el.dataset.index = i;
+    viewport.insertBefore(el, footer);
+  });
+  attachSwipeHandlers();
+  updateFooter();
+}
+
+function updateFooter(){
+  document.getElementById('bookFooter').textContent = `${bookCurrentIndex+1} / ${bookPages.length}`;
+  const bar = document.getElementById('progressBar');
+  if(bar){
+    const pct = ((bookCurrentIndex+1) / bookPages.length) * 100;
+    bar.style.width = pct + '%';
+  }
+}
+
+let bookTouchStartX = 0, bookTouchStartY = 0, bookTouchMoved = false;
+
+function attachSwipeHandlers(){
+  const viewport = document.getElementById('bookViewport');
+  viewport.ontouchstart = (e)=>{
+    bookTouchStartX = e.touches[0].clientX;
+    bookTouchStartY = e.touches[0].clientY;
+    bookTouchMoved = false;
+  };
+  viewport.ontouchmove = ()=>{ bookTouchMoved = true; };
+  viewport.ontouchend = (e)=>{
+    const dx = e.changedTouches[0].clientX - bookTouchStartX;
+    const dy = e.changedTouches[0].clientY - bookTouchStartY;
+    if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)){
+      if(dx < 0) turnPage(1); else turnPage(-1);
+    }
+  };
+}
+
+function turnPage(direction){
+  const total = bookPages.length;
+  const nextIndex = bookCurrentIndex + direction;
+  if(nextIndex < 0 || nextIndex >= total) return;
+
+  const viewport = document.getElementById('bookViewport');
+  const pages = viewport.querySelectorAll('.book-page');
+  const current = pages[bookCurrentIndex];
+  const next = pages[nextIndex];
+
+  next.style.display = 'block';
+  next.style.zIndex = 999;
+  current.style.zIndex = 998;
+
+  requestAnimationFrame(()=>{
+    if(direction > 0){
+      current.classList.add('leaving-left');
+    } else {
+      current.classList.add('leaving-right');
+    }
+  });
+
+  setTimeout(()=>{
+    current.style.display = 'none';
+    current.classList.remove('leaving-left','leaving-right');
+    bookCurrentIndex = nextIndex;
+    updateFooter();
+    document.getElementById('bookViewport').scrollTop = 0;
+    next.scrollTop = 0;
+  }, 560);
 }
 
 function openLightbox(src){
@@ -2414,10 +2730,6 @@ window.addEventListener('scroll', ()=>{
     bar.style.width = '0%';
     return;
   }
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-  bar.style.width = Math.min(pct, 100) + '%';
 });
 
 /* ============ KÜRE HARİTASI ============ */
