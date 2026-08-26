@@ -28,6 +28,13 @@
   .grain{position:fixed; inset:0; pointer-events:none; z-index:999; opacity:var(--grain-opacity); mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
+  .map-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:url("https://commons.wikimedia.org/wiki/Special:FilePath/Old-world-map.jpg?width=1400");
+    background-size:cover; background-position:center;
+    opacity:0.07; filter:sepia(60%) brightness(0.8);
+  }
+  #home, #category, #reader, #mapView{ position:relative; z-index:1; }
 
   .view{display:none;}
   .view.active{display:block; animation: viewIn .5s ease both;}
@@ -74,6 +81,7 @@
 
   .random-btn{display:block; margin:0 auto 34px; padding:14px 28px; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase; cursor:pointer; transition:background .25s ease, color .25s ease;}
   .random-btn:hover{background:var(--gold); color:var(--film-black);}
+  .btn-icon{width:16px; height:16px; vertical-align:-3px; margin-right:4px;}
 
   .search-wrap{max-width:520px; margin:0 auto 24px; padding:0 20px;}
   .search-input{width:100%; padding:14px 16px; background:rgba(176,141,87,0.06); border:1px solid rgba(176,141,87,0.35); color:var(--paper); font-family:'Crimson Pro',serif; font-size:16px; outline:none; transition:border-color .2s ease;}
@@ -84,54 +92,69 @@
 
   .progress-bar{position:fixed; top:0; left:0; height:3px; background:var(--gold); z-index:60; width:0%; transition:width .1s linear;}
 
-  .decades{display:grid; grid-template-columns:1fr; gap:16px; max-width:520px; margin:0 auto;}
+  .decades{display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:560px; margin:0 auto; padding:0 20px;}
   .decade-card{
     position:relative; height:150px; border-radius:14px; overflow:hidden; cursor:pointer;
     background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#3a2a1c,#1c140d);
     box-shadow:0 14px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(201,164,92,0.25);
-    display:flex; align-items:flex-end; padding:18px;
+    display:flex; flex-direction:column; justify-content:flex-end; padding:12px;
     transition:transform .2s ease;
   }
-  .decade-card:active{transform:scale(0.98);}
+  .decade-card:active{transform:scale(0.97);}
   .decade-card::before{
     content:''; position:absolute; inset:0; opacity:.35; mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .decade-glow{position:absolute; top:-40px; right:-30px; width:160px; height:160px; border-radius:50%; background:radial-gradient(circle, rgba(201,164,92,0.35), transparent 70%); pointer-events:none;}
-  .decade-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; position:relative; z-index:2;}
-  .decade-title{font-family:'Oswald',sans-serif; font-size:26px; font-weight:600; margin-top:4px; position:relative; z-index:2; color:var(--paper); text-shadow:0 2px 12px rgba(0,0,0,0.6);}
-  .decade-count{font-size:12px; color:#D9CDB4; margin-top:4px; position:relative; z-index:2;}
-  .decade-arrow{position:absolute; right:18px; top:50%; transform:translateY(-50%); color:var(--gold); font-size:20px; z-index:2;}
+  .decade-bignum{
+    position:absolute; right:0; top:8px; z-index:1;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:52px; line-height:1;
+    color:rgba(237,227,208,0.08); letter-spacing:-.02em; pointer-events:none; user-select:none;
+  }
+  .decade-icon{position:relative; z-index:2; width:26px; height:26px; color:var(--gold); margin-bottom:4px;}
+  .decade-icon svg{width:100%; height:100%;}
+  .decade-label{font-family:'Special Elite',monospace; font-size:8.5px; letter-spacing:.15em; color:var(--gold); text-transform:uppercase; position:relative; z-index:2;}
+  .decade-title{font-family:'Oswald',sans-serif; font-size:19px; font-weight:600; margin-top:2px; position:relative; z-index:2; color:var(--paper); text-shadow:0 2px 8px rgba(0,0,0,0.6); line-height:1.15;}
+  .decade-count{font-size:9.5px; color:#B7A88C; margin-top:4px; position:relative; z-index:2; line-height:1.3; max-width:88%;}
+  .decade-arrow{position:absolute; right:10px; top:10px; color:var(--gold); font-size:15px; z-index:2; opacity:.8;}
 
   .analysis-card{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#1c2f3a,#0d1519);}
   .analysis-card .decade-glow{background:radial-gradient(circle, rgba(127,191,160,0.30), transparent 70%);}
-  .analysis-card .decade-label{color:#7FBFA0;}
+  .analysis-card .decade-label, .analysis-card .decade-icon{color:#7FBFA0;}
   .analysis-card .decade-arrow{color:#7FBFA0;}
 
   .thematic-card{background:linear-gradient(180deg, rgba(18,13,9,0.1) 0%, rgba(18,13,9,0.9) 70%), linear-gradient(135deg,#2a1c3a,#150d19);}
   .thematic-card .decade-glow{background:radial-gradient(circle, rgba(178,140,230,0.30), transparent 70%);}
-  .thematic-card .decade-label{color:#B88CE6;}
+  .thematic-card .decade-label, .thematic-card .decade-icon{color:#B88CE6;}
   .thematic-card .decade-arrow{color:#B88CE6;}
 
-  .filter-tabs{display:flex; gap:8px; max-width:520px; margin:0 auto 20px; padding:0 20px; overflow-x:auto;}
+  .filter-tabs{display:flex; gap:18px; max-width:560px; margin:0 auto 22px; padding:0 20px; overflow-x:auto;}
   .filter-tab{
-    flex-shrink:0; padding:8px 16px; border-radius:20px; border:1px solid rgba(176,141,87,0.3);
-    font-family:'Special Elite',monospace; font-size:11px; letter-spacing:.08em; color:#8C7F68;
+    flex-shrink:0; padding:6px 2px 10px; border-bottom:2px solid transparent;
+    font-family:'Crimson Pro',serif; font-size:14.5px; color:#8C7F68;
     cursor:pointer; transition:all .2s ease; background:transparent;
   }
-  .filter-tab.active{background:var(--gold); color:var(--film-black); border-color:var(--gold);}
+  .filter-tab.active{color:var(--paper); border-bottom-color:var(--gold); font-weight:600;}
+  .filter-tab[data-key="tema"].active{border-bottom-color:#B88CE6;}
+  .filter-tab[data-key="analiz"].active{border-bottom-color:#7FBFA0;}
 
   .today-history-card{
-    max-width:520px; margin:0 auto 22px; padding:0 20px;
+    max-width:560px; margin:0 auto 22px; padding:0 20px;
   }
   .today-history-inner{
-    position:relative; border-radius:16px; overflow:hidden; padding:16px; display:flex; gap:12px; align-items:center;
-    background:linear-gradient(135deg, rgba(201,164,92,0.12), rgba(201,164,92,0.03));
+    position:relative; border-radius:16px; overflow:hidden; height:110px; display:flex; align-items:stretch;
+    background:linear-gradient(135deg, rgba(201,164,92,0.10), rgba(0,0,0,0.2));
     border:1px solid rgba(201,164,92,0.4); cursor:pointer;
+    box-shadow:0 10px 24px rgba(0,0,0,0.4);
   }
-  .today-history-inner img{width:56px; height:56px; border-radius:10px; object-fit:cover; flex-shrink:0;}
-  .today-history-label{font-family:'Special Elite',monospace; font-size:10px; letter-spacing:.15em; color:var(--gold); text-transform:uppercase;}
-  .today-history-title{font-family:'Oswald',sans-serif; font-size:16px; color:var(--paper); margin-top:3px;}
+  .today-history-inner img{width:38%; height:100%; object-fit:cover; flex-shrink:0; filter:sepia(35%) contrast(1.05);}
+  .today-history-text{padding:14px 16px; display:flex; flex-direction:column; justify-content:center;}
+  .today-history-label{font-family:'Special Elite',monospace; font-size:9.5px; letter-spacing:.15em; color:var(--gold); text-transform:uppercase;}
+  .today-history-title{font-family:'Oswald',sans-serif; font-weight:600; font-size:17px; color:var(--paper); margin-top:5px; line-height:1.2;}
+  .today-history-badge{
+    position:absolute; top:8px; right:8px; width:26px; height:26px; z-index:2;
+    color:var(--gold); opacity:.85;
+  }
 
   /* ---------- KATEGORİ / HİKAYE LİSTESİ ---------- */
   #category{min-height:100vh; padding:0 0 60px;}
@@ -288,16 +311,20 @@
   .analogy-icon{font-size:20px; flex-shrink:0;}
   .analogy-text{font-family:'Crimson Pro',serif; font-style:italic; font-size:16px; line-height:1.6; color:#C9DCE3;}
 
-  /* ---------- KÜRE HARİTASI ---------- */
-  .map-btn{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    margin:0 auto 20px; padding:14px 28px; max-width:320px;
-    background:transparent; border:1px solid rgba(107,180,220,0.5); color:#7FC4E8;
-    font-family:'Special Elite',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase;
-    cursor:pointer; border-radius:4px; transition:background .25s ease;
+  /* ---------- KARE İKON BUTONLARI (Pusula / Zar) ---------- */
+  .square-btn-row{display:flex; gap:14px; max-width:320px; margin:0 auto 26px;}
+  .square-btn{
+    flex:1; aspect-ratio:1.3/1; border-radius:10px; cursor:pointer;
+    background:linear-gradient(160deg, rgba(201,164,92,0.06), rgba(0,0,0,0.15));
+    border:1px solid rgba(201,164,92,0.4); color:var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: inset 0 0 0 1px rgba(201,164,92,0.12), 0 6px 16px rgba(0,0,0,0.35);
+    transition: transform .15s ease, border-color .2s ease;
   }
-  .map-btn:active{background:rgba(107,180,220,0.15);}
+  .square-btn:active{transform:scale(0.95); border-color:var(--gold);}
+  .square-btn-icon{width:38px; height:38px; opacity:0.9;}
 
+  /* ---------- KÜRE HARİTASI ---------- */
   #mapView{padding-top:20px;}
   .map-header{padding:50px 20px 10px;}
   .map-hint{text-align:center; font-size:12px; color:#8C7F68; font-style:italic; margin-top:8px; font-family:'Crimson Pro',serif;}
@@ -322,6 +349,7 @@
 </head>
 <body>
 <div class="grain"></div>
+<div class="map-bg"></div>
 <div class="progress-bar" id="progressBar"></div>
 <div id="curtain">
   <div class="panel left"></div>
@@ -341,8 +369,25 @@
     <input type="text" id="searchInput" class="search-input" placeholder="Hikaye, dönem, konu ara…" oninput="handleSearch(this.value)">
   </div>
   <div class="decades" id="searchResults" style="display:none;"></div>
-  <button class="random-btn" id="randomBtnHome" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>
-  <button class="map-btn" onclick="openMapView()">🌍 Haritada Keşfet</button>
+  <div class="square-btn-row">
+    <button class="square-btn" onclick="openMapView()">
+      <svg class="square-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+        <circle cx="12" cy="12" r="9.5"/>
+        <path d="M12 3.5 13.6 10.4 20.5 12 13.6 13.6 12 20.5 10.4 13.6 3.5 12 10.4 10.4Z"/>
+        <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+      </svg>
+    </button>
+    <button class="square-btn" id="randomBtnHome" onclick="openRandomStory()">
+      <svg class="square-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+        <rect x="4" y="4" width="16" height="16" rx="3"/>
+        <circle cx="8.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="15.5" cy="8.5" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="8.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="15.5" cy="15.5" r="1.3" fill="currentColor" stroke="none"/>
+      </svg>
+    </button>
+  </div>
   <div id="todayInHistory" style="display:none;"></div>
   <div class="filter-tabs" id="filterTabs"></div>
   <div class="decades" id="decadeGrid"></div>
@@ -2549,6 +2594,7 @@ function renderFilterTabs(){
   options.forEach(opt=>{
     const btn = document.createElement('div');
     btn.className = 'filter-tab' + (currentFilter === opt.key ? ' active' : '');
+    btn.dataset.key = opt.key;
     btn.textContent = opt.label;
     btn.onclick = ()=>{ currentFilter = opt.key; renderHome(); };
     tabs.appendChild(btn);
@@ -2562,6 +2608,12 @@ function matchesFilter(d){
   if(currentFilter === 'analiz') return !!d.isAnalysis;
   return true;
 }
+
+const CARD_ICONS = {
+  donem: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9.5"/><path d="M12 3.5 13.6 10.4 20.5 12 13.6 13.6 12 20.5 10.4 13.6 3.5 12 10.4 10.4Z"/></svg>',
+  analiz: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>',
+  tema: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5"/></svg>'
+};
 
 function renderHome(){
   renderFilterTabs();
@@ -2577,17 +2629,22 @@ function renderHome(){
     let cls = 'decade-card';
     let label = 'Dönem';
     let unit = 'hikâye';
-    if(d.isAnalysis){ cls += ' analysis-card'; label = 'Güncel Analiz'; unit = 'rapor'; }
-    if(d.isThematic){ cls += ' thematic-card'; label = 'Tema'; unit = 'hikâye'; }
+    let icon = CARD_ICONS.donem;
+    if(d.isAnalysis){ cls += ' analysis-card'; label = 'Analiz'; unit = 'rapor'; icon = CARD_ICONS.analiz; }
+    if(d.isThematic){ cls += ' thematic-card'; label = 'Tema'; unit = 'hikâye'; icon = CARD_ICONS.tema; }
     card.className = cls;
     card.style.animationDelay = (i * 0.08) + 's';
     i++;
     card.onclick=()=>showCategory(key);
+    const yearMatch = d.title.match(/\d{4}/);
+    const bgYear = yearMatch ? yearMatch[0] : '';
     card.innerHTML = `<div class="decade-glow"></div>
+      ${bgYear ? `<div class="decade-bignum">${bgYear}</div>` : ''}
+      <div class="decade-arrow">→</div>
+      <div class="decade-icon">${icon}</div>
       <div class="decade-label">${label}</div>
       <div class="decade-title">${d.title}</div>
-      <div class="decade-count">${d.stories.length} ${unit} — ${d.subtitle}</div>
-      <div class="decade-arrow">→</div>`;
+      <div class="decade-count">${d.stories.length} ${unit} — ${d.subtitle}</div>`;
     grid.appendChild(card);
   });
 }
@@ -2623,10 +2680,11 @@ function renderTodayInHistory(){
   wrap.innerHTML = `<div class="today-history-card">
     <div class="today-history-inner" onclick="openStory('${found.decadeKey}','${found.story.id}')">
       <img src="${found.story.cover}" alt="">
-      <div>
-        <div class="today-history-label">📅 Bugün Tarihte</div>
+      <div class="today-history-text">
+        <div class="today-history-label">Bugün Tarihte</div>
         <div class="today-history-title">${found.story.title}</div>
       </div>
+      <svg class="today-history-badge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 15h6M9 9h2"/></svg>
     </div>
   </div>`;
 }
@@ -2709,7 +2767,7 @@ function buildPageInnerHTML(page, index){
         ${page.sources.map(src=>`<div style="font-family:'Special Elite',monospace;font-size:10px;color:var(--ink-soft);line-height:1.8;">${src}</div>`).join('')}
       </div>`;
     }
-    html += `<button class="random-btn end-random-btn" style="margin-top:26px;color:var(--page-accent);border-color:var(--page-accent);" onclick="openRandomStory()">🎲 Rastgele Bir Hikaye</button>`;
+    html += `<button class="random-btn end-random-btn" style="margin-top:26px;color:var(--page-accent);border-color:var(--page-accent);" onclick="openRandomStory()"><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/></svg> Rastgele Bir Hikaye</button>`;
     return html;
   }
   let html = `<div class="page-header"><span>ARŞİV</span><span>${index+1} / ${bookPages.length}</span></div>`;
